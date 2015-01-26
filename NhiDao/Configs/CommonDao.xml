@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+         xmlns:db="http://www.springframework.net/database">
+    <description>
+        Definitions for the NHibernate Objects.
+    </description>
+    <!-- Database and NHibernate Configuration这下面是配置使用Nhibernate -->
+    <db:provider id="DbProvider" provider="SqlServer-2.0" connectionString="database=TXF_OA;uid=sa;pwd=123;server=.;"/>
+    <object id="SessionFactory" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate30">
+        <property name="DbProvider" ref="DbProvider" />
+        <property name="MappingAssemblies">
+            <list>
+                <!--这是配置嵌入资源的xx类对应的xx.hbm.xml文件所在的项目名称-->
+                <value>Model</value>
+            </list>
+        </property>
+        <property name="HibernateProperties">
+            <dictionary>
+                <entry key="hibernate.connection.provider" value="NHibernate.Connection.DriverConnectionProvider" />
+                <entry key="hibernate.dialect" value="NHibernate.Dialect.MsSql2005Dialect" />
+                <entry key="hibernate.connection.driver_class" value="NHibernate.Driver.SqlClientDriver" />
+                <entry key="show_sql" value="true" />
+            </dictionary>
+        </property>
+    </object>
+
+    <object id="HibernateTransactionManager" type="Spring.Data.NHibernate.HibernateTransactionManager, Spring.Data.NHibernate12">
+        <property name="DbProvider" ref="DbProvider" />
+        <property name="sessionFactory" ref="SessionFactory" />
+    </object>
+
+    <object id="TransactionInterceptor" type="Spring.Transaction.Interceptor.TransactionInterceptor, Spring.Data">
+        <property name="TransactionManager" ref="HibernateTransactionManager" />
+        <property name="TransactionAttributeSource">
+            <object type="Spring.Transaction.Interceptor.AttributesTransactionAttributeSource, Spring.Data" />
+        </property>
+    </object>
+</objects>

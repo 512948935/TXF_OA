@@ -1,0 +1,8 @@
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\INhiDao\bin\Debug\INhiDao.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\INhiDao\bin\Debug\INhiDao.pdb
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\INhiDao\obj\Debug\INhiDao.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\INhiDao\obj\Debug\INhiDao.pdb
+E:\GitHub\TXF_OA\INhiDao\bin\Debug\INhiDao.dll
+E:\GitHub\TXF_OA\INhiDao\bin\Debug\INhiDao.pdb
+E:\GitHub\TXF_OA\INhiDao\obj\Debug\INhiDao.dll
+E:\GitHub\TXF_OA\INhiDao\obj\Debug\INhiDao.pdb

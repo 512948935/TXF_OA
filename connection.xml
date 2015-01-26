@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<connection>
+  <databaseConn connectionString="Data Source=.;database=TXF_OA;User ID=sa;Pwd=123"></databaseConn>
+</connection>

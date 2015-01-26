@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="sys_DataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="sys_DataModelStoreContainer">
+    <EntitySet Name="tb_sys_Module" EntityType="sys_DataModel.Store.tb_sys_Module" store:Type="Tables" Schema="dbo" />
+  </EntityContainer>
+  <EntityType Name="tb_sys_Module">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="ParentID" Type="int" Nullable="false" />
+    <Property Name="NodeState" Type="varchar" MaxLength="10" />
+    <Property Name="NodeLevel" Type="int" Nullable="false" />
+    <Property Name="ModuleCode" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="ModuleName" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Icon" Type="varchar" MaxLength="50" />
+    <Property Name="PageUrl" Type="varchar" MaxLength="50" />
+    <Property Name="IsPage" Type="bit" Nullable="false" />
+    <Property Name="IsDelete" Type="bit" />
+    <Property Name="IsItem" Type="bit" />
+  </EntityType>
+</Schema>

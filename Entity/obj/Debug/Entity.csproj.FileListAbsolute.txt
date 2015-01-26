@@ -1,0 +1,16 @@
+E:\TXF_Project\TXF_OA\Entity\bin\Debug\Entity.dll.config
+E:\TXF_Project\TXF_OA\Entity\bin\Debug\Entity.dll
+E:\TXF_Project\TXF_OA\Entity\bin\Debug\Entity.pdb
+E:\TXF_Project\TXF_OA\Entity\obj\Debug\Entity.dll
+E:\TXF_Project\TXF_OA\Entity\obj\Debug\Entity.pdb
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\Entity\bin\Debug\Entity.dll.config
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\Entity\bin\Debug\Entity.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\Entity\bin\Debug\Entity.pdb
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\Entity\obj\Debug\Entity.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\Entity\obj\Debug\Entity.pdb
+E:\GitHub\TXF_OA\Entity\bin\Debug\Entity.dll.config
+E:\GitHub\TXF_OA\Entity\bin\Debug\Entity.dll
+E:\GitHub\TXF_OA\Entity\bin\Debug\Entity.pdb
+E:\GitHub\TXF_OA\Entity\obj\Debug\Entity.csprojResolveAssemblyReference.cache
+E:\GitHub\TXF_OA\Entity\obj\Debug\Entity.dll
+E:\GitHub\TXF_OA\Entity\obj\Debug\Entity.pdb

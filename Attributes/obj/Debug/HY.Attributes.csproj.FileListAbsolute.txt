@@ -1,0 +1,12 @@
+E:\JLHY\HY_OA\Attributes\bin\Debug\HY.Attributes.dll
+E:\JLHY\HY_OA\Attributes\bin\Debug\HY.Attributes.pdb
+E:\JLHY\HY_OA\Attributes\obj\Debug\HY.Attributes.dll
+E:\JLHY\HY_OA\Attributes\obj\Debug\HY.Attributes.pdb
+E:\JLHY\HY_OA\HY.Attributes\bin\Debug\HY.Attributes.dll
+E:\JLHY\HY_OA\HY.Attributes\bin\Debug\HY.Attributes.pdb
+E:\JLHY\HY_OA\HY.Attributes\obj\Debug\HY.Attributes.dll
+E:\JLHY\HY_OA\HY.Attributes\obj\Debug\HY.Attributes.pdb
+E:\JLHY\HY_OA_MVC\HY.Attributes\bin\Debug\HY.Attributes.dll
+E:\JLHY\HY_OA_MVC\HY.Attributes\bin\Debug\HY.Attributes.pdb
+E:\JLHY\HY_OA_MVC\HY.Attributes\obj\Debug\HY.Attributes.dll
+E:\JLHY\HY_OA_MVC\HY.Attributes\obj\Debug\HY.Attributes.pdb

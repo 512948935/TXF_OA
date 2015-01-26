@@ -1,0 +1,8 @@
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\IEFDAO\bin\Debug\IEFDAO.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\IEFDAO\bin\Debug\IEFDAO.pdb
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\IEFDAO\obj\Debug\IEFDAO.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\IEFDAO\obj\Debug\IEFDAO.pdb
+E:\GitHub\TXF_OA\IEFDAO\bin\Debug\IEFDAO.dll
+E:\GitHub\TXF_OA\IEFDAO\bin\Debug\IEFDAO.pdb
+E:\GitHub\TXF_OA\IEFDAO\obj\Debug\IEFDAO.dll
+E:\GitHub\TXF_OA\IEFDAO\obj\Debug\IEFDAO.pdb

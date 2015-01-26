@@ -1,0 +1,11 @@
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\obj\Debug\SqlDao.csprojResolveAssemblyReference.cache
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\bin\Debug\SqlDao.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\bin\Debug\SqlDao.pdb
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\bin\Debug\IDao.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\bin\Debug\Model.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\bin\Debug\TXF.Attributes.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\bin\Debug\TXF.Attributes.pdb
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\bin\Debug\IDao.pdb
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\bin\Debug\Model.pdb
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\obj\Debug\SqlDao.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\SqlDao\obj\Debug\SqlDao.pdb

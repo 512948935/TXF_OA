@@ -1,0 +1,12 @@
+E:\TXF_Project\TXF_OA\NhiDao\bin\Debug\NhiDao.dll
+E:\TXF_Project\TXF_OA\NhiDao\bin\Debug\NhiDao.pdb
+E:\TXF_Project\TXF_OA\NhiDao\obj\Debug\NhiDao.dll
+E:\TXF_Project\TXF_OA\NhiDao\obj\Debug\NhiDao.pdb
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\NhiDao\bin\Debug\NhiDao.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\NhiDao\bin\Debug\NhiDao.pdb
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\NhiDao\obj\Debug\NhiDao.dll
+E:\TXF_Project\TXF_OA(EF+Ninject+MVC)\NhiDao\obj\Debug\NhiDao.pdb
+E:\GitHub\TXF_OA\NhiDao\bin\Debug\NhiDao.dll
+E:\GitHub\TXF_OA\NhiDao\bin\Debug\NhiDao.pdb
+E:\GitHub\TXF_OA\NhiDao\obj\Debug\NhiDao.dll
+E:\GitHub\TXF_OA\NhiDao\obj\Debug\NhiDao.pdb
