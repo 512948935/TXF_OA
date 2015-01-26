@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "新增/编辑部门";
+}
+<div class="easyui-panel" title="部门信息" iconCls='icon-edit' id="uiPanel" fit="true">
+    <form id="depForm" method="post" novalidate="novalidate">
+        <table width="70%" cellpadding="0" cellspacing="0" align="center" class="tablestyle" id="tt">
+            <tr>
+                <td class="td1" width="30%">部门代码：</td>
+                <td class="td2">
+                    <input type="text" id="t_ItemNo" name="ItemNo" required="true" missingMessage='必填' readonly="readonly" />
+                    <input type="hidden" id="t_ID" name="ID" value="0" />
+                    <input type="hidden" id="t_ItemID" name="ItemID"/>
+                    <input type="hidden" id="t_PreCode" name="PreCode" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">部门名称：</td>
+                <td class="td2">
+                    <input type="text" id="t_ItemName" name="ItemName" required="true" missingMessage='必填' />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">部门主管：</td>
+                <td class="td2">
+                    <input type="text" id="t_Manager" name="Manager" readonly="readonly" />
+                    <input type="hidden" id="t_EmpID" name="EmpID" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">部门电话：</td>
+                <td class="td2">
+                    <input type="text" id="t_Phone" name="Phone" validtype="isTel" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">部门传真：</td>
+                <td class="td2">
+                    <input type="text" id="t_Fax" name="Fax" validtype="isFax" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">是否禁用：</td>
+                <td class="td2">
+                    <input type="checkbox" id="t_IsDelete" name="IsDelete" value="true" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">备注：</td>
+                <td class="td2">
+                     <textarea class="txtaa" id="t_Remark" name="Remark" rows="5" cols="10"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div style="text-align:center;padding:5px;">
+        <a class="easyui-linkbutton" iconCls="icon-ok" id="btnSave" href="javascript:void(0)">保存</a>
+        <a class="easyui-linkbutton" iconCls="icon-back" id="btnBack" href="javascript:void(0)">返回</a>
+    </div>
+  <!--数据选择对话框-->
+  <div class="easyui-dialog" id="choose_dlg" style="overflow:hidden"></div>
+  <script type="text/javascript">
+      var typeID;
+      var backUrl = encodeURI(getUrlParam('backUrl'));
+      $(function () {
+          $("input:text").each(function () {
+              $(this).addClass('txt');
+              if ($(this).attr('required') || $(this).attr('validtype'))
+                  $(this).validatebox();
+          });
+          //获取父页面的元素
+          var code = window.parent.document.getElementById("t_NodeCode");
+          if (code != null) {
+              $("#t_ItemNo").val(code.value + ".");
+              $("#t_ItemNo").attr("readonly", false);
+              typeID = window.parent.$("#t_NodeType").combobox("getValue");
+          }
+          //加载数据
+          if (getUrlParam("ID") != "") {
+              $.get("/Com/GetDepinfo?num=" + Math.random(), { "ID": getUrlParam("ID") }, function (data) {
+                  if (data.status == 1) {
+                      var model = eval(data.model)[0];
+                      $("#depForm").find("input:text,input:hidden").each(function () {
+                          var name = $(this).attr('name');
+                          $(this).val(model[name]);
+                      });
+                      if (model.IsDelete == "True")
+                          $("#t_IsDelete").attr("checked", true);
+                      $("#t_Remark").val(model.Remark);
+                      $("#t_PreCode").val(model.ItemNo);
+                  }
+                  else {
+                      jqAlert('数据加载失败:' + data, 'error')
+                  }
+              });
+          }
+          //保存事件
+          $("#btnSave").bind("click", function () {
+              if ($("#depForm").form('validate')) {
+                  $.ajax({
+                      type: "post",
+                      url: "/Com/SaveDepinfo?typeID=" + typeID,
+                      data: $("#depForm").serializeArray(),
+                      async: false,
+                      success: function (data) {
+                          if (data.status == 1) {//保存成功
+                              if (getUrlParam("ID") != "")
+                                  jqAlert('保存成功.', 'info', backUrl);
+                              else
+                                  jqAlert('保存成功.', 'info', '/Com/DepinfoManage');
+                          }
+                          else {
+                              jqAlert('保存失败:' + data, 'error')
+                          }
+                      }
+                  });
+              }
+          });
+          //加载选择对话框
+          showMyDialog1($("#choose_dlg"), '选择数据', 'icon-tip', '/Com/ItemChoose?PageUrl=../Com/EmpinfoManage', "empFrame", 780, 400, true, function () {
+              var child = window.frames["empFrame"].window.frames["mainFrame"];
+              if (child != null) {
+                  var selections = child.$("#tt").datagrid('getSelections');
+                  if (selections.length == 1) {
+                      $("#t_EmpID").val(selections[0].ID);
+                      $("#t_Manager").val(selections[0].ItemName);
+                      $("#choose_dlg").dialog('close');
+                  }
+                  else
+                      jqAlert('请选择一条记录！', 'warning')
+              }
+          });
+          $("#t_Manager").dblclick(function () {
+              $("#choose_dlg").dialog('open');
+          });
+          $("#btnBack").click(function () {
+              document.location = backUrl;
+          });
+      });
+   </script>
+</div>
+

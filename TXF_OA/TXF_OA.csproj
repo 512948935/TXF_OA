@@ -1,0 +1,1094 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1A115326-F33C-47BB-B972-72DC7B8DB417}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TXF_OA</RootNamespace>
+    <AssemblyName>TXF_OA</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\Lib\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebActivator, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\WebActivator.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Areas\_1uu\Controllers\UsersController.cs" />
+    <Compile Include="Areas\_1uu\_1uuAreaRegistration.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\FlowController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="NinjectDependencyResolver.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\GooFlow\default.css" />
+    <Content Include="Content\GooFlow\GooFlow.css" />
+    <Content Include="Content\GooFlow\GooFlow.js" />
+    <Content Include="Content\GooFlow\GooFlow2.css" />
+    <Content Include="Content\GooFlow\GooFunc.js" />
+    <Content Include="Content\GooFlow\img\gooflow_bg.png" />
+    <Content Include="Content\GooFlow\img\gooflow_blank.gif" />
+    <Content Include="Content\GooFlow\img\gooflow_blank2.gif" />
+    <Content Include="Content\GooFlow\img\gooflow_blank2.htm" />
+    <Content Include="Content\GooFlow\img\gooflow_btn_bg.png" />
+    <Content Include="Content\GooFlow\img\gooflow_bullet.png" />
+    <Content Include="Content\GooFlow\img\gooflow_icon.png" />
+    <Content Include="Content\GooFlow\img\gooflow_icon2.png" />
+    <Content Include="Content\GooFlow\img\GooFlow_line_oper.png" />
+    <Content Include="Content\GooFlow\img\gooflow_tip.png" />
+    <Content Include="Content\GooFlow\jquery.min.js" />
+    <Content Include="Content\GooFlow\json2.js" />
+    <Content Include="Content\images\1.jpg" />
+    <Content Include="Content\images\2.jpg" />
+    <Content Include="Content\images\3.jpg" />
+    <Content Include="Content\images\AddAll.gif" />
+    <Content Include="Content\images\AddTo.gif" />
+    <Content Include="Content\images\Answer.jpg" />
+    <Content Include="Content\images\back.gif" />
+    <Content Include="Content\images\BackWhite.gif" />
+    <Content Include="Content\images\BanKuai.gif" />
+    <Content Include="Content\images\BanKuaiJianTou.gif" />
+    <Content Include="Content\images\bg.bmp" />
+    <Content Include="Content\images\bg.jpg" />
+    <Content Include="Content\images\BGLine.png" />
+    <Content Include="Content\images\BottomBg.gif" />
+    <Content Include="Content\images\btn.png" />
+    <Content Include="Content\images\btn_end.gif" />
+    <Content Include="Content\images\button.png" />
+    <Content Include="Content\images\Button\BtnAdd.jpg" />
+    <Content Include="Content\images\Button\BtnAddDir.jpg" />
+    <Content Include="Content\images\Button\BtnDel.jpg" />
+    <Content Include="Content\images\Button\BtnExit.jpg" />
+    <Content Include="Content\images\Button\BtnHuiFu.jpg" />
+    <Content Include="Content\images\Button\BtnModify.jpg" />
+    <Content Include="Content\images\Button\BtnPrint.jpg" />
+    <Content Include="Content\images\Button\BtnReport.jpg" />
+    <Content Include="Content\images\Button\BtnSend.jpg" />
+    <Content Include="Content\images\Button\BtnSerch.jpg" />
+    <Content Include="Content\images\Button\btn_closewin.gif" />
+    <Content Include="Content\images\Button\DelFile.jpg" />
+    <Content Include="Content\images\Button\Ding.jpg" />
+    <Content Include="Content\images\Button\Down.gif" />
+    <Content Include="Content\images\Button\Edit.gif" />
+    <Content Include="Content\images\Button\EditFile.gif" />
+    <Content Include="Content\images\Button\FDJ.gif" />
+    <Content Include="Content\images\Button\FDJ.jpg" />
+    <Content Include="Content\images\Button\First.jpg" />
+    <Content Include="Content\images\Button\GetMail.jpg" />
+    <Content Include="Content\images\Button\InsertQianMing.gif" />
+    <Content Include="Content\images\Button\InsertRedHead.gif" />
+    <Content Include="Content\images\Button\InsertYinZhang.gif" />
+    <Content Include="Content\images\Button\JianGe.jpg" />
+    <Content Include="Content\images\Button\JianTou.gif" />
+    <Content Include="Content\images\Button\Jump.jpg" />
+    <Content Include="Content\images\Button\Last.jpg" />
+    <Content Include="Content\images\Button\Left.gif" />
+    <Content Include="Content\images\Button\Man.gif" />
+    <Content Include="Content\images\Button\Man.jpg" />
+    <Content Include="Content\images\Button\Next.jpg" />
+    <Content Include="Content\images\Button\Pre.jpg" />
+    <Content Include="Content\images\Button\QianShou.jpg" />
+    <Content Include="Content\images\Button\QuDing.jpg" />
+    <Content Include="Content\images\Button\Read.gif" />
+    <Content Include="Content\images\Button\ReadFile.gif" />
+    <Content Include="Content\images\Button\ReLoad.jpg" />
+    <Content Include="Content\images\Button\Right.gif" />
+    <Content Include="Content\images\Button\search.gif" />
+    <Content Include="Content\images\Button\Select.gif" />
+    <Content Include="Content\images\Button\SelectAll.jpg" />
+    <Content Include="Content\images\Button\Setting.gif" />
+    <Content Include="Content\images\Button\ShenPiNo.jpg" />
+    <Content Include="Content\images\Button\ShenPiNo1.jpg" />
+    <Content Include="Content\images\Button\ShenPiOK.jpg" />
+    <Content Include="Content\images\Button\ShenPiOK1.jpg" />
+    <Content Include="Content\images\Button\SmsD.gif" />
+    <Content Include="Content\images\Button\Submit.jpg" />
+    <Content Include="Content\images\Button\SubmitCaoGao.jpg" />
+    <Content Include="Content\images\Button\Up.gif" />
+    <Content Include="Content\images\Button\UpLoad.jpg" />
+    <Content Include="Content\images\Button\vote.gif" />
+    <Content Include="Content\images\Button\Wait.jpg" />
+    <Content Include="Content\images\Button\WenJianJia.gif" />
+    <Content Include="Content\images\Button\WenJianJiaGongXiang.gif" />
+    <Content Include="Content\images\child.gif" />
+    <Content Include="Content\images\child1.gif" />
+    <Content Include="Content\images\close_x.png" />
+    <Content Include="Content\images\collapse_arrow.png" />
+    <Content Include="Content\images\comm.gif" />
+    <Content Include="Content\images\CRF.jpg" />
+    <Content Include="Content\images\Dir.gif" />
+    <Content Include="Content\images\face_1.gif" />
+    <Content Include="Content\images\face_2.gif" />
+    <Content Include="Content\images\FDJ.gif" />
+    <Content Include="Content\images\FenXi.gif" />
+    <Content Include="Content\images\filetype\aac.gif" />
+    <Content Include="Content\images\filetype\ace.gif" />
+    <Content Include="Content\images\filetype\ai.gif" />
+    <Content Include="Content\images\filetype\ain.gif" />
+    <Content Include="Content\images\filetype\amr.gif" />
+    <Content Include="Content\images\filetype\app.gif" />
+    <Content Include="Content\images\filetype\arj.gif" />
+    <Content Include="Content\images\filetype\asf.gif" />
+    <Content Include="Content\images\filetype\asp.gif" />
+    <Content Include="Content\images\filetype\aspx.gif" />
+    <Content Include="Content\images\filetype\av.gif" />
+    <Content Include="Content\images\filetype\avi.gif" />
+    <Content Include="Content\images\filetype\bin.gif" />
+    <Content Include="Content\images\filetype\bmp.gif" />
+    <Content Include="Content\images\filetype\cab.gif" />
+    <Content Include="Content\images\filetype\cad.gif" />
+    <Content Include="Content\images\filetype\cat.gif" />
+    <Content Include="Content\images\filetype\cdr.gif" />
+    <Content Include="Content\images\filetype\chm.gif" />
+    <Content Include="Content\images\filetype\com.gif" />
+    <Content Include="Content\images\filetype\css.gif" />
+    <Content Include="Content\images\filetype\cur.gif" />
+    <Content Include="Content\images\filetype\dat.gif" />
+    <Content Include="Content\images\filetype\db.gif" />
+    <Content Include="Content\images\filetype\dir.gif" />
+    <Content Include="Content\images\filetype\dll.gif" />
+    <Content Include="Content\images\filetype\dmv.gif" />
+    <Content Include="Content\images\filetype\doc.gif" />
+    <Content Include="Content\images\filetype\dot.gif" />
+    <Content Include="Content\images\filetype\dps.gif" />
+    <Content Include="Content\images\filetype\dpt.gif" />
+    <Content Include="Content\images\filetype\dwg.gif" />
+    <Content Include="Content\images\filetype\dxf.gif" />
+    <Content Include="Content\images\filetype\emf.gif" />
+    <Content Include="Content\images\filetype\eps.gif" />
+    <Content Include="Content\images\filetype\et.gif" />
+    <Content Include="Content\images\filetype\ett.gif" />
+    <Content Include="Content\images\filetype\exe.gif" />
+    <Content Include="Content\images\filetype\fla.gif" />
+    <Content Include="Content\images\filetype\ftp.gif" />
+    <Content Include="Content\images\filetype\gif.gif" />
+    <Content Include="Content\images\filetype\hlp.gif" />
+    <Content Include="Content\images\filetype\htm.gif" />
+    <Content Include="Content\images\filetype\html.gif" />
+    <Content Include="Content\images\filetype\icl.gif" />
+    <Content Include="Content\images\filetype\ico.gif" />
+    <Content Include="Content\images\filetype\img.gif" />
+    <Content Include="Content\images\filetype\inf.gif" />
+    <Content Include="Content\images\filetype\ini.gif" />
+    <Content Include="Content\images\filetype\iso.gif" />
+    <Content Include="Content\images\filetype\jpeg.gif" />
+    <Content Include="Content\images\filetype\jpg.gif" />
+    <Content Include="Content\images\filetype\js.gif" />
+    <Content Include="Content\images\filetype\m3u.gif" />
+    <Content Include="Content\images\filetype\max.gif" />
+    <Content Include="Content\images\filetype\mdb.gif" />
+    <Content Include="Content\images\filetype\mde.gif" />
+    <Content Include="Content\images\filetype\mht.gif" />
+    <Content Include="Content\images\filetype\mid.gif" />
+    <Content Include="Content\images\filetype\midi.gif" />
+    <Content Include="Content\images\filetype\mov.gif" />
+    <Content Include="Content\images\filetype\mp3.gif" />
+    <Content Include="Content\images\filetype\mp4.gif" />
+    <Content Include="Content\images\filetype\mpeg.gif" />
+    <Content Include="Content\images\filetype\mpg.gif" />
+    <Content Include="Content\images\filetype\msi.gif" />
+    <Content Include="Content\images\filetype\nrg.gif" />
+    <Content Include="Content\images\filetype\ocx.gif" />
+    <Content Include="Content\images\filetype\ogg.gif" />
+    <Content Include="Content\images\filetype\ogm.gif" />
+    <Content Include="Content\images\filetype\other.gif" />
+    <Content Include="Content\images\filetype\pdf.gif" />
+    <Content Include="Content\images\filetype\png.gif" />
+    <Content Include="Content\images\filetype\pot.gif" />
+    <Content Include="Content\images\filetype\ppt.gif" />
+    <Content Include="Content\images\filetype\psd.gif" />
+    <Content Include="Content\images\filetype\pub.gif" />
+    <Content Include="Content\images\filetype\qt.gif" />
+    <Content Include="Content\images\filetype\ra.gif" />
+    <Content Include="Content\images\filetype\ram.gif" />
+    <Content Include="Content\images\filetype\rar.gif" />
+    <Content Include="Content\images\filetype\rm.gif" />
+    <Content Include="Content\images\filetype\rmvb.gif" />
+    <Content Include="Content\images\filetype\rtf.gif" />
+    <Content Include="Content\images\filetype\ShareDir.gif" />
+    <Content Include="Content\images\filetype\swf.gif" />
+    <Content Include="Content\images\filetype\tar.gif" />
+    <Content Include="Content\images\filetype\tif.gif" />
+    <Content Include="Content\images\filetype\tiff.gif" />
+    <Content Include="Content\images\filetype\txt.gif" />
+    <Content Include="Content\images\filetype\unknown.gif" />
+    <Content Include="Content\images\filetype\url.gif" />
+    <Content Include="Content\images\filetype\vbs.gif" />
+    <Content Include="Content\images\filetype\vsd.gif" />
+    <Content Include="Content\images\filetype\vss.gif" />
+    <Content Include="Content\images\filetype\vst.gif" />
+    <Content Include="Content\images\filetype\wav.gif" />
+    <Content Include="Content\images\filetype\wave.gif" />
+    <Content Include="Content\images\filetype\wm.gif" />
+    <Content Include="Content\images\filetype\wma.gif" />
+    <Content Include="Content\images\filetype\wmd.gif" />
+    <Content Include="Content\images\filetype\wmf.gif" />
+    <Content Include="Content\images\filetype\wmv.gif" />
+    <Content Include="Content\images\filetype\wps.gif" />
+    <Content Include="Content\images\filetype\wpt.gif" />
+    <Content Include="Content\images\filetype\xls.gif" />
+    <Content Include="Content\images\filetype\xlt.gif" />
+    <Content Include="Content\images\filetype\xml.gif" />
+    <Content Include="Content\images\filetype\zip.gif" />
+    <Content Include="Content\images\HeadBack.jpg" />
+    <Content Include="Content\images\HeadBack2.jpg" />
+    <Content Include="Content\images\ico_clip.gif" />
+    <Content Include="Content\images\index_02.gif" />
+    <Content Include="Content\images\index_04.gif" />
+    <Content Include="Content\images\index_05.gif" />
+    <Content Include="Content\images\input.png" />
+    <Content Include="Content\images\JianTou.gif" />
+    <Content Include="Content\images\Jt_left.gif" />
+    <Content Include="Content\images\Jt_right.gif" />
+    <Content Include="Content\images\list_hd_bg.png" />
+    <Content Include="Content\images\login.gif" />
+    <Content Include="Content\images\Logo .png" />
+    <Content Include="Content\images\logo.gif" />
+    <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\NewLogin.png" />
+    <Content Include="Content\images\node_user.gif" />
+    <Content Include="Content\images\NoYz.gif" />
+    <Content Include="Content\images\parent.gif" />
+    <Content Include="Content\images\parent1.gif" />
+    <Content Include="Content\images\parentopen.gif" />
+    <Content Include="Content\images\pencil.png" />
+    <Content Include="Content\images\product.png" />
+    <Content Include="Content\images\Question.jpg" />
+    <Content Include="Content\images\Remove.gif" />
+    <Content Include="Content\images\RemoveAll.gif" />
+    <Content Include="Content\images\ShareDir.gif" />
+    <Content Include="Content\images\ShiWu.jpg" />
+    <Content Include="Content\images\ShiWuSmall.jpg" />
+    <Content Include="Content\images\show_02.gif" />
+    <Content Include="Content\images\SmsBD.gif" />
+    <Content Include="Content\images\SmsD.gif" />
+    <Content Include="Content\images\s_loading.gif" />
+    <Content Include="Content\images\TalkRoom.gif" />
+    <Content Include="Content\images\time.gif" />
+    <Content Include="Content\images\TitleBg.gif" />
+    <Content Include="Content\images\top.gif" />
+    <Content Include="Content\images\TreeImages\%40asset.gif" />
+    <Content Include="Content\images\TreeImages\%40basedata.gif" />
+    <Content Include="Content\images\TreeImages\%40bbs.gif" />
+    <Content Include="Content\images\TreeImages\%40book.gif" />
+    <Content Include="Content\images\TreeImages\%40chatroom.gif" />
+    <Content Include="Content\images\TreeImages\%40crm.gif" />
+    <Content Include="Content\images\TreeImages\%40crmsetting.gif" />
+    <Content Include="Content\images\TreeImages\%40finance.gif" />
+    <Content Include="Content\images\TreeImages\%40hrms.gif" />
+    <Content Include="Content\images\TreeImages\%40infofind.gif" />
+    <Content Include="Content\images\TreeImages\%40mail.gif" />
+    <Content Include="Content\images\TreeImages\%40manage.gif" />
+    <Content Include="Content\images\TreeImages\%40meeting.gif" />
+    <Content Include="Content\images\TreeImages\%40netmeeting.gif" />
+    <Content Include="Content\images\TreeImages\%40notify2.gif" />
+    <Content Include="Content\images\TreeImages\%40office_Product.gif" />
+    <Content Include="Content\images\TreeImages\%40provider.gif" />
+    <Content Include="Content\images\TreeImages\%40roll_manage.gif" />
+    <Content Include="Content\images\TreeImages\%40salary.gif" />
+    <Content Include="Content\images\TreeImages\%40sale.gif" />
+    <Content Include="Content\images\TreeImages\%40score.gif" />
+    <Content Include="Content\images\TreeImages\%40sms.gif" />
+    <Content Include="Content\images\TreeImages\%40statistic.gif" />
+    <Content Include="Content\images\TreeImages\%40system.gif" />
+    <Content Include="Content\images\TreeImages\%40test.gif" />
+    <Content Include="Content\images\TreeImages\%40unit.gif" />
+    <Content Include="Content\images\TreeImages\%40vehicle.gif" />
+    <Content Include="Content\images\TreeImages\%40work_plan.gif" />
+    <Content Include="Content\images\TreeImages\1hrms.gif" />
+    <Content Include="Content\images\TreeImages\1news.gif" />
+    <Content Include="Content\images\TreeImages\1score.gif" />
+    <Content Include="Content\images\TreeImages\1vote.gif" />
+    <Content Include="Content\images\TreeImages\address.gif" />
+    <Content Include="Content\images\TreeImages\arrow_l.gif" />
+    <Content Include="Content\images\TreeImages\arrow_r.gif" />
+    <Content Include="Content\images\TreeImages\asset.gif" />
+    <Content Include="Content\images\TreeImages\attendance.gif" />
+    <Content Include="Content\images\TreeImages\bbs.gif" />
+    <Content Include="Content\images\TreeImages\bbs1.gif" />
+    <Content Include="Content\images\TreeImages\bbs2.gif" />
+    <Content Include="Content\images\TreeImages\book.gif" />
+    <Content Include="Content\images\TreeImages\calendar.gif" />
+    <Content Include="Content\images\TreeImages\calendar2.gif" />
+    <Content Include="Content\images\TreeImages\chatroom.gif" />
+    <Content Include="Content\images\TreeImages\clock.gif" />
+    <Content Include="Content\images\TreeImages\comm.gif" />
+    <Content Include="Content\images\TreeImages\contact.gif" />
+    <Content Include="Content\images\TreeImages\contact1.gif" />
+    <Content Include="Content\images\TreeImages\contract.gif" />
+    <Content Include="Content\images\TreeImages\customer.gif" />
+    <Content Include="Content\images\TreeImages\diary.gif" />
+    <Content Include="Content\images\TreeImages\email.gif" />
+    <Content Include="Content\images\TreeImages\erp.gif" />
+    <Content Include="Content\images\TreeImages\exit.gif" />
+    <Content Include="Content\images\TreeImages\fav.gif" />
+    <Content Include="Content\images\TreeImages\file.jpg" />
+    <Content Include="Content\images\TreeImages\file_folder.gif" />
+    <Content Include="Content\images\TreeImages\finance.gif" />
+    <Content Include="Content\images\TreeImages\fldb.gif" />
+    <Content Include="Content\images\TreeImages\game.gif" />
+    <Content Include="Content\images\TreeImages\help.gif" />
+    <Content Include="Content\images\TreeImages\histroy.gif" />
+    <Content Include="Content\images\TreeImages\hrms.gif" />
+    <Content Include="Content\images\TreeImages\inbox.gif" />
+    <Content Include="Content\images\TreeImages\info.gif" />
+    <Content Include="Content\images\TreeImages\infofind.gif" />
+    <Content Include="Content\images\TreeImages\info_query.gif" />
+    <Content Include="Content\images\TreeImages\linkman.gif" />
+    <Content Include="Content\images\TreeImages\mailout.gif" />
+    <Content Include="Content\images\TreeImages\meeting.gif" />
+    <Content Include="Content\images\TreeImages\menu_url.gif" />
+    <Content Include="Content\images\TreeImages\mobile_sms.gif" />
+    <Content Include="Content\images\TreeImages\mytable.gif" />
+    <Content Include="Content\images\TreeImages\netchat.gif" />
+    <Content Include="Content\images\TreeImages\netdisk.gif" />
+    <Content Include="Content\images\TreeImages\netmeeting.gif" />
+    <Content Include="Content\images\TreeImages\news.gif" />
+    <Content Include="Content\images\TreeImages\new_email.gif" />
+    <Content Include="Content\images\TreeImages\notify.gif" />
+    <Content Include="Content\images\TreeImages\notify2.gif" />
+    <Content Include="Content\images\TreeImages\office_Product.gif" />
+    <Content Include="Content\images\TreeImages\office_Product1.gif" />
+    <Content Include="Content\images\TreeImages\outbox.gif" />
+    <Content Include="Content\images\TreeImages\person_info.gif" />
+    <Content Include="Content\images\TreeImages\picture.gif" />
+    <Content Include="Content\images\TreeImages\pro.gif" />
+    <Content Include="Content\images\TreeImages\product.gif" />
+    <Content Include="Content\images\TreeImages\query.gif" />
+    <Content Include="Content\images\TreeImages\roll_manage.gif" />
+    <Content Include="Content\images\TreeImages\salary.gif" />
+    <Content Include="Content\images\TreeImages\sale_manage.gif" />
+    <Content Include="Content\images\TreeImages\score.gif" />
+    <Content Include="Content\images\TreeImages\sentbox.gif" />
+    <Content Include="Content\images\TreeImages\shortcut.gif" />
+    <Content Include="Content\images\TreeImages\sms.gif" />
+    <Content Include="Content\images\TreeImages\source.gif" />
+    <Content Include="Content\images\TreeImages\statistic.gif" />
+    <Content Include="Content\images\TreeImages\sub_arrow.gif" />
+    <Content Include="Content\images\TreeImages\sys.gif" />
+    <Content Include="Content\images\TreeImages\system.gif" />
+    <Content Include="Content\images\TreeImages\test.gif" />
+    <Content Include="Content\images\TreeImages\theme.gif" />
+    <Content Include="Content\images\TreeImages\training.gif" />
+    <Content Include="Content\images\TreeImages\trash.gif" />
+    <Content Include="Content\images\TreeImages\tree_blank.gif" />
+    <Content Include="Content\images\TreeImages\tree_blankl.gif" />
+    <Content Include="Content\images\TreeImages\tree_dir.gif" />
+    <Content Include="Content\images\TreeImages\tree_diropen.gif" />
+    <Content Include="Content\images\TreeImages\tree_line.gif" />
+    <Content Include="Content\images\TreeImages\tree_minus.gif" />
+    <Content Include="Content\images\TreeImages\tree_minusl.gif" />
+    <Content Include="Content\images\TreeImages\tree_plus.gif" />
+    <Content Include="Content\images\TreeImages\tree_plusl.gif" />
+    <Content Include="Content\images\TreeImages\tree_transp.gif" />
+    <Content Include="Content\images\TreeImages\U01.gif" />
+    <Content Include="Content\images\TreeImages\url.gif" />
+    <Content Include="Content\images\TreeImages\vchat.gif" />
+    <Content Include="Content\images\TreeImages\vehicle.gif" />
+    <Content Include="Content\images\TreeImages\vmeet.gif" />
+    <Content Include="Content\images\TreeImages\vote.gif" />
+    <Content Include="Content\images\TreeImages\webmail.gif" />
+    <Content Include="Content\images\TreeImages\winexe.gif" />
+    <Content Include="Content\images\TreeImages\workflow.gif" />
+    <Content Include="Content\images\TreeImages\work_plan.gif" />
+    <Content Include="Content\images\TreeImages\world_time.gif" />
+    <Content Include="Content\images\Tree_01.jpg" />
+    <Content Include="Content\images\Tree_01_new.jpg" />
+    <Content Include="Content\images\Tree_02.jpg" />
+    <Content Include="Content\images\Tree_03.jpg" />
+    <Content Include="Content\images\Tree_04.jpg" />
+    <Content Include="Content\images\U01.gif" />
+    <Content Include="Content\images\U02.gif" />
+    <Content Include="Content\images\U03.gif" />
+    <Content Include="Content\images\user_all_bg.gif" />
+    <Content Include="Content\images\user_bottom_c.gif" />
+    <Content Include="Content\images\user_bottom_l.gif" />
+    <Content Include="Content\images\user_bottom_r.gif" />
+    <Content Include="Content\images\user_botton.gif" />
+    <Content Include="Content\images\user_group.gif" />
+    <Content Include="Content\images\user_login_name.gif" />
+    <Content Include="Content\images\user_login_password.gif" />
+    <Content Include="Content\images\user_login_validatecode.gif" />
+    <Content Include="Content\images\user_main_c.gif" />
+    <Content Include="Content\images\user_main_l.gif" />
+    <Content Include="Content\images\user_main_r.gif" />
+    <Content Include="Content\images\user_top_c.gif" />
+    <Content Include="Content\images\user_top_l.gif" />
+    <Content Include="Content\images\user_top_r.gif" />
+    <Content Include="Content\images\vote_bg.gif" />
+    <Content Include="Content\images\ZM.jpg" />
+    <Content Include="Content\themes\black\accordion.css" />
+    <Content Include="Content\themes\black\calendar.css" />
+    <Content Include="Content\themes\black\combo.css" />
+    <Content Include="Content\themes\black\combobox.css" />
+    <Content Include="Content\themes\black\datagrid.css" />
+    <Content Include="Content\themes\black\datebox.css" />
+    <Content Include="Content\themes\black\dialog.css" />
+    <Content Include="Content\themes\black\easyui.css" />
+    <Content Include="Content\themes\black\images\accordion_arrows.png" />
+    <Content Include="Content\themes\black\images\blank.gif" />
+    <Content Include="Content\themes\black\images\calendar_arrows.png" />
+    <Content Include="Content\themes\black\images\combo_arrow.png" />
+    <Content Include="Content\themes\black\images\datagrid_icons.png" />
+    <Content Include="Content\themes\black\images\datebox_arrow.png" />
+    <Content Include="Content\themes\black\images\layout_arrows.png" />
+    <Content Include="Content\themes\black\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\black\images\loading.gif" />
+    <Content Include="Content\themes\black\images\login_txt_bg.jpg" />
+    <Content Include="Content\themes\black\images\menu_arrows.png" />
+    <Content Include="Content\themes\black\images\messager_icons.png" />
+    <Content Include="Content\themes\black\images\pagination_icons.png" />
+    <Content Include="Content\themes\black\images\panel_tools.png" />
+    <Content Include="Content\themes\black\images\searchbox_button.png" />
+    <Content Include="Content\themes\black\images\slider_handle.png" />
+    <Content Include="Content\themes\black\images\spinner_arrows.png" />
+    <Content Include="Content\themes\black\images\tabs_icons.png" />
+    <Content Include="Content\themes\black\images\tree_icons.png" />
+    <Content Include="Content\themes\black\images\validatebox_arrows.png" />
+    <Content Include="Content\themes\black\images\validatebox_warning.png" />
+    <Content Include="Content\themes\black\layout.css" />
+    <Content Include="Content\themes\black\linkbutton.css" />
+    <Content Include="Content\themes\black\menu.css" />
+    <Content Include="Content\themes\black\menubutton.css" />
+    <Content Include="Content\themes\black\messager.css" />
+    <Content Include="Content\themes\black\pagination.css" />
+    <Content Include="Content\themes\black\panel.css" />
+    <Content Include="Content\themes\black\progressbar.css" />
+    <Content Include="Content\themes\black\propertygrid.css" />
+    <Content Include="Content\themes\black\searchbox.css" />
+    <Content Include="Content\themes\black\slider.css" />
+    <Content Include="Content\themes\black\spinner.css" />
+    <Content Include="Content\themes\black\splitbutton.css" />
+    <Content Include="Content\themes\black\tabs.css" />
+    <Content Include="Content\themes\black\tree.css" />
+    <Content Include="Content\themes\black\validatebox.css" />
+    <Content Include="Content\themes\black\window.css" />
+    <Content Include="Content\themes\bootstrap\accordion.css" />
+    <Content Include="Content\themes\bootstrap\calendar.css" />
+    <Content Include="Content\themes\bootstrap\combo.css" />
+    <Content Include="Content\themes\bootstrap\combobox.css" />
+    <Content Include="Content\themes\bootstrap\datagrid.css" />
+    <Content Include="Content\themes\bootstrap\datebox.css" />
+    <Content Include="Content\themes\bootstrap\dialog.css" />
+    <Content Include="Content\themes\bootstrap\easyui.css" />
+    <Content Include="Content\themes\bootstrap\images\accordion_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\blank.gif" />
+    <Content Include="Content\themes\bootstrap\images\calendar_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\combo_arrow.png" />
+    <Content Include="Content\themes\bootstrap\images\datagrid_icons.png" />
+    <Content Include="Content\themes\bootstrap\images\datebox_arrow.png" />
+    <Content Include="Content\themes\bootstrap\images\layout_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\bootstrap\images\loading.gif" />
+    <Content Include="Content\themes\bootstrap\images\menu_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\messager_icons.png" />
+    <Content Include="Content\themes\bootstrap\images\pagination_icons.png" />
+    <Content Include="Content\themes\bootstrap\images\panel_tools.png" />
+    <Content Include="Content\themes\bootstrap\images\searchbox_button.png" />
+    <Content Include="Content\themes\bootstrap\images\slider_handle.png" />
+    <Content Include="Content\themes\bootstrap\images\spinner_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\tabs_icons.png" />
+    <Content Include="Content\themes\bootstrap\images\tree_icons.png" />
+    <Content Include="Content\themes\bootstrap\images\validatebox_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\validatebox_warning.png" />
+    <Content Include="Content\themes\bootstrap\layout.css" />
+    <Content Include="Content\themes\bootstrap\linkbutton.css" />
+    <Content Include="Content\themes\bootstrap\menu.css" />
+    <Content Include="Content\themes\bootstrap\menubutton.css" />
+    <Content Include="Content\themes\bootstrap\messager.css" />
+    <Content Include="Content\themes\bootstrap\pagination.css" />
+    <Content Include="Content\themes\bootstrap\panel.css" />
+    <Content Include="Content\themes\bootstrap\progressbar.css" />
+    <Content Include="Content\themes\bootstrap\propertygrid.css" />
+    <Content Include="Content\themes\bootstrap\searchbox.css" />
+    <Content Include="Content\themes\bootstrap\slider.css" />
+    <Content Include="Content\themes\bootstrap\spinner.css" />
+    <Content Include="Content\themes\bootstrap\splitbutton.css" />
+    <Content Include="Content\themes\bootstrap\tabs.css" />
+    <Content Include="Content\themes\bootstrap\tree.css" />
+    <Content Include="Content\themes\bootstrap\validatebox.css" />
+    <Content Include="Content\themes\bootstrap\window.css" />
+    <Content Include="Content\themes\default\accordion.css" />
+    <Content Include="Content\themes\default\calendar.css" />
+    <Content Include="Content\themes\default\combo.css" />
+    <Content Include="Content\themes\default\combobox.css" />
+    <Content Include="Content\themes\default\datagrid.css" />
+    <Content Include="Content\themes\default\datebox.css" />
+    <Content Include="Content\themes\default\dialog.css" />
+    <Content Include="Content\themes\default\easyui.css" />
+    <Content Include="Content\themes\default\images\accordion_arrows.png" />
+    <Content Include="Content\themes\default\images\blank.gif" />
+    <Content Include="Content\themes\default\images\calendar_arrows.png" />
+    <Content Include="Content\themes\default\images\combo_arrow.png" />
+    <Content Include="Content\themes\default\images\datagrid_icons.png" />
+    <Content Include="Content\themes\default\images\datebox_arrow.png" />
+    <Content Include="Content\themes\default\images\layout_arrows.png" />
+    <Content Include="Content\themes\default\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\default\images\loading.gif" />
+    <Content Include="Content\themes\default\images\menu_arrows.png" />
+    <Content Include="Content\themes\default\images\messager_icons.png" />
+    <Content Include="Content\themes\default\images\pagination_icons.png" />
+    <Content Include="Content\themes\default\images\panel_tools.png" />
+    <Content Include="Content\themes\default\images\searchbox_button.png" />
+    <Content Include="Content\themes\default\images\slider_handle.png" />
+    <Content Include="Content\themes\default\images\spinner_arrows.png" />
+    <Content Include="Content\themes\default\images\tabs_icons.png" />
+    <Content Include="Content\themes\default\images\tree_icons.png" />
+    <Content Include="Content\themes\default\images\validatebox_arrows.png" />
+    <Content Include="Content\themes\default\images\validatebox_warning.png" />
+    <Content Include="Content\themes\default\layout.css" />
+    <Content Include="Content\themes\default\linkbutton.css" />
+    <Content Include="Content\themes\default\menu.css" />
+    <Content Include="Content\themes\default\menubutton.css" />
+    <Content Include="Content\themes\default\messager.css" />
+    <Content Include="Content\themes\default\pagination.css" />
+    <Content Include="Content\themes\default\panel.css" />
+    <Content Include="Content\themes\default\progressbar.css" />
+    <Content Include="Content\themes\default\propertygrid.css" />
+    <Content Include="Content\themes\default\searchbox.css" />
+    <Content Include="Content\themes\default\slider.css" />
+    <Content Include="Content\themes\default\spinner.css" />
+    <Content Include="Content\themes\default\splitbutton.css" />
+    <Content Include="Content\themes\default\tabs.css" />
+    <Content Include="Content\themes\default\tree.css" />
+    <Content Include="Content\themes\default\validatebox.css" />
+    <Content Include="Content\themes\default\window.css" />
+    <Content Include="Content\themes\gray\accordion.css" />
+    <Content Include="Content\themes\gray\calendar.css" />
+    <Content Include="Content\themes\gray\combo.css" />
+    <Content Include="Content\themes\gray\combobox.css" />
+    <Content Include="Content\themes\gray\datagrid.css" />
+    <Content Include="Content\themes\gray\datebox.css" />
+    <Content Include="Content\themes\gray\dialog.css" />
+    <Content Include="Content\themes\gray\easyui.css" />
+    <Content Include="Content\themes\gray\images\accordion_arrows.png" />
+    <Content Include="Content\themes\gray\images\blank.gif" />
+    <Content Include="Content\themes\gray\images\calendar_arrows.png" />
+    <Content Include="Content\themes\gray\images\combo_arrow.png" />
+    <Content Include="Content\themes\gray\images\datagrid_icons.png" />
+    <Content Include="Content\themes\gray\images\datebox_arrow.png" />
+    <Content Include="Content\themes\gray\images\layout_arrows.png" />
+    <Content Include="Content\themes\gray\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\gray\images\loading.gif" />
+    <Content Include="Content\themes\gray\images\menu_arrows.png" />
+    <Content Include="Content\themes\gray\images\messager_icons.png" />
+    <Content Include="Content\themes\gray\images\pagination_icons.png" />
+    <Content Include="Content\themes\gray\images\panel_tools.png" />
+    <Content Include="Content\themes\gray\images\searchbox_button.png" />
+    <Content Include="Content\themes\gray\images\slider_handle.png" />
+    <Content Include="Content\themes\gray\images\spinner_arrows.png" />
+    <Content Include="Content\themes\gray\images\tabs_icons.png" />
+    <Content Include="Content\themes\gray\images\tree_icons.png" />
+    <Content Include="Content\themes\gray\images\validatebox_arrows.png" />
+    <Content Include="Content\themes\gray\images\validatebox_warning.png" />
+    <Content Include="Content\themes\gray\layout.css" />
+    <Content Include="Content\themes\gray\linkbutton.css" />
+    <Content Include="Content\themes\gray\menu.css" />
+    <Content Include="Content\themes\gray\menubutton.css" />
+    <Content Include="Content\themes\gray\messager.css" />
+    <Content Include="Content\themes\gray\pagination.css" />
+    <Content Include="Content\themes\gray\panel.css" />
+    <Content Include="Content\themes\gray\progressbar.css" />
+    <Content Include="Content\themes\gray\propertygrid.css" />
+    <Content Include="Content\themes\gray\searchbox.css" />
+    <Content Include="Content\themes\gray\slider.css" />
+    <Content Include="Content\themes\gray\spinner.css" />
+    <Content Include="Content\themes\gray\splitbutton.css" />
+    <Content Include="Content\themes\gray\tabs.css" />
+    <Content Include="Content\themes\gray\tree.css" />
+    <Content Include="Content\themes\gray\validatebox.css" />
+    <Content Include="Content\themes\gray\window.css" />
+    <Content Include="Content\themes\icon.css" />
+    <Content Include="Content\themes\icons\anquantuichu.gif" />
+    <Content Include="Content\themes\icons\back.png" />
+    <Content Include="Content\themes\icons\bangzhu.gif" />
+    <Content Include="Content\themes\icons\blank.gif" />
+    <Content Include="Content\themes\icons\cancel.png" />
+    <Content Include="Content\themes\icons\clear.png" />
+    <Content Include="Content\themes\icons\cut.png" />
+    <Content Include="Content\themes\icons\deleteimge.png" />
+    <Content Include="Content\themes\icons\direction.gif" />
+    <Content Include="Content\themes\icons\duanxinxi.gif" />
+    <Content Include="Content\themes\icons\edit_add.png" />
+    <Content Include="Content\themes\icons\edit_remove.png" />
+    <Content Include="Content\themes\icons\excel.png" />
+    <Content Include="Content\themes\icons\excelcss.jpg" />
+    <Content Include="Content\themes\icons\filesave.png" />
+    <Content Include="Content\themes\icons\glyphicons-halflings-white.png" />
+    <Content Include="Content\themes\icons\glyphicons-halflings.png" />
+    <Content Include="Content\themes\icons\header.png" />
+    <Content Include="Content\themes\icons\help.png" />
+    <Content Include="Content\themes\icons\mimaxiugai.gif" />
+    <Content Include="Content\themes\icons\mini_add.png" />
+    <Content Include="Content\themes\icons\mini_edit.png" />
+    <Content Include="Content\themes\icons\mini_refresh.png" />
+    <Content Include="Content\themes\icons\no.png" />
+    <Content Include="Content\themes\icons\ok.png" />
+    <Content Include="Content\themes\icons\openmail.png" />
+    <Content Include="Content\themes\icons\password_bg.gif" />
+    <Content Include="Content\themes\icons\pencil.png" />
+    <Content Include="Content\themes\icons\print.png" />
+    <Content Include="Content\themes\icons\redo.png" />
+    <Content Include="Content\themes\icons\reload.png" />
+    <Content Include="Content\themes\icons\right.png" />
+    <Content Include="Content\themes\icons\search.png" />
+    <Content Include="Content\themes\icons\sendmail.png" />
+    <Content Include="Content\themes\icons\sum.png" />
+    <Content Include="Content\themes\icons\tabicons.png" />
+    <Content Include="Content\themes\icons\tip.png" />
+    <Content Include="Content\themes\icons\undo.png" />
+    <Content Include="Content\themes\icons\username_bg.gif" />
+    <Content Include="Content\themes\icons\view.png" />
+    <Content Include="Content\themes\main.css" />
+    <Content Include="Content\themes\metro-blue\accordion.css" />
+    <Content Include="Content\themes\metro-blue\calendar.css" />
+    <Content Include="Content\themes\metro-blue\combo.css" />
+    <Content Include="Content\themes\metro-blue\combobox.css" />
+    <Content Include="Content\themes\metro-blue\datagrid.css" />
+    <Content Include="Content\themes\metro-blue\datebox.css" />
+    <Content Include="Content\themes\metro-blue\dialog.css" />
+    <Content Include="Content\themes\metro-blue\easyui.css" />
+    <Content Include="Content\themes\metro-blue\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\blank.gif" />
+    <Content Include="Content\themes\metro-blue\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro-blue\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro-blue\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro-blue\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro-blue\images\loading.gif" />
+    <Content Include="Content\themes\metro-blue\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\messager_icons.png" />
+    <Content Include="Content\themes\metro-blue\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro-blue\images\panel_tools.png" />
+    <Content Include="Content\themes\metro-blue\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro-blue\images\slider_handle.png" />
+    <Content Include="Content\themes\metro-blue\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro-blue\images\tree_icons.png" />
+    <Content Include="Content\themes\metro-blue\images\validatebox_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro-blue\layout.css" />
+    <Content Include="Content\themes\metro-blue\linkbutton.css" />
+    <Content Include="Content\themes\metro-blue\menu.css" />
+    <Content Include="Content\themes\metro-blue\menubutton.css" />
+    <Content Include="Content\themes\metro-blue\messager.css" />
+    <Content Include="Content\themes\metro-blue\pagination.css" />
+    <Content Include="Content\themes\metro-blue\panel.css" />
+    <Content Include="Content\themes\metro-blue\progressbar.css" />
+    <Content Include="Content\themes\metro-blue\propertygrid.css" />
+    <Content Include="Content\themes\metro-blue\searchbox.css" />
+    <Content Include="Content\themes\metro-blue\slider.css" />
+    <Content Include="Content\themes\metro-blue\spinner.css" />
+    <Content Include="Content\themes\metro-blue\splitbutton.css" />
+    <Content Include="Content\themes\metro-blue\tabs.css" />
+    <Content Include="Content\themes\metro-blue\tree.css" />
+    <Content Include="Content\themes\metro-blue\validatebox.css" />
+    <Content Include="Content\themes\metro-blue\window.css" />
+    <Content Include="Content\themes\metro-gray\accordion.css" />
+    <Content Include="Content\themes\metro-gray\calendar.css" />
+    <Content Include="Content\themes\metro-gray\combo.css" />
+    <Content Include="Content\themes\metro-gray\combobox.css" />
+    <Content Include="Content\themes\metro-gray\datagrid.css" />
+    <Content Include="Content\themes\metro-gray\datebox.css" />
+    <Content Include="Content\themes\metro-gray\dialog.css" />
+    <Content Include="Content\themes\metro-gray\easyui.css" />
+    <Content Include="Content\themes\metro-gray\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\blank.gif" />
+    <Content Include="Content\themes\metro-gray\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro-gray\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro-gray\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro-gray\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro-gray\images\loading.gif" />
+    <Content Include="Content\themes\metro-gray\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\messager_icons.png" />
+    <Content Include="Content\themes\metro-gray\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro-gray\images\panel_tools.png" />
+    <Content Include="Content\themes\metro-gray\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro-gray\images\slider_handle.png" />
+    <Content Include="Content\themes\metro-gray\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro-gray\images\tree_icons.png" />
+    <Content Include="Content\themes\metro-gray\images\validatebox_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro-gray\layout.css" />
+    <Content Include="Content\themes\metro-gray\linkbutton.css" />
+    <Content Include="Content\themes\metro-gray\menu.css" />
+    <Content Include="Content\themes\metro-gray\menubutton.css" />
+    <Content Include="Content\themes\metro-gray\messager.css" />
+    <Content Include="Content\themes\metro-gray\pagination.css" />
+    <Content Include="Content\themes\metro-gray\panel.css" />
+    <Content Include="Content\themes\metro-gray\progressbar.css" />
+    <Content Include="Content\themes\metro-gray\propertygrid.css" />
+    <Content Include="Content\themes\metro-gray\searchbox.css" />
+    <Content Include="Content\themes\metro-gray\slider.css" />
+    <Content Include="Content\themes\metro-gray\spinner.css" />
+    <Content Include="Content\themes\metro-gray\splitbutton.css" />
+    <Content Include="Content\themes\metro-gray\tabs.css" />
+    <Content Include="Content\themes\metro-gray\tree.css" />
+    <Content Include="Content\themes\metro-gray\validatebox.css" />
+    <Content Include="Content\themes\metro-gray\window.css" />
+    <Content Include="Content\themes\metro-green\accordion.css" />
+    <Content Include="Content\themes\metro-green\calendar.css" />
+    <Content Include="Content\themes\metro-green\combo.css" />
+    <Content Include="Content\themes\metro-green\combobox.css" />
+    <Content Include="Content\themes\metro-green\datagrid.css" />
+    <Content Include="Content\themes\metro-green\datebox.css" />
+    <Content Include="Content\themes\metro-green\dialog.css" />
+    <Content Include="Content\themes\metro-green\easyui.css" />
+    <Content Include="Content\themes\metro-green\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\blank.gif" />
+    <Content Include="Content\themes\metro-green\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro-green\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro-green\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro-green\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro-green\images\loading.gif" />
+    <Content Include="Content\themes\metro-green\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\messager_icons.png" />
+    <Content Include="Content\themes\metro-green\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro-green\images\panel_tools.png" />
+    <Content Include="Content\themes\metro-green\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro-green\images\slider_handle.png" />
+    <Content Include="Content\themes\metro-green\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro-green\images\tree_icons.png" />
+    <Content Include="Content\themes\metro-green\images\validatebox_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro-green\layout.css" />
+    <Content Include="Content\themes\metro-green\linkbutton.css" />
+    <Content Include="Content\themes\metro-green\menu.css" />
+    <Content Include="Content\themes\metro-green\menubutton.css" />
+    <Content Include="Content\themes\metro-green\messager.css" />
+    <Content Include="Content\themes\metro-green\pagination.css" />
+    <Content Include="Content\themes\metro-green\panel.css" />
+    <Content Include="Content\themes\metro-green\progressbar.css" />
+    <Content Include="Content\themes\metro-green\propertygrid.css" />
+    <Content Include="Content\themes\metro-green\searchbox.css" />
+    <Content Include="Content\themes\metro-green\slider.css" />
+    <Content Include="Content\themes\metro-green\spinner.css" />
+    <Content Include="Content\themes\metro-green\splitbutton.css" />
+    <Content Include="Content\themes\metro-green\tabs.css" />
+    <Content Include="Content\themes\metro-green\tree.css" />
+    <Content Include="Content\themes\metro-green\validatebox.css" />
+    <Content Include="Content\themes\metro-green\window.css" />
+    <Content Include="Content\themes\metro-orange\accordion.css" />
+    <Content Include="Content\themes\metro-orange\calendar.css" />
+    <Content Include="Content\themes\metro-orange\combo.css" />
+    <Content Include="Content\themes\metro-orange\combobox.css" />
+    <Content Include="Content\themes\metro-orange\datagrid.css" />
+    <Content Include="Content\themes\metro-orange\datebox.css" />
+    <Content Include="Content\themes\metro-orange\dialog.css" />
+    <Content Include="Content\themes\metro-orange\easyui.css" />
+    <Content Include="Content\themes\metro-orange\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\blank.gif" />
+    <Content Include="Content\themes\metro-orange\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro-orange\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro-orange\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro-orange\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro-orange\images\loading.gif" />
+    <Content Include="Content\themes\metro-orange\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\messager_icons.png" />
+    <Content Include="Content\themes\metro-orange\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro-orange\images\panel_tools.png" />
+    <Content Include="Content\themes\metro-orange\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro-orange\images\slider_handle.png" />
+    <Content Include="Content\themes\metro-orange\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro-orange\images\tree_icons.png" />
+    <Content Include="Content\themes\metro-orange\images\validatebox_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro-orange\layout.css" />
+    <Content Include="Content\themes\metro-orange\linkbutton.css" />
+    <Content Include="Content\themes\metro-orange\menu.css" />
+    <Content Include="Content\themes\metro-orange\menubutton.css" />
+    <Content Include="Content\themes\metro-orange\messager.css" />
+    <Content Include="Content\themes\metro-orange\pagination.css" />
+    <Content Include="Content\themes\metro-orange\panel.css" />
+    <Content Include="Content\themes\metro-orange\progressbar.css" />
+    <Content Include="Content\themes\metro-orange\propertygrid.css" />
+    <Content Include="Content\themes\metro-orange\searchbox.css" />
+    <Content Include="Content\themes\metro-orange\slider.css" />
+    <Content Include="Content\themes\metro-orange\spinner.css" />
+    <Content Include="Content\themes\metro-orange\splitbutton.css" />
+    <Content Include="Content\themes\metro-orange\tabs.css" />
+    <Content Include="Content\themes\metro-orange\tree.css" />
+    <Content Include="Content\themes\metro-orange\validatebox.css" />
+    <Content Include="Content\themes\metro-orange\window.css" />
+    <Content Include="Content\themes\metro-red\accordion.css" />
+    <Content Include="Content\themes\metro-red\calendar.css" />
+    <Content Include="Content\themes\metro-red\combo.css" />
+    <Content Include="Content\themes\metro-red\combobox.css" />
+    <Content Include="Content\themes\metro-red\datagrid.css" />
+    <Content Include="Content\themes\metro-red\datebox.css" />
+    <Content Include="Content\themes\metro-red\dialog.css" />
+    <Content Include="Content\themes\metro-red\easyui.css" />
+    <Content Include="Content\themes\metro-red\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\blank.gif" />
+    <Content Include="Content\themes\metro-red\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro-red\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro-red\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro-red\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro-red\images\loading.gif" />
+    <Content Include="Content\themes\metro-red\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\messager_icons.png" />
+    <Content Include="Content\themes\metro-red\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro-red\images\panel_tools.png" />
+    <Content Include="Content\themes\metro-red\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro-red\images\slider_handle.png" />
+    <Content Include="Content\themes\metro-red\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro-red\images\tree_icons.png" />
+    <Content Include="Content\themes\metro-red\images\validatebox_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro-red\layout.css" />
+    <Content Include="Content\themes\metro-red\linkbutton.css" />
+    <Content Include="Content\themes\metro-red\menu.css" />
+    <Content Include="Content\themes\metro-red\menubutton.css" />
+    <Content Include="Content\themes\metro-red\messager.css" />
+    <Content Include="Content\themes\metro-red\pagination.css" />
+    <Content Include="Content\themes\metro-red\panel.css" />
+    <Content Include="Content\themes\metro-red\progressbar.css" />
+    <Content Include="Content\themes\metro-red\propertygrid.css" />
+    <Content Include="Content\themes\metro-red\searchbox.css" />
+    <Content Include="Content\themes\metro-red\slider.css" />
+    <Content Include="Content\themes\metro-red\spinner.css" />
+    <Content Include="Content\themes\metro-red\splitbutton.css" />
+    <Content Include="Content\themes\metro-red\tabs.css" />
+    <Content Include="Content\themes\metro-red\tree.css" />
+    <Content Include="Content\themes\metro-red\validatebox.css" />
+    <Content Include="Content\themes\metro-red\window.css" />
+    <Content Include="Content\themes\metro\accordion.css" />
+    <Content Include="Content\themes\metro\calendar.css" />
+    <Content Include="Content\themes\metro\combo.css" />
+    <Content Include="Content\themes\metro\combobox.css" />
+    <Content Include="Content\themes\metro\datagrid.css" />
+    <Content Include="Content\themes\metro\datebox.css" />
+    <Content Include="Content\themes\metro\dialog.css" />
+    <Content Include="Content\themes\metro\easyui.css" />
+    <Content Include="Content\themes\metro\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro\images\blank.gif" />
+    <Content Include="Content\themes\metro\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro\images\loading.gif" />
+    <Content Include="Content\themes\metro\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro\images\messager_icons.png" />
+    <Content Include="Content\themes\metro\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro\images\panel_tools.png" />
+    <Content Include="Content\themes\metro\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro\images\slider_handle.png" />
+    <Content Include="Content\themes\metro\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro\images\tree_icons.png" />
+    <Content Include="Content\themes\metro\images\validatebox_arrows.png" />
+    <Content Include="Content\themes\metro\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro\layout.css" />
+    <Content Include="Content\themes\metro\linkbutton.css" />
+    <Content Include="Content\themes\metro\menu.css" />
+    <Content Include="Content\themes\metro\menubutton.css" />
+    <Content Include="Content\themes\metro\messager.css" />
+    <Content Include="Content\themes\metro\pagination.css" />
+    <Content Include="Content\themes\metro\panel.css" />
+    <Content Include="Content\themes\metro\progressbar.css" />
+    <Content Include="Content\themes\metro\propertygrid.css" />
+    <Content Include="Content\themes\metro\searchbox.css" />
+    <Content Include="Content\themes\metro\slider.css" />
+    <Content Include="Content\themes\metro\spinner.css" />
+    <Content Include="Content\themes\metro\splitbutton.css" />
+    <Content Include="Content\themes\metro\tabs.css" />
+    <Content Include="Content\themes\metro\tree.css" />
+    <Content Include="Content\themes\metro\validatebox.css" />
+    <Content Include="Content\themes\metro\window.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\datagrid-bufferview.js" />
+    <Content Include="Scripts\easyui-lang-zh_CN.js" />
+    <Content Include="Scripts\jquery-1.8.0.min.js" />
+    <Content Include="Scripts\jquery.easyui.functionextend.js" />
+    <Content Include="Scripts\jquery.easyui.min.js" />
+    <Content Include="Scripts\jquery.easyui.validextend.js" />
+    <Content Include="Scripts\JSHelper.js" />
+    <Content Include="Scripts\js\crop.js" />
+    <Content Include="Scripts\js\jquery.fineuploader-3.1.min.js" />
+    <Content Include="Scripts\js\jquery.Jcrop.min.js" />
+    <Content Include="test.htm" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\_1uu\Models\" />
+    <Folder Include="Models\" />
+    <Folder Include="Views\Account\" />
+    <Folder Include="Views\Sys\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\About.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\_1uu\Views\Web.config" />
+    <Content Include="Areas\_1uu\Views\Users\_1uublog.cshtml" />
+    <Content Include="Areas\_1uu\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\_1uu\Views\_ViewStart.cshtml" />
+    <None Include="Content\GooFlow\img\Thumbs.db" />
+    <None Include="Content\images\Button\Thumbs.db" />
+    <None Include="Content\images\filetype\Thumbs.db" />
+    <None Include="Content\images\TreeImages\Thumbs.db" />
+    <None Include="Content\themes\black\images\Thumbs.db" />
+    <None Include="Content\themes\bootstrap\images\Thumbs.db" />
+    <None Include="Content\themes\default\images\Thumbs.db" />
+    <None Include="Content\themes\gray\images\Thumbs.db" />
+    <None Include="Content\themes\metro-blue\images\Thumbs.db" />
+    <None Include="Content\themes\metro-gray\images\Thumbs.db" />
+    <None Include="Content\themes\metro-green\images\Thumbs.db" />
+    <None Include="Content\themes\metro-orange\images\Thumbs.db" />
+    <None Include="Content\themes\metro-red\images\Thumbs.db" />
+    <None Include="Content\themes\metro\images\Thumbs.db" />
+    <Content Include="Views\Admin\ModuleManage.cshtml" />
+    <Content Include="Views\Admin\ModuleEdit.cshtml" />
+    <Content Include="Views\Item\DepinfoManage.cshtml" />
+    <Content Include="Views\Item\DepinfoEdit.cshtml" />
+    <Content Include="Views\Item\ItemEdit.cshtml" />
+    <Content Include="Views\Flow\demo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Entity\Entity.csproj">
+      <Project>{5CBA8F40-3FE7-4F7D-8752-0BE8A3737D1E}</Project>
+      <Name>Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IBLL\IBLL.csproj">
+      <Project>{BBEEF91A-8D26-4567-AA6B-79E85C2CFAB3}</Project>
+      <Name>IBLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{6E2C6DB2-A7DB-4C56-854F-89EF74216709}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TXF.IOC\TXF.IOC.csproj">
+      <Project>{32EFD69A-0ECF-478B-8467-8B87397D0086}</Project>
+      <Name>TXF.IOC</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>20494</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

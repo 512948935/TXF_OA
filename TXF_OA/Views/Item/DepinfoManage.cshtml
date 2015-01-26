@@ -1,0 +1,154 @@
+﻿@{
+    ViewBag.Title = "部门管理";
+}
+<div style="height:100%">
+<table class="easyui-datagrid" id="tt" name="datagrid" width="100%" border="0"
+       data-options="title:'部门管理',
+                     url:encodeURI(url),
+                     pageNumber:page,
+                     pageSize:pagesize,
+                     onLoadSuccess:loadSuccess,
+                     fit:true,
+                     rowStyler:rowstyler,
+                     toolbar:toolbar">
+        <thead data-options="frozen:true">
+            <tr>
+                <th data-options="field:'ck',checkbox:true"></th>
+                <th data-options="field:'ID',hidden:true,title:'ID'"></th>
+                <th data-options="field:'ItemID',hidden:true,title:'ItemID'"></th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th data-options="field:'ItemNo',width:'80',align:'center',sortable:'true',where:'true'">部门代码</th>
+                <th data-options="field:'ItemName',where:'true'">部门名称</th>
+                <th data-options="field:'Manager',width:'80',align:'center'">部门主管</th>
+                <th data-options="field:'Phone',width:'80',align:'center'">部门电话</th>
+                <th data-options="field:'Fax',width:'80',align:'center'">传真</th>
+                <th data-options="field:'IsDelete',align:'center',formatter:boolFormatter">是否禁用</th>
+            </tr>
+        </thead>
+</table>
+<div class="easyui-dialog" id="search_dlg"></div>
+</div>
+<script type="text/javascript">
+    var page = getUrlParam('page') == '' ? 1 : parseInt(getUrlParam('page'));
+    var pagesize = getUrlParam('pagesize') == '' ? 20 : getUrlParam('pagesize');
+    var code = window.parent.document.getElementById("t_NodeCode");
+    var param = {
+        "code": code == null ? "" : code.value,
+        "isDelete": getUrlParam("action") == "choose" ? "1" : "",
+        "where": getUrlParam1('where')
+    }
+    var url = '/Item/GetDepinfoList?code=' + param.code + '&isDelete=' + param.isDelete + '&where=' + param.where;
+    $(function () {
+        //datagridResize();
+        $("#btnadd").hide();
+        if (getUrlParam("action") == "choose") {
+            $("#btnedit").hide();
+            $("#btnedit").parent().next().hide();
+            $("#btnremove").hide();
+            $("#btnremove").parent().next().hide();
+            $("#btnexport").hide();
+            $("#btnexport").parent().next().hide();
+        }
+        else if (param.code != "")
+            $("#btnadd").show();
+        //创建过滤查询对话框
+        getWhereColumns($("#tt"), function (col) {
+            var href = '/Item/CreateWhereHTML?col=' + col;
+            showMyDialog($("#search_dlg"), '筛选条件', 'tu1611', href, 350, function () {
+                param.where = "";
+                $("#ttSearch input:text").each(function () {
+                    param.where += '{Key:"' + $(this).attr('name') + '",Value:"' + $.strFilter($(this).val()) + '",Symbol:"like"},';
+                });
+                if (param.where != "") {
+                    param.where = "[" + $.trimend(param.where, ',') + "]";
+                    $('#tt').datagrid('options').url = '/Com/GetDepinfoList?code=' + param.code + '&isDelete=' + param.isDelete + '&where=' + escape(param.where);
+                    $("#tt").datagrid('load');
+                }
+            });
+        });
+    })
+    var backUrl;
+    var loadSuccess = function () {
+        var p = $('#tt').datagrid('getPager');
+        var page = p.data("pagination").options.pageNumber;
+        var size = p.data("pagination").options.pageSize;
+        backUrl = '/Item/DepinfoManage?where=' + param.where + '&page=' + page + '&pagesize=' + size;
+    }
+    var toolbar = [{
+        id: 'btnadd',
+        text: '添加',
+        iconCls: 'icon-add',
+        handler: function () {
+            document.location = '/Item/DepinfoEdit?backUrl=' + escape(backUrl);
+        }
+    }, '-', {
+        id: 'btnedit',
+        text: '修改',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var selections = $('#tt').datagrid('getSelections');
+            if (selections.length == 1)
+                document.location = '/Item/DepinfoEdit?backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
+            else
+                jqAlert('请选择一条记录！', 'warning')
+        }
+    }, '-', {
+        id: 'btnremove',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: function () {
+            var selections = $('#tt').datagrid('getSelections');
+            if (selections.valueOf() == '')
+                jqAlert('请选择一条记录！', 'warning')
+            else {
+                var id = "(";
+                for (var i = 0; i < selections.length; i++) {
+                    id += selections[i].ID + ",";
+                }
+                id += "-1)";
+                uiConfirm("您确认要删除当前信息吗.", function () {
+                    $.post("/Item/DelDepinfo", { "ID": id }, function (data) {
+                        if (data.status == 1) {
+                            $("#tt").datagrid('reload');
+                        }
+                        else
+                            jqAlert('删除失败:' + data, 'error')
+                    });
+                });
+            }
+        }
+    }, '-',
+            {
+                id: 'btnsearch',
+                text: '查询',
+                iconCls: 'icon-search',
+                handler: function () {
+                    $('#search_dlg').dialog('open');
+                }
+            }, '-', {
+                id: "btnexport",
+                text: '导出',
+                iconCls: 'icon-excelcss',
+                handler: function () {
+                    getExportColumns($("#tt"), function (data) {
+                        if (data != "") {
+                            $("#tt").datagrid('reload');
+                            var url = "/Item/ExportDepinfo?title=" + escape("部门信息") + "&code=" + code + "&columns=" + data;
+                            window.open(url);
+                        }
+                    });
+                }
+            }];
+    var boolFormatter = function (value) {
+        if (value == "True") return "是"
+        return "否";
+    }
+    var rowstyler = function (index, row) {
+        if (row.IsDelete == "True") {
+            return 'color:#FF0000;';
+        }
+    }
+</script>

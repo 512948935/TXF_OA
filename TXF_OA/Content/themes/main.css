@@ -1,0 +1,37 @@
+﻿body, div, address, blockquote, iframe, ul, ol, dl, dt, dd, li, dl, h1, h2, h3, h4, h5, h6, p, pre, table, caption, th, td, form, legend, fieldset, input, button, select, textarea {margin:0; padding:0; font-weight: normal;font-style: normal;font-size: 100%; font-family: inherit;} 
+ol, ul ,li{list-style: none;} 
+img {border: 0;vertical-align:middle;}
+body{
+    height:100%;
+    overflow:hidden;
+    font-family:Verdana, Arial, '宋体';
+	font-size:12px;
+} 
+/*此上面代码是初始CSS模板，下面是新写CSS布局框架代码*/ 
+#header{height:77px;} 
+#header .h_left {background:url(../../Content/images/TitleBg.gif);width:52%;float:left;}
+#header .h_right{background:url(../../Content/images/TitleBg.gif) repeat-x;width:48%;float:left;line-height:50px;text-align:right;}
+#centers{width:100%;}
+#footer{height:24px;background:url(../../Content/images/BottomBg.gif);}
+
+a:link {font-size:12px;color:#000000;text-decoration:none;}
+a:visited {font-size: 12px;	color:#000000;text-decoration: none;}
+a:hover {font-size: 12px;color:#CF7500;text-decoration: none;}
+
+a.na:link {font-size: 12px;	font-weight:bold;color:Red;text-decoration: none;}
+a.na:visited {font-size: 12px;font-weight:bold;color:Red;text-decoration: none;}
+a.na:hover {font-size: 12px;font-weight:bold;color:Red;text-decoration: underline;}
+
+a.black:link {font-size: 12px;color:Black;text-decoration: none;}
+a.black:visited {font-size: 12px;color:Black;text-decoration: none;}
+a.black:hover {font-size: 12px;color:Black;text-decoration: underline;}
+
+a.blackBold:link {font-size: 12px;font-weight:bold;color:Black;text-decoration: underline;}
+a.blackBold:visited {font-size: 12px;	font-weight:bold;color:Black;text-decoration: underline;}
+a.blackBold:hover {font-size: 12px;font-weight:bold;color:Black;text-decoration: underline;}
+
+a.white:link {font-size: 12px;	color:White;text-decoration: none;}
+a.white:visited {font-size: 12px;	color:White;text-decoration: none;}
+a.white:hover {font-size: 12px;color:White;text-decoration: none;}
+
+.hand{cursor:pointer;}

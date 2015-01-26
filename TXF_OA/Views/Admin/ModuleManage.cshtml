@@ -1,0 +1,303 @@
+﻿@{
+    ViewBag.Title = "系统模块管理";
+}
+<div id="div_layout" class="easyui-layout" style="width:100%;height:100%">
+    <!------------------------------左部-----------------------------> 
+    <div data-options="region:'west',split:true,tools:'#toolbar',collapsible:false" iconCls='tu1419' title="系统菜单" id="left" style="width:250px;padding:5px">
+        <ul id="ul_tree"></ul>
+        <!----------------------------------模块编辑对话框------------------------------------------->
+        <div id="edit_dlg" style="padding:5px;">
+           <form id="edit_form" method="post" novalidate="novalidate" >
+               <table id="tt" class="tablestyle" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">            
+                <tr>
+                    <td class="td1" width="40%">模块代码：</td>
+                    <td class="td2">
+                        <input type="text" id="t_ModuleCode" name="ModuleCode" required="true" missingMessage='必填' />
+                        <input type="hidden" id="t_ID" name="ID" value="0" />
+                        <input type="hidden" id="t_PreCode" name="PreCode" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td1">模块名称：</td>
+                    <td class="td2">
+                        <input type="text" id="t_ModuleName" name="ModuleName" required="true" missingMessage='必填' />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td1">模块图标：</td>
+                    <td class="td2"><input type="text" id="t_Icon" name="Icon"/></td>
+                </tr>
+                <tr>
+                    <td class="td1">是否禁用：</td>
+                    <td class="td2">
+                        <input type="checkbox" class="checkbox" id="t_IsDelete" name="IsDelete" value="true" />
+                    </td>
+                </tr>
+                </table>    
+         </form>
+        <!--树形头部菜单-->
+        <div id="toolbar">
+             <a href="javascript:void(0)" class="icon-add" id="btnAdd"></a>
+             <a href="javascript:void(0)" class="icon-edit" onclick="javascript:$('#btnModify').click();"></a>
+             <a href="javascript:void(0)" class="icon-cut" onclick="javascript:$('#btnDel').click();"></a>
+         </div>
+        <!--树形右键菜单-->
+        <div id="div_menu" class="easyui-menu" style="width:120px;">
+            <div id="btnModify" iconCls='icon-edit'" >修改节点</div>
+		    <div id="btnDel" iconCls='icon-remove'">删除节点</div>
+            <div class="menu-sep"></div>
+		    <div iconCls='tu0103'>折叠节点</div>
+            <div iconCls='tu0203'>展开节点</div>
+            <div></div>
+	     </div> 
+	 </div>
+     </div>
+    <!--------------------------------------中间----------------------------------> 
+    <div data-options="region:'center'" title="页面信息" iconCls='tu1602'>
+        <!------------------------------------列表数据展示------------------------------------------->
+        <table class="easyui-datagrid" id="tt_grid" name="datagrid" width="100%" border="0"
+               data-options="url:url,
+                             fit:true,
+                             rowStyler:rowstyler,
+                             toolbar:toolbar">
+                <thead data-options="frozen:true">
+                    <tr>
+                        <th data-options="field:'ck',checkbox:true"></th>
+                        <th data-options="field:'ID',hidden:true,title:'ID'"></th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th data-options="field:'ModuleCode',align:'center',sortable:'true',where:'true'">页面代码</th>
+                        <th data-options="field:'ModuleName',where:'true'">页面名称</th>
+                        <th data-options="field:'PageUrl'">链接地址</th>
+                        <th data-options="field:'Icon'">页面图标</th>
+                        <th data-options="field:'IsDelete',align:'center',formatter:boolFormatter">是否禁用</th>
+                    </tr>
+                </thead>
+        </table>
+        <div id="search_dlg" style="padding:5px"></div>
+        <div id="edit_win" style="padding:5px;overflow:hidden;">
+             <iframe id="edit_frame" name="frame" frameborder="0" style="width:100%;height:100%;"></iframe>
+        </div>
+     </div>
+</div>
+<script type="text/javascript">
+
+    //#region easyui-datagrid 功能按钮+配置参数
+    var url = "/Admin/GetPageList";
+    var toolbar = [{
+        id: 'btnadd',
+        text: '添加',
+        iconCls: 'icon-add',
+        handler: function () {
+            if ($("#edit_frame").attr("name") != "frame_0") {
+                $("#edit_frame").attr("src", "/Admin/ModuleEdit");
+                $("#edit_frame").attr("name", "frame_0");
+            }
+            $("#edit_win").window('open');
+        }
+    }, '-', {
+        id: 'btnedit',
+        text: '修改',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var selections = $('#tt_grid').datagrid('getSelections');
+            if (selections.length == 1) {
+                var id = selections[0].ID;
+                if ($("#edit_frame").attr("name") != "frame_" + id) {
+                    $("#edit_frame").attr("src", "/Admin/ModuleEdit?ID=" + selections[0].ID);
+                    $("#edit_frame").attr("name", "frame_" + id);
+                }
+                $("#edit_win").window('open');
+            }
+            else
+                jqAlert('请选择一条记录！', 'warning')
+        }
+    }, '-', {
+        id: 'btnremove',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: function () {
+            var selections = $('#tt_grid').datagrid('getSelections');
+            if (selections.length == 0)
+                jqAlert('请选择一条记录！', 'warning')
+            else {
+                var id = "(";
+                for (var i = 0; i < selections.length; i++) {
+                    id += selections[i].ID + ",";
+                }
+                id += "-1)";
+                uiConfirm("您确认要删除当前信息吗.", function () {
+                    $.post("/Admin/DeleteAction", { "ID": id }, function (data) {
+                        if (data.status == 1) {
+                            $("#tt_grid").datagrid('reload');
+                        }
+                        else
+                            jqAlert('删除失败:' + data, 'error')
+                    });
+                });
+            }
+        }
+    }, '-', {
+        id: 'btnsearch',
+        text: '查询',
+        iconCls: 'icon-search',
+        handler: function () {
+            $('#search_dlg').dialog('open');
+        }
+    }];
+    var boolFormatter = function (value) {
+        if (value == "True") return "是"
+        return "否";
+    }
+    var rowstyler = function (index, row) {
+        if (row.IsDelete == "True") {
+            return 'color:#FF0000';
+        }
+    }
+    //#endregion
+
+    //#region 加载事件
+    $(function () {
+        //调整布局大小
+        parent.$("#body_layout").layout('panel', 'center').panel({
+            onResize: function (width, height) {
+                $('#div_layout').layout('resize', {
+                    width: width,
+                    height: height - 30
+                });
+                $("[name=datagrid]").datagrid("resize", width);
+            }
+        });
+        $("#edit_form input:text").each(function () {
+            $(this).addClass('easyui-validatebox textbox txt');
+            if ($(this).attr('required') || $(this).attr('validtype'))
+                $(this).validatebox();
+        });
+        //配置树形控件
+        $('#ul_tree').tree({
+            url: '/Admin/LoadTree',
+            animate: true,
+            lines: true,
+            onLoadError: function () { alert("信息获取失败.") },
+            onContextMenu: function (e, node) {
+                e.preventDefault();
+                $(this).tree('select', node.target);
+                $('#div_menu').menu({
+                    onClick: function (item) {
+                        var isLeaf = $(this).tree('isLeaf', node.target);
+                        if (!isLeaf) {
+                            if (item.text == "展开节点") {
+                                $.post('/Admin/SetNodeState', { state: 'open', id: node.id }, function () {
+                                    $("#uiTree").tree("reload");
+                                });
+                            }
+                            if (item.text == "折叠节点") {
+                                $.post('/Admin/SetNodeState', { state: 'closed', id: node.id }, function () {
+                                    $("#uiTree").tree("reload");
+                                });
+                            }
+                        }
+                    }
+                });
+                $('#div_menu').menu('show', { left: e.pageX, top: e.pageY });
+            },
+            formatter: function (node) {
+                if (node.attributes["IsDelete"] == "True")
+                    return "<span style='color:red'>" + node.text + "</span>";
+                return node.text;
+            },
+            onSelect: function (node) {
+                var code = node.attributes["ModuleCode"];
+                if (code != $("#t_PreCode").val()) {
+                    $('#tt_grid').datagrid('options').url = '/Admin/GetPageList?code=' + code;
+                    $("#tt_grid").datagrid('load');
+                    $("#t_PreCode").val(code);
+                }
+            }
+        });
+        //新增节点
+        $("#btnAdd").click(function () {
+            $("#t_ID").val(0);
+            $("#edit_form")[0].reset(); //重置表单
+            $('#edit_dlg').dialog('open');
+        });
+        //修改节点
+        $("#btnModify").click(function () {
+            var node = $("#ul_tree").tree("getSelected");
+            if (node == null)
+                jqAlert('请选择需要修改的模块名称.', 'warning');
+            else {
+                //表单赋值
+                $("#edit_form").find("input").each(function () {
+                    var val = node.attributes[this.name];
+                    if (this.type == "text" || this.type == "hidden")
+                        $(this).val(val);
+                    else if (this.type == "checkbox")
+                        $(this).attr("checked", val == "True");
+                });
+                $("#t_PreCode").val(node.attributes["ModuleCode"]);
+                $('#edit_dlg').dialog('open');
+            }
+        });
+        //删除节点
+        $("#btnDel").click(function () {
+            var node = $("#ul_tree").tree("getSelected");
+            if (node == null)
+                jqAlert('请选择需要删除的模块名称.', 'warning');
+            else {
+                uiConfirm("确定要删除当前模块吗！", function () {
+                    var postData = { "code": eval(node.attributes).ModuleCode };
+                    $.post("/Admin/DeleteModule", postData, function (data) {
+                        if (data.status == 1) {//删除成功
+                            $("#ul_tree").tree("reload");
+                        }
+                        else
+                            jqAlert('删除失败:' + data, 'error')
+                    });
+                });
+            }
+        });
+        //初始化模块编辑对话框
+        showMyDialog($("#edit_dlg"), '编辑模块信息', 'icon-edit', '', 400,true,function () {
+            if ($("#edit_form").form('validate')) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/SaveAction",
+                    data: $("#edit_form").serializeArray(),
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 1) {//保存成功
+                            $("#edit_dlg").dialog('close');
+                            $("#ul_tree").tree("reload");
+                        }
+                        else {
+                            jqAlert('保存失败:' + data, 'error')
+                        }
+                    }
+                });
+            }
+        });
+        //初始化页面信息对话框
+        showMyWindow($("#edit_win"), '编辑页面信息', 'icon-edit', "", 700, 260);
+        //初始化过滤查询对话框
+        getWhereColumns($("#tt_grid"), function (col) {
+            var href = '/Admin/CreateWhereHTML?col=' + col;
+            showMyDialog($("#search_dlg"), '筛选条件', 'tu1611', href, 350, true, function () {
+                var where = "";
+                $("#ttSearch input:text").each(function () {
+                    where += '{Key:"' + $(this).attr('name') + '",Value:"' + $.strFilter($(this).val()) + '",Symbol:"like"},';
+                });
+                if (where != "") {
+                    where = "[" + $.trimend(where, ',') + "]";
+                    $('#tt_grid').datagrid('options').url = '/Admin/GetPageList?code=' + $("#t_PreCode").val() + '&where=' + escape(where);
+                    $("#tt_grid").datagrid('load');
+                    $('#search_dlg').dialog('close');
+                }
+            });
+        });
+    });
+    //#endregion
+
+</script>
