@@ -4,18 +4,18 @@
 <div id="div_Layout" class="easyui-layout" style="width:100%;height:100%">
    <!--左边-->
    <div data-options="region:'west',split:true,tools:'#toolbar',collapsible:false,iconCls:'tu1419',title:'数据类别'" style="width:300px;padding:5px">
-        <ul id="ui_Tree"></ul>
+        <ul id="ul_tree"></ul>
    </div>
    <!--中间-->
-   <div data-options="region:'center',title:'数据明细',border:false,iconCls:'tu1602'" style="overflow:hidden;">
+   <div data-options="region:'center',title:'数据列表',iconCls:'tu1602'" style="overflow:hidden;">
        <iframe id="mainFrame" name="mainFrame" frameborder="0" style="width:100%;height:100%;"></iframe>
    </div>
    <!--节点编辑内容-->
-    <div id="node_Dialog">
-         <form id="node_Form" method="post" novalidate="novalidate">
-             <table id="ttDialog" class="tablestyle" width="100%" border="0" cellpadding="0" cellspacing="0">            
+    <div id="div_dialog_node">
+         <form id="form_node" method="post" action="">
+             <table id="tt" class="tablestyle" width="100%" border="0" cellpadding="0" cellspacing="0">            
                 <tr>
-                    <td class="td1" width="80">节点代码：</td>
+                    <td class="td1" width="120">节点代码：</td>
                     <td class="td2">
                         <input type="text" id="t_NodeCode" name="NodeCode" required="true" missingMessage='必填' />
                         <input type="hidden" id="t_PreCode" name="PreCode" />
@@ -70,7 +70,7 @@
 
          //#region 树形控件操作
          //配置树形控件
-         $('#ui_Tree').tree({
+         $('#ul_tree').tree({
              url: '/Item/LoadTree',
              animate: true,
              lines: true,
@@ -82,14 +82,14 @@
                      onClick: function (item) {
                          var isLeaf = $(this).tree('isLeaf', node.target);
                          if (!isLeaf) {
-                             if (item.text == "展开节点") {
+                             if (item.text == "折叠节点") {
                                  $.post('/Item/SetNodeState', { id: node.id, state: 'open' }, function () {
-                                     $("#ui_Tree").tree("reload");
+                                     $("#ul_tree").tree("reload");
                                  });
                              }
-                             if (item.text == "折叠节点") {
+                             if (item.text == "展开节点") {
                                  $.post('/Item/SetNodeState', { id: node.id, state: 'closed' }, function () {
-                                     $("#ui_Tree").tree("reload");
+                                     $("#ul_tree").tree("reload");
                                  });
                              }
                          }
@@ -101,7 +101,7 @@
                  if (node.attributes.NodeCode != $("#t_NodeCode").val())
                      $("#mainFrame").attr("src", node.attributes.PageUrl);
                  //赋值
-                 $("#node_Form").find("input:text,input:hidden").each(function () {
+                 $("#form_node").find("input:text,input:hidden").each(function () {
                      var name = $(this).attr('name');
                      $(this).val(node.attributes[name]);
                  });
@@ -111,24 +111,24 @@
          });
          //新增节点
          $("#btnAdd").click(function () {
-             $("#ttDialog tr:eq(2)").show();
-             $('#node_Dialog').dialog('open');
-             $("#node_Form").form('clear')
+             $("#tt tr:eq(2)").show();
+             $('#div_dialog_node').dialog('open');
+             $("#form_node").form('clear')
              $("#t_NodeType").combobox('select', "==请选择==");
          });
          //修改节点
          $("#btnModify").click(function () {
-             var node = $("#ui_Tree").tree("getSelected");
+             var node = $("#ul_tree").tree("getSelected");
              if (node == null)
                  jqAlert('请选择需要修改节点.', 'warning');
              else {
-                 //$("#ttDialog tr:eq(2)").hide();
-                 $('#node_Dialog').dialog('open');
+                 //$("#tt tr:eq(2)").hide();
+                 $('#div_dialog_node').dialog('open');
              }
          });
          //删除节点
          $("#btnDel").click(function () {
-             var node = $("#ui_Tree").tree("getSelected");
+             var node = $("#ul_tree").tree("getSelected");
              if (node == null)
                  jqAlert('请选择需要删除的节点.', 'warning');
              else {
@@ -136,7 +136,7 @@
                      var postData = { "NodeCode": eval(node.attributes).NodeCode };
                      $.post("/Item/DeleteItem", postData, function (data) {
                          if (data.status == 1) {//删除成功
-                             $("#ui_Tree").tree("reload");
+                             $("#ul_tree").tree("reload");
                              $("#t_NodeCode").val('');
                              window.frames["mainFrame"].document.write('');
                              window.frames["mainFrame"].document.clear();
@@ -148,7 +148,7 @@
              }
          });
          //节点编辑对话框
-         $("#node_Dialog").dialog({
+         $("#div_dialog_node").dialog({
              iconCls: 'tu1602',
              title: '节点操作',
              width: 400,
@@ -157,7 +157,7 @@
              modal: true,
              shadow: false,
              onClose: function () {
-                 var node = $("#ui_Tree").tree("getSelected");
+                 var node = $("#ul_tree").tree("getSelected");
                  if (node == null) {
                      $("#t_ID").val(0);
                      $("#t_NodeCode").val('');
@@ -175,21 +175,21 @@
                  text: '确定',
                  iconCls: 'icon-ok',
                  handler: function () {
-                     if ($("#node_Form").form('validate')) {
+                     if ($("#form_node").form('validate')) {
                          $.ajax({
                              type: "post",
                              url: "/Item/SaveItemInfo",
-                             data: $("#node_Form").serializeArray(),
+                             data: $("#form_node").serializeArray(),
                              async: false,
                              success: function (data) {
                                  if (data.status == 1) {//保存成功
                                      if ($("#t_ID").val() != "") {
-                                         var node = $("#ui_Tree").tree("getSelected");
+                                         var node = $("#ul_tree").tree("getSelected");
                                          if (node.attributes.PageUrl != "")
                                              window.frames["mainFrame"].location = node.attributes.PageUrl;
                                      }
-                                     $("#ui_Tree").tree("reload");
-                                     $('#node_Dialog').dialog('close');
+                                     $("#ul_tree").tree("reload");
+                                     $('#div_dialog_node').dialog('close');
                                  }
                                  else {
                                      jqAlert('保存失败:' + data, 'error')
@@ -202,7 +202,7 @@
                  text: '取消',
                  iconCls: 'icon-cancel',
                  handler: function () {
-                     $('#node_Dialog').dialog('close');
+                     $('#div_dialog_node').dialog('close');
                  }
              }]
          });

@@ -17,9 +17,18 @@ namespace Dao
                 string where = "1=1";
                 if (!string.IsNullOrEmpty(url))
                     where += " AND PageUrl='" + url + "'";
-                string sql = string.Format(@"SELECT * FROM (SELECT a.ID,a.ParentID,a.NodeCode,a.NodeName,a.NodeType,b.PageUrl,a.NodeState
-                                            ,ISNULL(a.TableName,'')TableName FROM dbo.tb_sys_Item a LEFT JOIN dbo.tb_sys_Module b 
-                                             ON b.ID=a.NodeType AND TableName IS NULL)as tt WHERE {0} ORDER BY NodeCode", where);
+                string sql = string.Format(@" SELECT * FROM (SELECT a.ID
+                                                            ,a.ParentID
+                                                            ,a.NodeCode
+                                                            ,a.NodeName
+                                                            ,a.NodeType
+                                                            ,b.PageUrl
+                                                            ,a.NodeState
+                                                            ,ISNULL(a.TableName,'') TableName
+                                                     FROM   dbo.tb_sys_Item a
+                                                            LEFT JOIN dbo.tb_sys_Module b ON b.ID=a.NodeType
+                                                            AND TableName IS NULL
+                                                    ) AS tt WHERE {0} ORDER BY NodeCode", where);
                 return DBHelper.Query(sql);
             }
             catch (Exception ex)

@@ -26,28 +26,29 @@ namespace TXF_OA
         {
             return View();
         }
+        //TODO:显示部门信息
         public string GetDepinfoList(string code = "", string isDelete = "", string where = "")
         {
-            int page = Request["page"] == null ? 1 : int.Parse(Request["page"]);
-            int pagesize = Request["rows"] == null ? 20 : int.Parse(Request["rows"]);
-            int total = 0;
-            List<WhereField> wheres = new List<WhereField>();
-            if (where != "")
-                wheres = JSONStringToList<WhereField>(where);
-            else
-                where = "1=1";
-            foreach (WhereField field in wheres)
-            {
-                if (field.Value.ToString() != "")
-                    where += string.Format(" AND {0} {1} '%{2}%'", field.Key, field.Symbol, field.Value);
-            }
-            DataTable dt = depBLL.GetPageList(page, pagesize, out total, code, isDelete, where);
-            Session["exportData"] = dt;
+            //int page = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            //int pagesize = Request["rows"] == null ? 20 : int.Parse(Request["rows"]);
+            //int total = 0;
+            //List<WhereField> wheres = new List<WhereField>();
+            //if (where != "")
+            //    wheres = JSONStringToList<WhereField>(where);
+            //else
+            //    where = "1=1";
+            //foreach (WhereField field in wheres)
+            //{
+            //    if (field.Value.ToString() != "")
+            //        where += string.Format(" AND {0} {1} '%{2}%'", field.Key, field.Symbol, field.Value);
+            //}
+            //DataTable dt = depBLL.GetPageList(page, pagesize, out total, code, isDelete, where);
+            //Session["exportData"] = dt;
             string jsonStr = "";
-            jsonStr += "{\n";
-            jsonStr += "\"total\":" + total + ",\n";
-            jsonStr += "\"rows\":" + DataTableToJson(dt) + "";
-            jsonStr += "\n}";
+            //jsonStr += "{\n";
+            //jsonStr += "\"total\":" + total + ",\n";
+            //jsonStr += "\"rows\":" + DataTableToJson(dt) + "";
+            //jsonStr += "\n}";
             return jsonStr;
         }
         public ActionResult DelDepinfo(string id)
@@ -137,7 +138,7 @@ namespace TXF_OA
         #endregion
         #endregion
 
-        #region 数据字典管理
+        #region 数据类别管理
         /// <summary>
         /// 页面信息
         /// </summary>

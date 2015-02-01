@@ -1,0 +1,4 @@
+E:\GitHub\TXF_OA\MyCache.Interface\bin\Debug\MyCache.Interface.dll
+E:\GitHub\TXF_OA\MyCache.Interface\bin\Debug\MyCache.Interface.pdb
+E:\GitHub\TXF_OA\MyCache.Interface\obj\Debug\MyCache.Interface.dll
+E:\GitHub\TXF_OA\MyCache.Interface\obj\Debug\MyCache.Interface.pdb

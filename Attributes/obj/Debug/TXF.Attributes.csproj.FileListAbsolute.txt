@@ -22,4 +22,3 @@ E:\GitHub\TXF_OA\Attributes\bin\Debug\TXF.Attributes.dll
 E:\GitHub\TXF_OA\Attributes\bin\Debug\TXF.Attributes.pdb
 E:\GitHub\TXF_OA\Attributes\obj\Debug\TXF.Attributes.dll
 E:\GitHub\TXF_OA\Attributes\obj\Debug\TXF.Attributes.pdb
-E:\GitHub\TXF_OA\Attributes\obj\Debug\TXF.Attributes.csprojResolveAssemblyReference.cache
