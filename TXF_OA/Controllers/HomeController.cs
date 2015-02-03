@@ -22,7 +22,7 @@ namespace TXF_OA
         public string GetAccordionData()
         {
             DataTable dt = moduleBLL.SelectDataTable(where: "ParentID=0", sort: "ModuleCode");
-            string jsonStr = "";
+            string jsonStr = "[]";
             if (dt.Rows.Count > 0)
             {
                 jsonStr = "[";
@@ -32,8 +32,6 @@ namespace TXF_OA
                 }
                 jsonStr = jsonStr.TrimEnd(',') + "]";
             }
-            else
-                jsonStr = "[]";
             return jsonStr;
         }
         private DataTable dt;

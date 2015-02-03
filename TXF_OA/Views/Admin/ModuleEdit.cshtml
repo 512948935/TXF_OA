@@ -2,7 +2,7 @@
     ViewBag.Title = "编辑/修改页面信息";
 }
 <!----------------------------------页面编辑对话框------------------------------------------->
-<form id="edit_form" method="post" novalidate="novalidate" >
+<form id="form_page" method="post" action="">
       <table id="page_tt" class="tablestyle" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">            
         <tr>
             <td class="td1" width="40%">页面代码：</td>
@@ -54,41 +54,23 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        $("#edit_form input:text").each(function () {
+        $("#form_page input:text").each(function () {
             $(this).addClass('easyui-validatebox textbox txt');
             if ($(this).attr('required') || $(this).attr('validtype'))
                 $(this).validatebox();
         });
-        //加载数据
-        if (getUrlParam("ID") != "") {
-            $.get("/Admin/GetModel", { "ID": getUrlParam("ID") }, function (data) {
-                if (data.status == 1) {
-                    var model = data.model;
-                    $("#edit_form").find("input").each(function () {
-                        var val = model[this.name];
-                        if (this.type == "text" || this.type == "hidden")
-                            $(this).val(val);
-                        else if (this.type == "checkbox")
-                            $(this).attr("checked", val == "True");
-                    });
-                }
-                else {
-                    jqAlert('数据加载失败:' + data, 'error')
-                }
-            });
-        }
         //保存数据
         $("#btnSave").click(function () {
-            if ($("#edit_form").form('validate')) {
+            if ($("#form_page").form('validate')) {
                 $.ajax({
                     type: "POST",
                     url: "/Admin/SaveAction",
-                    data: $("#edit_form").serializeArray(),
+                    data: $("#form_page").serializeArray(),
                     async: false,
                     success: function (data) {
                         if (data.status == 1) {//保存成功
-                            window.parent.$("#tt_grid").datagrid("reload");
-                            window.parent.$("#edit_win").window("close");
+                            parent.$("#tt_grid").datagrid("reload");
+                            parent.$("#div_win").window("close");
                         }
                         else {
                             jqAlert('保存失败:' + data, 'error')
@@ -98,7 +80,7 @@
             }
         });
         $("#btnClose").click(function () {
-            window.parent.$("#edit_win").window("close");
+            parent.$("#div_win").window("close");
         });
     });
 </script>

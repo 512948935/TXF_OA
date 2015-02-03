@@ -100,3 +100,27 @@ $.extend($.fn.textbox.methods, {
         });
     }
 });
+//阻止panel拖出边界
+function easyuiPanelOnMove(left, top) {
+    var l = left < 1 ? 1 : left;
+    var t = top < 1 ? 1 : top;
+    var width = parseInt($(this).parent().css('width')) + 14;
+    var height = parseInt($(this).parent().css('height')) + 14;
+    var right = l + width;
+    var buttom = t + height;
+    var browserWidth = $(window).width();
+    var browserHeight = $(window).height();
+    if (right > browserWidth) {
+        l = browserWidth - width;
+    }
+    if (buttom > browserHeight) {
+        t = browserHeight - height;
+    }
+    $(this).parent().css({
+        left: l,
+        top: t
+    });
+}
+$.fn.dialog.defaults.onMove = easyuiPanelOnMove;
+$.fn.window.defaults.onMove = easyuiPanelOnMove;
+$.fn.panel.defaults.onMove = easyuiPanelOnMove;

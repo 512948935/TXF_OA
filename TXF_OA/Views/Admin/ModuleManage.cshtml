@@ -7,7 +7,7 @@
         <ul id="ul_tree"></ul>
         <!----------------------------------模块编辑对话框------------------------------------------->
         <div id="edit_dlg" style="padding:5px;">
-           <form id="edit_form" method="post" novalidate="novalidate" >
+           <form id="form_module" method="post" action="">
                <table id="tt" class="tablestyle" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">            
                 <tr>
                     <td class="td1" width="40%">模块代码：</td>
@@ -76,14 +76,13 @@
                     </tr>
                 </thead>
         </table>
-        <div id="search_dlg" style="padding:2px"></div>
-        <div id="edit_win" style="padding:2px;overflow:hidden;">
-             <iframe id="edit_frame" name="frame" frameborder="0" style="width:100%;height:100%;"></iframe>
+        <div id="dialog_search" style="padding:2px"></div>
+        <div id="div_win" style="padding:2px;overflow:hidden;">
+           @*  <iframe id="frame_edit" name="frame" frameborder="0" style="width:100%;height:100%;"></iframe>*@
         </div>
      </div>
 </div>
 <script type="text/javascript">
-
     //#region easyui-datagrid 功能按钮+配置参数
     var url = "/Admin/GetPageList";
     var toolbar = [{
@@ -91,11 +90,9 @@
         text: '添加',
         iconCls: 'icon-add',
         handler: function () {
-            if ($("#edit_frame").attr("name") != "frame_0") {
-                $("#edit_frame").attr("src", "/Admin/ModuleEdit");
-                $("#edit_frame").attr("name", "frame_0");
-            }
-            $("#edit_win").window('open');
+            //子窗体的form
+            $("#form_page", window.frames['frame'].document)[0].reset();
+            $('#div_win').window('open');
         }
     }, '-', {
         id: 'btnedit',
@@ -104,12 +101,23 @@
         handler: function () {
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
-                var id = selections[0].ID;
-                if ($("#edit_frame").attr("name") != "frame_" + id) {
-                    $("#edit_frame").attr("src", "/Admin/ModuleEdit?ID=" + selections[0].ID);
-                    $("#edit_frame").attr("name", "frame_" + id);
-                }
-                $("#edit_win").window('open');
+                $.get("/Admin/GetModel", { "ID": selections[0].ID }, function (data) {
+                    if (data.status == 1) {
+                        var model = data.model;
+                        //子窗体的form
+                        $("#form_page", window.frames['frame'].document).find("input").each(function () {
+                            var val = model[this.name];
+                            if (this.type == "text" || this.type == "hidden")
+                                $(this).val(val);
+                            else if (this.type == "checkbox")
+                                $(this).attr("checked", val == "True");
+                        });
+                    }
+                    else {
+                        jqAlert('数据加载失败:' + data, 'error')
+                    }
+                });
+                $('#div_win').window('open');
             }
             else
                 jqAlert('请选择一条记录！', 'warning')
@@ -144,7 +152,7 @@
         text: '查询',
         iconCls: 'icon-search',
         handler: function () {
-            $('#search_dlg').dialog('open');
+            $('#dialog_search').dialog('open');
         }
     }];
     var boolFormatter = function (value) {
@@ -170,7 +178,7 @@
                 $("[name=datagrid]").datagrid("resize", width);
             }
         });
-        $("#edit_form input:text").each(function () {
+        $("#form_module input:text").each(function () {
             $(this).addClass('easyui-validatebox textbox txt');
             if ($(this).attr('required') || $(this).attr('validtype'))
                 $(this).validatebox();
@@ -220,7 +228,7 @@
         //新增节点
         $("#btnAdd").click(function () {
             $("#t_ID").val(0);
-            $("#edit_form")[0].reset(); //重置表单
+            $("#form_module")[0].reset(); //重置表单
             $('#edit_dlg').dialog('open');
         });
         //修改节点
@@ -230,7 +238,7 @@
                 jqAlert('请选择需要修改的模块名称.', 'warning');
             else {
                 //表单赋值
-                $("#edit_form").find("input").each(function () {
+                $("#form_module").find("input").each(function () {
                     var val = node.attributes[this.name];
                     if (this.type == "text" || this.type == "hidden")
                         $(this).val(val);
@@ -260,12 +268,12 @@
             }
         });
         //初始化模块编辑对话框
-        showMyDialog($("#edit_dlg"), '编辑模块信息', 'icon-edit', '', 400,true,function () {
-            if ($("#edit_form").form('validate')) {
+        showMyDialog($("#edit_dlg"), '编辑模块信息', 'icon-edit', '', 400, true, function () {
+            if ($("#form_module").form('validate')) {
                 $.ajax({
                     type: "POST",
                     url: "/Admin/SaveAction",
-                    data: $("#edit_form").serializeArray(),
+                    data: $("#form_module").serializeArray(),
                     async: false,
                     success: function (data) {
                         if (data.status == 1) {//保存成功
@@ -280,11 +288,11 @@
             }
         });
         //初始化页面信息对话框
-        showMyWindow($("#edit_win"), '编辑页面信息', 'icon-edit', "", 700, 260);
+        showMyWindow($("#div_win"), '编辑页面信息', 'icon-edit', "/Admin/ModuleEdit", 700, 260);
         //初始化过滤查询对话框
         getWhereColumns($("#tt_grid"), function (col) {
             var href = '/Admin/CreateWhereHTML?col=' + col;
-            showMyDialog($("#search_dlg"), '筛选条件', 'tu1611', href, 350, true, function () {
+            showMyDialog($("#dialog_search"), '筛选条件', 'tu1611', href, 350, true, function () {
                 var where = "";
                 $("#ttSearch input:text").each(function () {
                     where += '{Key:"' + $(this).attr('name') + '",Value:"' + $.strFilter($(this).val()) + '",Symbol:"like"},';
@@ -293,7 +301,7 @@
                     where = "[" + $.trimend(where, ',') + "]";
                     $('#tt_grid').datagrid('options').url = '/Admin/GetPageList?code=' + $("#t_PreCode").val() + '&where=' + escape(where);
                     $("#tt_grid").datagrid('load');
-                    $('#search_dlg').dialog('close');
+                    $('#dialog_search').dialog('close');
                 }
             });
         });
