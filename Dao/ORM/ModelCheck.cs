@@ -5,7 +5,7 @@ using System.Web;
 using TXF.Attributes;
 using System.Data;
 
-namespace Dao
+namespace Dao.ORM
 {
     public class ModelCheck
     {

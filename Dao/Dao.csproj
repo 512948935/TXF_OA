@@ -42,15 +42,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModelOperate.cs" />
-    <Compile Include="DBHelper.cs" />
-    <Compile Include="IsValidType.cs" />
-    <Compile Include="ModelCheck.cs" />
+    <Compile Include="DataProvider\TransConnection.cs" />
+    <Compile Include="DataProvider\DBHelper.cs" />
+    <Compile Include="ORM\ModelBase.cs" />
+    <Compile Include="ORM\ModelOperate.cs" />
+    <Compile Include="DataProvider\DBHelper1.cs" />
+    <Compile Include="ORM\IsValidType.cs" />
+    <Compile Include="ORM\ModelCheck.cs" />
+    <Compile Include="ORM\ReflectionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DAL\BaseDAL.cs" />
-    <Compile Include="DAL\tb_item_DepartmentDAL.cs" />
-    <Compile Include="DAL\tb_sys_ItemDAL.cs" />
-    <Compile Include="DAL\tb_sys_ModuleDAL.cs" />
+    <Compile Include="BaseDAL.cs" />
+    <Compile Include="tb_item_DepartmentDAL.cs" />
+    <Compile Include="tb_sys_ItemDAL.cs" />
+    <Compile Include="tb_sys_ModuleDAL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Attributes\TXF.Attributes.csproj">
@@ -65,7 +69,12 @@
       <Project>{6E2C6DB2-A7DB-4C56-854F-89EF74216709}</Project>
       <Name>Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MyCache.IO\MyCache.IO.csproj">
+      <Project>{E8EDF160-08F9-480C-991F-60D147D678C6}</Project>
+      <Name>MyCache.IO</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

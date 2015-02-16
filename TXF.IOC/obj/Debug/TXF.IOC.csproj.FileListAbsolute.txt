@@ -70,3 +70,11 @@ E:\GitHub\TXF_OA\TXF.IOC\bin\Debug\TXF.Attributes.pdb
 E:\GitHub\TXF_OA\TXF.IOC\obj\Debug\TXF.IOC.csprojResolveAssemblyReference.cache
 E:\GitHub\TXF_OA\TXF.IOC\obj\Debug\TXF.IOC.dll
 E:\GitHub\TXF_OA\TXF.IOC\obj\Debug\TXF.IOC.pdb
+E:\GitHub\TXF_OA\TXF.IOC\bin\Debug\MyCache.IO.dll
+E:\GitHub\TXF_OA\TXF.IOC\bin\Debug\MyCache.Interface.dll
+E:\GitHub\TXF_OA\TXF.IOC\bin\Debug\MyCache.Factory.dll
+E:\GitHub\TXF_OA\TXF.IOC\bin\Debug\MyCache.InProc.dll
+E:\GitHub\TXF_OA\TXF.IOC\bin\Debug\MyCache.IO.pdb
+E:\GitHub\TXF_OA\TXF.IOC\bin\Debug\MyCache.Interface.pdb
+E:\GitHub\TXF_OA\TXF.IOC\bin\Debug\MyCache.Factory.pdb
+E:\GitHub\TXF_OA\TXF.IOC\bin\Debug\MyCache.InProc.pdb

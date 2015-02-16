@@ -185,7 +185,7 @@ namespace TXF_OA
 
                 if (item.ID > 0)
                     where += " AND ID<>" + item.ID;
-                tb_sys_Module record = moduleBLL.SelectEntity(where);
+                tb_sys_Module record = moduleBLL.SelectT(where);
                 if (record == null)
                 {
                     if (itemNos.Length == 1)
@@ -196,7 +196,7 @@ namespace TXF_OA
                         //查找上级节点
                         string preCode = tempNo.TrimEnd('.').Substring(0, tempNo.TrimEnd('.').LastIndexOf('.'));
                         where = string.Format("ModuleCode='{0}' AND NodeLevel={1}", preCode, item.NodeLevel - 1);
-                        tb_sys_Module parentItem = moduleBLL.SelectEntity(where);
+                        tb_sys_Module parentItem = moduleBLL.SelectT(where);
                         if (parentItem.IsPage)
                             throw new Exception("不能在页面节点下面添加模块.");
                         item.ParentID = parentItem.ID;
@@ -221,7 +221,7 @@ namespace TXF_OA
         {
             try
             {
-                tb_sys_Module model = moduleBLL.SelectEntity("ID=" + id);
+                tb_sys_Module model = moduleBLL.SelectT("ID=" + id);
                 return Json(new { status = 1, model = model }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

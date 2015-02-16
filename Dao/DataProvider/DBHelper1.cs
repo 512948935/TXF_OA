@@ -6,9 +6,9 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Data;
 
-namespace Dao
+namespace Dao.ORM
 {
-    public class DBHelper
+    public class DBHelper1
     {
         #region 创建链接字符串
         //获取解密后的字符串
@@ -170,6 +170,66 @@ namespace Dao
                 CloseConnection();
             }
         }
-        #endregion
+        /// <summary>
+        /// 大批量添加数据ds.Tables[0] 表名strTblName(数据库表名称)
+        /// </summary>
+        /// <param name="ds"></param>
+        /// <param name="tableName"></param>
+        /// <returns>受影响的行数</returns>
+        public static int InsertAll(DataTable dt, string tableName)
+        {
+            int iRet = -1;
+            try
+            {
+                SqlCommand myCommand = new SqlCommand("select * from " + tableName, conn);
+                SqlDataAdapter myAdapter = new SqlDataAdapter(myCommand);
+                SqlCommandBuilder myCommandBuilder = new SqlCommandBuilder(myAdapter);
+                myAdapter.InsertCommand = myCommandBuilder.GetInsertCommand();
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (dr.RowState != DataRowState.Added)
+                        dr.SetAdded();
+                }
+                conn.Open();
+                iRet = myAdapter.Update(dt);
+            }
+            catch (Exception err)
+            {
+                throw err;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return iRet;
+        }
+        /// <summary>
+        /// 大批量更改数据ds.Tables[0] 表名strTblName(数据库表名称,表需要有主键)
+        /// </summary>
+        /// <param name="ds"></param>
+        /// <param name="strTblName"></param>
+        /// <returns>受影响的行数</returns>
+        public static int UpdateAll(DataTable dt, string strTblName, SqlConnection conn)
+        {
+            int iRet = 0;
+            try
+            {
+                SqlCommand myCommand = new SqlCommand("select * from " + strTblName, conn);
+                SqlDataAdapter myAdapter = new SqlDataAdapter(myCommand);
+                SqlCommandBuilder myCommandBuilder = new SqlCommandBuilder(myAdapter);
+                myAdapter.UpdateCommand = myCommandBuilder.GetUpdateCommand();
+                conn.Open();
+                iRet = myAdapter.Update(dt);
+                conn.Close();
+            }
+            catch (Exception err)
+            {
+                conn.Close();
+                throw err;
+            }
+            return iRet;
+        }
     }
+        #endregion
 }

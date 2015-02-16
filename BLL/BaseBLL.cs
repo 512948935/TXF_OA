@@ -86,9 +86,9 @@ namespace BLL
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public virtual T SelectEntity(string where)
+        public virtual T SelectT(string where)
         {
-            return dao.SelectEntity(where);
+            return dao.SelectT(where);
         }
         /// <summary>
         /// 查找实体类集合
@@ -97,9 +97,9 @@ namespace BLL
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public virtual List<T> SelectList(string field = "*", string where = "", string sort = "")
+        public virtual List<T> SelectList(string where = "", string sort = "")
         {
-            return dao.SelectList(field, where, sort);
+            return dao.SelectList(where, sort);
         }
         /// <summary>
         /// 查找实体类集合
@@ -110,9 +110,9 @@ namespace BLL
         /// <param name="field"></param>
         /// <param name="listWhere"></param>
         /// <returns></returns>
-        public virtual List<T> SelectList(string field = "*", List<WhereField> listWhere = null, string sort = "")
+        public virtual List<T> SelectList(List<WhereField> listWhere = null, string sort = "")
         {
-            return dao.SelectList(field, listWhere, sort);
+            return dao.SelectList(listWhere, sort);
         }
         /// <summary>
         /// 查找数据

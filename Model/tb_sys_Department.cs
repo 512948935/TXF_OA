@@ -11,7 +11,7 @@ namespace Model
     {
         private int m_ID;
         /// <summary>
-        ///
+        /// 主键ID
         /// </summary>
         [Model(Name = "主键ID", Empty = false, DataType = DbType.Int32, PrimaryKey = true, AutoIncrement = true)]
         public int ID

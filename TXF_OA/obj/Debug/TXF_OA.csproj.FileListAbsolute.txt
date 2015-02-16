@@ -22,3 +22,11 @@ E:\GitHub\TXF_OA\TXF_OA\bin\Dao.pdb
 E:\GitHub\TXF_OA\TXF_OA\obj\Debug\TXF_OA.csprojResolveAssemblyReference.cache
 E:\GitHub\TXF_OA\TXF_OA\obj\Debug\TXF_OA.dll
 E:\GitHub\TXF_OA\TXF_OA\obj\Debug\TXF_OA.pdb
+E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.IO.dll
+E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.Interface.dll
+E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.Factory.dll
+E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.InProc.dll
+E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.IO.pdb
+E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.Interface.pdb
+E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.Factory.pdb
+E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.InProc.pdb

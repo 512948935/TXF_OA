@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Reflection;
 using System.Web;
 using System.Data;
 using System.Data.SqlClient;
 using TXF.Attributes;
 using Model;
 using IDao;
+using System.Data.Common;
 
-namespace Dao
+namespace Dao.ORM
 {
     /// <summary>
     ///  /// <summary>
@@ -18,6 +18,7 @@ namespace Dao
     /// </summary>
     public class ModelOperate<T> where T:class,new()
     {
+        private ModelBase _ModelBase = new ModelBase();
         private static ModelOperate<T> _modelHelper;
         /// <summary>
         /// 获取当前类的实例
@@ -31,9 +32,7 @@ namespace Dao
             }
             return _modelHelper;
         }
-
         #region 绑定实体类
-        private ModelCheck modelCheck = new ModelCheck();
         /// <summary>
         /// 绑定Mode实体类
         /// </summary>
@@ -42,35 +41,15 @@ namespace Dao
         public T BindModel()
         {
             T entity = new T();
-            //获取当前类型的所有属性
-            PropertyInfo[] Properties = typeof(T).GetProperties();
-            string error = "";
-            //遍历属性集合
-            foreach (PropertyInfo Property in Properties)
+            string[] fields = _ModelBase.GetInsertFields<T>();
+            Dictionary<string, object> pNameAndValue = new Dictionary<string, object>();
+            foreach (string field in fields)
             {
                 //获取属性的值
-                string value = HttpContext.Current.Request[Property.Name];
-                //获取当前属性所指定的特性
-                object[] attributes = Property.GetCustomAttributes(typeof(ModelAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    try
-                    {
-                        ModelAttribute modelAttribute = attributes[0] as ModelAttribute;
-                        this.modelCheck.CheckInput(modelAttribute, value);
-                    }
-                    catch (Exception ex)
-                    {
-                        error += ex.Message;
-                    }
-                }
-                //给实体赋值
-                if (error.Equals("") && !string.IsNullOrEmpty(value))
-                {
-                    Property.SetValue(entity, Convert.ChangeType(value, (System.Nullable.GetUnderlyingType(Property.PropertyType) ?? Property.PropertyType)), null);
-                }
+                string value = HttpContext.Current.Request[field];
+                pNameAndValue.Add(field, value);
             }
-            if (!error.Equals("")) throw new Exception(error);
+            ReflectionHelper.SetPropertyValue<T>(entity, pNameAndValue);
             return entity;
         }
         #endregion
@@ -81,35 +60,21 @@ namespace Dao
         /// </summary>
         public int Add(T entity)
         {
-            Type type = entity.GetType();
-            string tableName = type.Name;
-            PropertyInfo[] Propertys = type.GetProperties();
             List<SqlParameter> listParameter = new List<SqlParameter>();
-            string fieldNames = string.Empty;
-            string fieldValues = string.Empty;
-            foreach (PropertyInfo Property in Propertys)
+            string tableName = typeof(T).Name;
+            //获取需要插入的字段和值
+            Dictionary<string, object> models = _ModelBase.GetModelValue<T>(entity, ActionState.Add);
+            string columnName = string.Empty;
+            string paramName = string.Empty;
+            foreach (string field in models.Keys)
             {
-                string name = Property.Name;
-                object value = Property.GetValue(entity, null);
-                if (value != null)
-                {
-                    object[] attributes = Property.GetCustomAttributes(typeof(ModelAttribute), false);
-                    if (attributes.Length == 0)
-                        throw new Exception("对象没有定义表结构！");
-                    else
-                    {
-                        ModelAttribute modelAttribute = attributes[0] as ModelAttribute;
-                        if (!modelAttribute.AutoIncrement)
-                        {
-                            fieldNames += "[" + name + "],";
-                            fieldValues += "@" + name + ",";
-                            listParameter.Add(new SqlParameter("@" + name, value));
-                        }
-                    }
-                }
+                columnName += "[" + field + "],";
+                paramName += "@" + field + ",";
+                listParameter.Add(new SqlParameter("@" + field, models[field]));
             }
-            string sql = string.Format("SET NOCOUNT ON;INSERT INTO [{0}]({1}) VALUES({2});SELECT SCOPE_IDENTITY()", tableName, fieldNames.TrimEnd(','), fieldValues.TrimEnd(','));
-            return DBHelper.Add(sql, listParameter.ToArray());
+            string sql = string.Format("SET NOCOUNT ON;INSERT INTO [{0}]({1}) VALUES({2});SELECT SCOPE_IDENTITY()", tableName, columnName.TrimEnd(','), paramName.TrimEnd(','));
+            object result = DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql, listParameter.ToArray());
+            return Convert.ToInt32(result);
         }
         #endregion
 
@@ -120,35 +85,28 @@ namespace Dao
         /// <param name="entity"></param>
         public void Update(T entity)
         {
-            Type type = entity.GetType();
-            string tableName = type.Name;
-            PropertyInfo[] Propertys = type.GetProperties();
+            string tableName = typeof(T).Name;
+            //获取需要更新字段的值
+            Dictionary<string, object> models = _ModelBase.GetModelValue<T>(entity, ActionState.Update);
+            //获取主键
+            string keyField = _ModelBase.GetPrimaryKeyName<T>();
+            string where = "[" + keyField + "]=@" + keyField + "";
             List<SqlParameter> listParameter = new List<SqlParameter>();
             string sets = string.Empty;
-            string where = " 1=1 ";
-            foreach (PropertyInfo Property in Propertys)
+            foreach (string field in models.Keys)
             {
-                string name = Property.Name;
-                object value = Property.GetValue(entity, null) ?? "";
-                //获取当前属性的所有特性，如果有，查找是否有主键
-                object[] attributes = Property.GetCustomAttributes(typeof(ModelAttribute), false);
-                if (attributes.Length > 0)
+                if (field == keyField)
+                    listParameter.Add(new SqlParameter("@" + keyField, models[keyField]));
+                else
                 {
-                    ModelAttribute modelAttribute = attributes[0] as ModelAttribute;
-                    //如果找到主键，则根据主键进行修改，因为主键是唯一的
-                    if (modelAttribute.PrimaryKey)
-                        where += " and [" + name + "]=@" + name + " ";
-                    else if
-                        (modelAttribute.IsNotUpdate) continue;
-                    else
-                        sets += "[" + name + "]=@" + name + ",";
-                    listParameter.Add(new SqlParameter("@" + name, value));
+                    sets += "[" + field + "]=@" + field + ",";
+                    listParameter.Add(new SqlParameter("@" + field, models[field]));
                 }
             }
             try
             {
                 string sql = string.Format("UPDATE [{0}] SET {1} WHERE {2}", tableName, sets.TrimEnd(','), where);
-                DBHelper.ExecuteNonQuery(sql, listParameter.ToArray());
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql, listParameter.ToArray());
             }
             catch (Exception ex)
             {
@@ -162,8 +120,7 @@ namespace Dao
         /// <param name="listWhere">where条件集合</param>
         public void Update(List<UpdateField> listField, List<WhereField> listWhere)
         {
-            Type type = typeof(T);
-            string tableName = type.Name;
+            string tableName = typeof(T).Name;
             if (listField.Count() == 0 || listWhere.Count == 0) return;
             string sets = string.Empty;
             List<SqlParameter> listParameter = new List<SqlParameter>();
@@ -181,8 +138,8 @@ namespace Dao
             try
             {
                 StringBuilder sql = new StringBuilder();
-                sql.AppendFormat("update [{0}] set {1} where {2}", tableName, sets.TrimEnd(','), where);
-                DBHelper.ExecuteNonQuery(sql.ToString(), listParameter.ToArray());
+                sql.AppendFormat("UPDATE [{0}] SET {1} WHERE {2}", tableName, sets.TrimEnd(','), where);
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), listParameter.ToArray());
             }
             catch (Exception ex)
             {
@@ -197,8 +154,7 @@ namespace Dao
         public void Update(List<UpdateField> listField, string where)
         {
             if (listField.Count() == 0) return;
-            Type type = typeof(T);
-            string tableName = type.Name;
+            string tableName = typeof(T).Name;
             string sets = string.Empty;
             List<SqlParameter> listParameter = new List<SqlParameter>();
             foreach (UpdateField field in listField)
@@ -209,8 +165,8 @@ namespace Dao
             try
             {
                 StringBuilder sql = new StringBuilder();
-                sql.AppendFormat("update [{0}] set {1} where {2}", tableName, sets.TrimEnd(','), where);
-                DBHelper.ExecuteNonQuery(sql.ToString(), listParameter.ToArray());
+                sql.AppendFormat("UPDATE [{0}] SET {1} WHERE {2}", tableName, sets.TrimEnd(','), where);
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), listParameter.ToArray());
             }
             catch (Exception ex)
             {
@@ -225,45 +181,23 @@ namespace Dao
         /// </summary>
         public void Delete(T entity)
         {
-            Type type = entity.GetType();
-            string tableName = type.Name;
-            PropertyInfo[] Propertys = type.GetProperties();
+            string tableName = typeof(T).Name;
+            //获取主键
+            string keyField = _ModelBase.GetPrimaryKeyName<T>();
+            string where = " WHERE [" + keyField + "]=@" + keyField + "";
             List<SqlParameter> listParameter = new List<SqlParameter>();
-            string where = " 1=1 ";
-            bool existPrimaryKey = false;
-            foreach (PropertyInfo Property in Propertys)
+            Dictionary<string, object> models = _ModelBase.GetModelValue<T>(entity, ActionState.Add);
+            listParameter.Add(new SqlParameter("@" + keyField, models[keyField]));
+            try
             {
-                string name = Property.Name;
-                object value = Property.GetValue(entity, null);
-                if (value != null)
-                {
-                    object[] attributes = Property.GetCustomAttributes(typeof(ModelAttribute), false);
-                    if (attributes.Length > 0)
-                    {
-                        ModelAttribute modelAttribute = attributes[0] as ModelAttribute;
-                        if (modelAttribute.PrimaryKey)
-                        {
-                            where += " and [" + name + "]=@" + name + " ";
-                            listParameter.Add(new SqlParameter("@" + name, value));
-                            existPrimaryKey = true;
-                            break;
-                        }
-                    }
-                }
+                StringBuilder sql = new StringBuilder();
+                sql.AppendFormat("DELETE FROM {0} WHERE {1}", tableName, where);
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql.ToString(), listParameter.ToArray());
             }
-            if (existPrimaryKey)
+            catch (Exception)
             {
-                try
-                {
-                    StringBuilder sql = new StringBuilder();
-                    sql.AppendFormat("DELETE FROM {0} WHERE {1}", tableName, where);
-                    DBHelper.ExecuteNonQuery(sql.ToString(), listParameter.ToArray());
-                }
-                catch (Exception)
-                {
 
-                    throw;
-                }
+                throw;
             }
         }
         /// <summary>
@@ -280,7 +214,7 @@ namespace Dao
                     string tableName = type.Name;
                     StringBuilder sql = new StringBuilder();
                     sql.AppendFormat("DELETE FROM [{0}] WHERE {1}", tableName, where);
-                    DBHelper.ExecuteNonQuery(sql.ToString(), null);
+                    DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), null);
                 }
                 catch (Exception)
                 {
@@ -308,7 +242,7 @@ namespace Dao
                 string tableName = type.Name;
                 StringBuilder sql = new StringBuilder();
                 sql.AppendFormat("delete from [{0}] where {1}", tableName, where);
-                DBHelper.ExecuteNonQuery(sql.ToString(), listParameter.ToArray());
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), listParameter.ToArray());
             }
             catch (Exception ex)
             {
@@ -323,30 +257,30 @@ namespace Dao
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="where">where条件集合</param>
-        public T SelectEntity(string where)
+        public T SelectT(string where)
         {
             try
             {
                 Type type = typeof(T);
                 string tableName = type.Name;
-                string sql = string.Format("SELECT * FROM [{0}] WHERE {1}", tableName, where);
-                DataTable dt = DBHelper.Query(sql);
-                if (dt.Rows.Count > 0)
+                //获取所有字段
+                string[] fields = _ModelBase.GetAllFields<T>();
+                string selectField = _ModelBase.GetSelectFieldStr(fields);
+                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}",selectField,tableName, where);
+                DbDataReader reader = DataProvider.DBHelper.ExecuteReader(CommandType.Text, sql);
+                Dictionary<string, object> pNameAndValue = new Dictionary<string, object>();
+                while (reader.Read())
                 {
-                    PropertyInfo[] Properties = typeof(T).GetProperties();
                     T entity = (T)Activator.CreateInstance(type);
-                    foreach (PropertyInfo Property in Properties)
+                    foreach (string field in fields)
                     {
-                        object[] attributes = Property.GetCustomAttributes(typeof(ModelAttribute), false);
-                        if (attributes.Length == 0)
-                            throw new Exception("对象没有定义表结构！");
-                        else
-                        {
-                            ModelAttribute modelAttribute = attributes[0] as ModelAttribute;
-                            if (!modelAttribute.Readonly && dt.Rows[0][Property.Name] != DBNull.Value)
-                                Property.SetValue(entity, dt.Rows[0][Property.Name], null);
-                        }
+                        //取得当前数据库字段的顺序
+                        int Ordinal = reader.GetOrdinal(field);
+                        object obj = reader.GetValue(Ordinal);
+                        if (obj != DBNull.Value)
+                            pNameAndValue.Add(field, obj);
                     }
+                    ReflectionHelper.SetPropertyValue<T>(entity, pNameAndValue);
                     return entity;
                 }
                 return default(T);
@@ -363,29 +297,32 @@ namespace Dao
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public List<T> SelectList(string field = "*", string where = "1=1", string sort = "")
+        public List<T> SelectList(string where = "1=1", string sort = "")
         {
             try
             {
                 Type type = typeof(T);
                 string tableName = type.Name;
+                //获取所有字段
+                string[] fields = _ModelBase.GetAllFields<T>();
+                string selectField = _ModelBase.GetSelectFieldStr(fields);
+                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}", selectField, tableName, where);
+                if (!string.IsNullOrEmpty(sort)) sql += " ORDER BY " + sort;
+                DbDataReader reader = DataProvider.DBHelper.ExecuteReader(CommandType.Text, sql);
+                Dictionary<string, object> pNameAndValue = new Dictionary<string, object>();
                 List<T> entities = new List<T>();
-                DataTable dt = SelectDataTable(field, where);
-                var plist = new List<PropertyInfo>(typeof(T).GetProperties());
-                foreach (DataRow item in dt.Rows)
+                while (reader.Read())
                 {
-                    T entity = System.Activator.CreateInstance<T>();
-                    for (int i = 0; i < dt.Columns.Count; i++)
+                    T entity = (T)Activator.CreateInstance(type);
+                    foreach (string field in fields)
                     {
-                        PropertyInfo info = plist.Find(p => p.Name == dt.Columns[i].ColumnName);
-                        if (info != null)
-                        {
-                            if (!Convert.IsDBNull(item[i]))
-                            {
-                                info.SetValue(entity, item[i], null);
-                            }
-                        }
+                        //取得当前数据库字段的顺序
+                        int Ordinal = reader.GetOrdinal(field);
+                        object obj = reader.GetValue(Ordinal);
+                        if (obj != DBNull.Value)
+                            pNameAndValue.Add(field, obj);
                     }
+                    ReflectionHelper.SetPropertyValue<T>(entity, pNameAndValue);
                     entities.Add(entity);
                 }
                 return entities;
@@ -395,45 +332,61 @@ namespace Dao
                 throw ex;
             }
         }
-        /// <summary>
+          /// <summary>
         /// 查找实体类集合
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="where">where条件集合</param>
-        /// <returns>List<T></returns>
-        public List<T> SelectList(string field = "*", List<WhereField> listWhere = null, string sort = "")
+        /// <param name="field"></param>
+        /// <param name="where"></param>
+        /// <param name="sort"></param>
+        /// <returns></returns>
+        public List<T> SelectList(List<WhereField> listWhere = null, string sort = "")
         {
-            try
+            string where = " 1=1 ";
+            List<SqlParameter> listParameter = new List<SqlParameter>();
+            if (listWhere != null)
             {
-                Type type = typeof(T);
-                string tableName = type.Name;
-                List<T> entities = new List<T>();
-                DataTable dt = SelectDataTable(field, listWhere);
-                if (dt.Rows.Count > 0)
+                foreach (WhereField item in listWhere)
                 {
-                    PropertyInfo[] Properties = typeof(T).GetProperties();
-                    foreach (PropertyInfo Property in Properties)
+                    if (!string.IsNullOrEmpty(item.Value.ToString()))
                     {
-                        T entity = (T)Activator.CreateInstance(type);
-                        object[] attributes = Property.GetCustomAttributes(typeof(ModelAttribute), false);
-                        if (attributes.Length == 0)
-                            throw new Exception("对象没有定义表结构！");
+                        if (item.Symbol.Equals("like"))
+                        {
+                            where += " AND [" + item.Key + "] " + item.Symbol + " @" + item.Key + " ";
+                            listParameter.Add(new SqlParameter("@" + item.Key, "%" + item.Value + "%"));
+                        }
                         else
                         {
-                            ModelAttribute modelAttribute = attributes[0] as ModelAttribute;
-                            if (!modelAttribute.Readonly && dt.Rows[0][Property.Name] != DBNull.Value)
-                                Property.SetValue(entity, dt.Rows[0][Property.Name], null);
+                            where += " AND [" + item.Key + "] " + item.Symbol + " @" + item.Key + " ";
+                            listParameter.Add(new SqlParameter("@" + item.Key, item.Value));
                         }
-                        entities.Add(entity);
                     }
-                    return entities;
                 }
-                return null;
             }
-            catch (Exception ex)
+            Type type = typeof(T);
+            string tableName = type.Name;
+            //获取所有字段
+            string[] fields = _ModelBase.GetAllFields<T>();
+            string selectField = _ModelBase.GetSelectFieldStr(fields);
+            string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}", selectField, tableName, where);
+            if (!string.IsNullOrEmpty(sort)) sql += " ORDER BY " + sort;
+            DbDataReader reader = DataProvider.DBHelper.ExecuteReader(CommandType.Text, sql);
+            Dictionary<string, object> pNameAndValue = new Dictionary<string, object>();
+            List<T> entities = new List<T>();
+            while (reader.Read())
             {
-                throw ex;
+                T entity = (T)Activator.CreateInstance(type);
+                foreach (string field in fields)
+                {
+                    //取得当前数据库字段的顺序
+                    int Ordinal = reader.GetOrdinal(field);
+                    object obj = reader.GetValue(Ordinal);
+                    if (obj != DBNull.Value)
+                        pNameAndValue.Add(field, obj);
+                }
+                ReflectionHelper.SetPropertyValue<T>(entity, pNameAndValue);
+                entities.Add(entity);
             }
+            return entities;
         }
         /// <summary>
         /// 查找数据
@@ -446,11 +399,16 @@ namespace Dao
         {
             try
             {
-                Type type = typeof(T);
-                string tableName = type.Name;
-                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}",field,tableName, where);
+                string tableName = typeof(T).Name;
+                if (field.Equals("*"))
+                {
+                    //获取所有字段
+                    string[] fields = _ModelBase.GetAllFields<T>();
+                    field = _ModelBase.GetSelectFieldStr(fields);
+                }
+                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}", field, tableName, where);
                 if (!string.IsNullOrEmpty(sort)) sql += " ORDER BY " + sort;
-                DataTable dt = DBHelper.Query(sql);
+                DataTable dt = DataProvider.DBHelper.ExecuteDataTable(CommandType.Text, sql);
                 return dt;
             }
             catch (Exception ex)
@@ -469,8 +427,7 @@ namespace Dao
         {
             try
             {
-                Type type = typeof(T);
-                string tableName = type.Name;
+                string tableName = typeof(T).Name;
                 List<SqlParameter> listParameter = new List<SqlParameter>();
                 string where = " 1=1 ";
                 if (listWhere != null)
@@ -492,9 +449,15 @@ namespace Dao
                         }
                     }
                 }
-                string sql = string.Format("SELECT * FROM [{0}] WHERE {1}", tableName, where);
+                if (field.Equals("*"))
+                {
+                    //获取所有字段
+                    string[] fields = _ModelBase.GetAllFields<T>();
+                    field = _ModelBase.GetSelectFieldStr(_ModelBase.GetAllFields<T>());
+                }
+                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}", field, tableName, where);
                 if (!string.IsNullOrEmpty(sort)) sql += " ORDER BY " + sort;
-                DataTable dt = DBHelper.Query(sql, listParameter.ToArray());
+                DataTable dt = DataProvider.DBHelper.ExecuteDataTable(CommandType.Text, sql, listParameter.ToArray());
                 return dt;
             }
             catch (Exception ex)
@@ -516,7 +479,8 @@ namespace Dao
                 string tableName = type.Name;
                 StringBuilder sql = new StringBuilder();
                 sql.AppendFormat("SELECT COUNT(1)CNT FROM [{0}] WHERE {1}", tableName, where);
-                return (int)DBHelper.SingleQuery(sql.ToString());
+                return (int)DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql.ToString());
+
             }
             catch (Exception ex)
             {
@@ -557,7 +521,7 @@ namespace Dao
             {
                 StringBuilder sql = new StringBuilder();
                 sql.AppendFormat("SELECT COUNT(1) FROM [{0}] WHERE {1}", tableName, where);
-                return (int)DBHelper.SingleQuery(sql.ToString(), listParameter.ToArray());
+                return (int)DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql.ToString(), listParameter.ToArray());
             }
             catch (Exception ex)
             {

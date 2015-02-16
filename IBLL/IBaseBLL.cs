@@ -58,7 +58,7 @@ namespace IBLL
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        T SelectEntity(string where);
+        T SelectT(string where);
         /// <summary>
         /// 查找实体类集合
         /// </summary>
@@ -66,7 +66,7 @@ namespace IBLL
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        List<T> SelectList(string field = "*", string where = "", string sort = "");
+        List<T> SelectList(string where = "", string sort = "");
         /// <summary>
         /// 查找实体类集合
         /// </summary>
@@ -76,7 +76,7 @@ namespace IBLL
         /// <param name="field"></param>
         /// <param name="listWhere"></param>
         /// <returns></returns>
-        List<T> SelectList(string field = "*", List<WhereField> listWhere = null, string sort = "");
+        List<T> SelectList(List<WhereField> listWhere = null, string sort = "");
         /// <summary>
         /// 查找数据
         /// </summary>

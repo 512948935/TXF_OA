@@ -16,7 +16,7 @@ namespace Model
         /// <summary>
         ///创建时间
         /// </summary>
-        [Model(Name = "创建时间", Empty = true, DataType = DbType.DateTime, Readonly = true, IsNotUpdate = true)]
+        [Model(Name = "创建时间", Empty = true, DataType = DbType.DateTime, Readonly = true)]
         public DateTime CreateOn
         {
             get { return DateTime.Now; }
@@ -25,7 +25,7 @@ namespace Model
         /// <summary>
         ///创建人ID
         /// </summary>
-        [Model(Name = "创建人ID", Empty = true, DataType = DbType.Int32, Readonly = true, IsNotUpdate = true)]
+        [Model(Name = "创建人ID", Empty = true, DataType = DbType.Int32, Readonly = true)]
         public int CreateUserID
         {
             get
@@ -38,7 +38,7 @@ namespace Model
         /// <summary>
         ///创建人
         /// </summary>
-        [Model(Name = "创建人", Empty = true, DataType = DbType.String, MaxLength = 20, Readonly = true, IsNotUpdate = true)]
+        [Model(Name = "创建人", Empty = true, DataType = DbType.String, MaxLength = 20, Readonly = true)]
         public string CreateBy
         {
             get

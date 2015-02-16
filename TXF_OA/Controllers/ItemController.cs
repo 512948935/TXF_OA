@@ -88,7 +88,7 @@ namespace TXF_OA
         {
             try
             {
-                tb_item_Department dep = depBLL.SelectEntity("ID=" + id);
+                tb_item_Department dep = depBLL.SelectT("ID=" + id);
                 return Json(new { status = 1, model = dep }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -101,7 +101,7 @@ namespace TXF_OA
         {
             try
             {
-                tb_sys_Item item = itemBLL.SelectEntity("ID=" + model.ItemID);
+                tb_sys_Item item = itemBLL.SelectT("ID=" + model.ItemID);
                 if (item == null)
                 {
                     item = new tb_sys_Item();
@@ -183,7 +183,7 @@ namespace TXF_OA
                 {
                     string preCode = Request["PreCode"];
                     string tableName = itemBLL.GetTabelName(preCode);
-                    tb_sys_Item item = itemBLL.SelectEntity("ID=" + entity.ID);
+                    tb_sys_Item item = itemBLL.SelectT("ID=" + entity.ID);
                     item.NodeCode = entity.NodeCode;
                     item.NodeName = entity.NodeName;
                     itemBLL.Update(item);
@@ -239,7 +239,7 @@ namespace TXF_OA
                 where = string.Format("NodeCode='{0}' AND NodeLevel={1}", tempNo.TrimEnd('.'), item.NodeLevel);
                 if (item.ID > 0)
                     where += " AND ID<>" + item.ID;
-                tb_sys_Item record = itemBLL.SelectEntity(where);
+                tb_sys_Item record = itemBLL.SelectT(where);
                 if (record == null)
                 {
                     if (itemNos.Length == 1)
@@ -255,7 +255,7 @@ namespace TXF_OA
                         //查找上级节点
                         string preCode = tempNo.TrimEnd('.').Substring(0, tempNo.TrimEnd('.').LastIndexOf('.'));
                         where = string.Format("NodeCode='{0}' AND NodeLevel={1}", preCode, item.NodeLevel - 1);
-                        tb_sys_Item parentItem = itemBLL.SelectEntity(where);
+                        tb_sys_Item parentItem = itemBLL.SelectT(where);
                         if (!string.IsNullOrEmpty(parentItem.TableName))
                             throw new Exception("不能在明细节点下面添加类别节点.");
                         if (parentItem.NodeType != item.NodeType)

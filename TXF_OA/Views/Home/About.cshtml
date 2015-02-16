@@ -1,5 +1,307 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-
-<h2>About</h2>
+<script type="text/javascript">
+    $(function () {
+        $("#tt").fixTableHead({
+            width: "500",
+            height: "200",
+            scrolling: "yes"
+        });
+    }); 
+</script>
+<table id="tt" width="100%" border="1" cellspacing="0" cellpadding="0"> 
+   <thead> 
+    <tr bgcolor="#FFCCFF"> 
+     <td>列头</td> 
+     <td>列头</td> 
+     <td>列头</td> 
+     <td>列头</td> 
+     <td>列头</td> 
+     <td>列头</td> 
+     <td>列头</td> 
+    </tr> 
+   </thead> 
+   <tbody> 
+    <tr>
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox" value="checkbox" /> a</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox2" value="checkbox" /> b</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox3" value="checkbox" /> c</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox4" value="checkbox" /> d</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox5" value="checkbox" /> e</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox6" value="checkbox" /> f</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox7" value="checkbox" /> g</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox4" value="checkbox" /> d</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox5" value="checkbox" /> e</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox6" value="checkbox" /> f</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox7" value="checkbox" /> g</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox4" value="checkbox" /> d</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox5" value="checkbox" /> e</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox6" value="checkbox" /> f</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox7" value="checkbox" /> g</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox4" value="checkbox" /> d</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox5" value="checkbox" /> e</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox6" value="checkbox" /> f</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox7" value="checkbox" /> g</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox4" value="checkbox" /> d</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox5" value="checkbox" /> e</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox6" value="checkbox" /> f</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox7" value="checkbox" /> g</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox4" value="checkbox" /> d</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox5" value="checkbox" /> e</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox6" value="checkbox" /> f</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox7" value="checkbox" /> g</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox4" value="checkbox" /> d</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox5" value="checkbox" /> e</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox6" value="checkbox" /> f</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+    <tr> 
+     <td class="scrollRowThead"> <input type="checkbox" name="checkbox7" value="checkbox" /> g</td> 
+     <td>单元格2</td> 
+     <td>单元格3</td> 
+     <td>单元格4</td> 
+     <td>单元格5</td> 
+     <td>单元格6</td> 
+     <td>单元格7</td> 
+    </tr> 
+   </tbody> 
+  </table>
+</body>

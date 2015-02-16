@@ -43,7 +43,7 @@ namespace Model
         /// <summary>
         ///节点状态
         /// </summary>
-        [Model(Name = "节点状态", Empty = true, DataType = DbType.String)]
+        [Model(Name = "节点状态", Empty = true, DataType = DbType.String, Readonly = true)]
         public string NodeState
         {
             get { return m_NodeState; }
@@ -89,21 +89,11 @@ namespace Model
             get { return m_Icon; }
             set { m_Icon = value; }
         }
-        private bool m_IsItem;
-        /// <summary>
-        ///基础资料
-        /// </summary>
-        [Model(Name = "基础资料", Empty = true, DataType = DbType.Boolean)]
-        public bool IsItem
-        {
-            get { return m_IsItem; }
-            set { m_IsItem = value; }
-        }
         private bool m_IsDelete;
         /// <summary>
         ///是否禁用
         /// </summary>
-        [Model(Name = "是否禁用", Empty = true, DataType = DbType.Boolean)]
+        [Model(Name = "是否禁用", Empty = true, DataType = DbType.Boolean, Readonly = true)]
         public bool IsDelete
         {
             get { return m_IsDelete; }

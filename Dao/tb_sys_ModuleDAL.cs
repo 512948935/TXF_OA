@@ -15,7 +15,7 @@ namespace Dao
             try
             {
                 string sql = "SELECT ISNULL(MAX(NodeLevel),0) FROM dbo.tb_sys_Module";
-                return (int)DBHelper.SingleQuery(sql.ToString());
+                return (int)DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql.ToString());
             }
             catch (Exception ex)
             {
@@ -30,7 +30,7 @@ namespace Dao
             sql.AppendFormat("UPDATE dbo.tb_sys_Module SET ModuleCode =(REPLACE(LEFT(ModuleCode,'{0}')"
                        + ",LEFT(ModuleCode,{1}),'{2}')+SUBSTRING(ModuleCode,{3},LEN(ModuleCode))) FROM dbo.tb_sys_Module"
                        + " WHERE LEFT(ModuleCode,{4})='{5}'", len, len, code, len + 1, len, preCode);
-            DBHelper.ExecuteNonQuery(sql.ToString());
+            DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql.ToString());
         }
         /// <summary>
         /// 更新树形节点状态
@@ -40,7 +40,7 @@ namespace Dao
             try
             {
                 string sql = string.Format("UPDATE dbo.tb_sys_Module SET NodeState = '{0}' WHERE ID={1}", state, id);
-                DBHelper.ExecuteNonQuery(sql);
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql);
             }
             catch (Exception ex)
             {
@@ -56,12 +56,12 @@ namespace Dao
             {
                 StringBuilder sql = new StringBuilder();
                 sql.Append("SELECT COUNT(1) FROM dbo.tb_sys_Module WHERE IsPage=1 AND LEFT(ModuleCode," + code.Length + ")='" + code + "'");
-                int cnt = Convert.ToInt32(DBHelper.SingleQuery(sql.ToString()));
+                int cnt = Convert.ToInt32(DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql.ToString()));
                 if (cnt > 0)
                     throw new Exception("当前模块或子模块下已存在页面.");
                 sql.Clear();
                 sql.Append("DELETE FROM dbo.tb_sys_Module WHERE LEFT(ModuleCode," + code.Length + ")='" + code + "'");
-                DBHelper.ExecuteNonQuery(sql.ToString());
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql.ToString());
             }
             catch (Exception ex)
             {
@@ -84,11 +84,11 @@ namespace Dao
                 }
             }
             string sql = string.Format("SELECT COUNT(1)CNT FROM dbo.tb_sys_Module WHERE {0}", where);
-            total = Convert.ToInt32(DBHelper.SingleQuery(sql));
+            total = Convert.ToInt32(DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql.ToString()));
             int rowNo = (page - 1) * pagesize;
             sql = string.Format(@"SELECT TOP({0})* FROM(SELECT ROW_NUMBER()OVER(ORDER BY ModuleCode)RowNo,ID,ModuleCode,ModuleName
                                  ,PageUrl,Icon,IsDelete FROM dbo.tb_sys_Module WHERE {1}) as tt WHERE RowNo>{2}", pagesize, where, rowNo);
-            return DBHelper.Query(sql);
+            return DataProvider.DBHelper.ExecuteDataTable(CommandType.Text, sql.ToString());
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Model
         /// <summary>
         ///用户编号
         /// </summary>
-        [Model(Name = "用户编号", Empty = false, DataType = DbType.String, MaxLength = 50, IsWhere = true)]
+        [Model(Name = "用户编号", Empty = false, DataType = DbType.String, MaxLength = 50)]
         public string UserNo
         {
             get { return m_UserNo; }
@@ -33,7 +33,7 @@ namespace Model
         /// <summary>
         ///登录帐号
         /// </summary>
-        [Model(Name = "登录帐号", Empty = false, DataType = DbType.String, MaxLength = 50, IsWhere = true)]
+        [Model(Name = "登录帐号", Empty = false, DataType = DbType.String, MaxLength = 50)]
         public string UserName
         {
             get { return m_UserName; }
@@ -53,7 +53,7 @@ namespace Model
         /// <summary>
         ///用户姓名
         /// </summary>
-        [Model(Name = "用户姓名", Empty = false, DataType = DbType.String, MaxLength = 50, IsWhere = true)]
+        [Model(Name = "用户姓名", Empty = false, DataType = DbType.String, MaxLength = 50)]
         public string RealName
         {
             get { return m_RealName; }
@@ -73,7 +73,7 @@ namespace Model
         /// <summary>
         ///部门名称
         /// </summary>
-        [Model(Name = "部门名称", Empty = true, DataType = DbType.String, MaxLength = 50, IsWhere = true)]
+        [Model(Name = "部门名称", Empty = true, DataType = DbType.String, MaxLength = 50)]
         public string DepName
         {
             get { return m_DepName; }

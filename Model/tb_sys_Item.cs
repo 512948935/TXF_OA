@@ -13,7 +13,7 @@ namespace Model
         /// <summary>
         ///主键ID
         /// </summary>
-        [Model(Name = "主键ID", Empty = false, DataType = DbType.Int32, MaxLength = 4, PrimaryKey = true, AutoIncrement = true)]
+        [Model(Name = "主键ID", Empty = false, DataType = DbType.Int32, PrimaryKey = true, AutoIncrement = true)]
         public int ID
         {
             get { return m_ID; }
@@ -23,7 +23,7 @@ namespace Model
         /// <summary>
         ///父级ID
         /// </summary>
-        [Model(Name = "父级ID", Empty = false, DataType = DbType.Int32, MaxLength = 4)]
+        [Model(Name = "父级ID", Empty = false, DataType = DbType.Int32)]
         public int ParentID
         {
             get { return m_ParentID; }
@@ -33,7 +33,7 @@ namespace Model
         /// <summary>
         ///类别级次
         /// </summary>
-        [Model(Name = "类别级次", Empty = false, DataType = DbType.Int32, MaxLength = 4)]
+        [Model(Name = "类别级次", Empty = false, DataType = DbType.Int32)]
         public int NodeLevel
         {
             get { return m_NodeLevel; }
@@ -63,7 +63,7 @@ namespace Model
         /// <summary>
         ///
         /// </summary>
-        [Model(Name = "", Empty = false, DataType = DbType.Int32, MaxLength = 4)]
+        [Model(Name = "", Empty = false, DataType = DbType.Int32)]
         public int NodeType
         {
             get { return m_NodeType; }
@@ -88,6 +88,16 @@ namespace Model
         {
             get { return m_TableName; }
             set { m_TableName = value; }
+        }
+        private bool m_IsDelete;
+        /// <summary>
+        ///是否删除
+        /// </summary>
+        [Model(Name = "是否删除", Empty = true, DataType = DbType.Boolean)]
+        public bool IsDelete
+        {
+            get { return m_IsDelete; }
+            set { m_IsDelete = value; }
         }
     }
 }

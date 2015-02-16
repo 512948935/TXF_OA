@@ -29,7 +29,7 @@ namespace Dao
                                                             LEFT JOIN dbo.tb_sys_Module b ON b.ID=a.NodeType
                                                             AND TableName IS NULL
                                                     ) AS tt WHERE {0} ORDER BY NodeCode", where);
-                return DBHelper.Query(sql);
+                return DataProvider.DBHelper.ExecuteDataTable(CommandType.Text,sql);
             }
             catch (Exception ex)
             {
@@ -41,7 +41,7 @@ namespace Dao
             try
             {
                 string sql = string.Format("SELECT ISNULL(MIN(TableName),'')TableName FROM dbo.tb_sys_Item WHERE LEFT(NodeCode,{0})='{1}'", code.Length, code);
-                return DBHelper.SingleQuery(sql).ToString();
+                return DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql).ToString();
             }
             catch (Exception ex)
             {
@@ -53,7 +53,7 @@ namespace Dao
             try
             {
                 string sql = "SELECT ISNULL(MAX(NodeLevel),0) FROM dbo.tb_sys_Item";
-                return (int)DBHelper.SingleQuery(sql.ToString());
+                return (int)DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql);
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace Dao
             try
             {
                 string sql = "SELECT COUNT(*)CNT FROM dbo.tb_sys_Item WHERE NodeType=" + type;
-                int cnt = Convert.ToInt32(DBHelper.SingleQuery(sql));
+                int cnt = (int)DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql);
                 if (cnt > 0)
                     return false;
                 return true;
@@ -90,7 +90,7 @@ namespace Dao
                     sql += string.Format(@";UPDATE {0} SET ItemNo= a.NodeCode,ItemName=a.NodeName FROM dbo.tb_sys_Item a
                            WHERE a.ID=ItemID AND LEFT(ItemNo,{1})='{2}'", tableName, len, preCode);
                 }
-                DBHelper.ExecuteNonQuery(sql);
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql);
             }
             catch (Exception ex)
             {
@@ -105,7 +105,7 @@ namespace Dao
             try
             {
                 string sql = "UPDATE dbo.tb_sys_Item SET NodeState = '" + state + "' WHERE ID=" + id;
-                DBHelper.ExecuteNonQuery(sql);
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql);
             }
             catch (Exception ex)
             {
@@ -117,7 +117,7 @@ namespace Dao
             try
             {
                 string sql = string.Format("DELETE FROM dbo.tb_sys_Item WHERE LEFT(NodeCode,{0})='{1}'", code.Length, code);
-                DBHelper.ExecuteNonQuery(sql);
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql);
             }
             catch (Exception ex)
             {
