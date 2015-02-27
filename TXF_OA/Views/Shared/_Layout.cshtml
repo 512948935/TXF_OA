@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>企业OA综合管理平台</title>
+    <title>企业OA综合管理平台-@ViewBag.Title</title>
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/themes/default/easyui.css")" />
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/themes/icon.css")" />
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/themes/main.css")" />
@@ -13,7 +13,7 @@
    @* <script type="text/javascript" src="@Url.Content("~/Scripts/datagrid-bufferview.js")"></script>*@
     <script type="text/javascript" src="@Url.Content("~/Scripts/JSHelper.js")"></script>
 </head>
-<body class="easyui-layout" id="body_layout">
+<body class="easyui-layout" id="body_layout" style="overflow-y:auto;">
      @RenderBody()
 </body>
 </html>

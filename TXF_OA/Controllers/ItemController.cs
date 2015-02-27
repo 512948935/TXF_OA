@@ -27,28 +27,19 @@ namespace TXF_OA
             return View();
         }
         //TODO:显示部门信息
-        public string GetDepinfoList(string code = "", string isDelete = "", string where = "")
+        public string GetDepinfoList(string code = "", string disabled = "", string where = "")
         {
-            //int page = Request["page"] == null ? 1 : int.Parse(Request["page"]);
-            //int pagesize = Request["rows"] == null ? 20 : int.Parse(Request["rows"]);
-            //int total = 0;
-            //List<WhereField> wheres = new List<WhereField>();
-            //if (where != "")
-            //    wheres = JSONStringToList<WhereField>(where);
-            //else
-            //    where = "1=1";
-            //foreach (WhereField field in wheres)
-            //{
-            //    if (field.Value.ToString() != "")
-            //        where += string.Format(" AND {0} {1} '%{2}%'", field.Key, field.Symbol, field.Value);
-            //}
-            //DataTable dt = depBLL.GetPageList(page, pagesize, out total, code, isDelete, where);
-            //Session["exportData"] = dt;
+            int page = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            int pagesize = Request["rows"] == null ? 20 : int.Parse(Request["rows"]);
+            int total = 0;
+            List<WhereField> wheres = JSONStringToList<WhereField>(where);
+            DataTable dt = depBLL.GetPageList(page, pagesize, out total, code, disabled, wheres);
+            Session["exportData"] = dt;
             string jsonStr = "";
-            //jsonStr += "{\n";
-            //jsonStr += "\"total\":" + total + ",\n";
-            //jsonStr += "\"rows\":" + DataTableToJson(dt) + "";
-            //jsonStr += "\n}";
+            jsonStr += "{\n";
+            jsonStr += "\"total\":" + total + ",\n";
+            jsonStr += "\"rows\":" + DataTableToJson(dt) + "";
+            jsonStr += "\n}";
             return jsonStr;
         }
         public ActionResult DelDepinfo(string id)
@@ -56,7 +47,7 @@ namespace TXF_OA
             try
             {
                 //删除部门信息
-                depBLL.Delete(id);
+                depBLL.DeleteDepinfo(id);
                 return Json(new { status = 1 }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -97,37 +88,16 @@ namespace TXF_OA
             }
         }
         [HttpPost, ValidateInput(false)]
-        public ActionResult SaveDepinfo(tb_item_Department model, int typeID = 0)
+        public ActionResult SaveDepinfo(tb_item_Department model)
         {
             try
             {
-                tb_sys_Item item = itemBLL.SelectT("ID=" + model.ItemID);
-                if (item == null)
-                {
-                    item = new tb_sys_Item();
-                    item.ID = model.ItemID;
-                    item.NodeType = typeID;
-                    item.TableName = "tb_item_Department";
-                }
-                item.NodeCode = model.ItemNo;
-                item.NodeName = model.ItemName;
-                IsValidNode(item);
-                string preCode = Request["PreCode"];
-                using (TransactionScope scope = new TransactionScope())
-                {
-                    if (model.ID == 0)
-                    {
-                        //先添加节点
-                        model.ItemID = itemBLL.Add(item);
-                        depBLL.Add(model);
-                    }
-                    else
-                    {
-                        itemBLL.Update(item);
-                        depBLL.Update(model);
-                    }
-                    scope.Complete();
-                }
+                if (depBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
+                    throw new Exception("当前代码重复,请重新输入.");
+                if (model.ID == 0)
+                    depBLL.Add(model);
+                else
+                    depBLL.Update(model);
                 return Json(new { status = 1 }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -148,47 +118,17 @@ namespace TXF_OA
             return View();
         }
         /// <summary>
-        /// 获取菜单
-        /// </summary>
-        /// <param name="Fun_IDs"></param>
-        /// <returns></returns>
-        public string GetMenuList(int id = 0)
-        {
-            string where = "IsItem = 1";
-            if (id > 0)
-                where = "ID =" + id;
-            List<tb_sys_Module> list = moduleBLL.SelectList(where: where, sort: "ID");
-            string json = "";
-            foreach (tb_sys_Module m in list)
-            {
-                json += "{\"id\":" + m.ID + ",\"text\":\"" + m.ModuleName + "\"},";
-            }
-            if (json != "") { json = "[" + json.TrimEnd(',') + "]"; }
-            else json = "[]";
-            return json;
-        }
-        /// <summary>
         /// 保存tb_sys_Item提交
         /// </summary>
         /// <returns></returns>
         [HttpPost, ValidateInput(false)]
-        public ActionResult SaveItemInfo(tb_sys_Item entity)
+        public ActionResult SaveItem(tb_sys_Item entity)
         {
             try
             {
-                IsValidNode(entity);
-                if (entity.ID == 0)
-                    itemBLL.Add(entity);
-                else
-                {
-                    string preCode = Request["PreCode"];
-                    string tableName = itemBLL.GetTabelName(preCode);
-                    tb_sys_Item item = itemBLL.SelectT("ID=" + entity.ID);
-                    item.NodeCode = entity.NodeCode;
-                    item.NodeName = entity.NodeName;
-                    itemBLL.Update(item);
-                    itemBLL.UpdateChildNode(entity.NodeCode, preCode, tableName);
-                }
+                itemBLL.IsValidNode(entity);
+                string preCode = Request["PreCode"] ?? "";
+                itemBLL.SaveItemInfo(entity, preCode);
                 return Json(new { status = 1 }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -200,9 +140,6 @@ namespace TXF_OA
         {
             try
             {
-                string tableName = itemBLL.GetTabelName(NodeCode);
-                if (!string.IsNullOrEmpty(tableName))
-                    throw new Exception("当前节点或子节点已存在明细.");
                 itemBLL.DeleteByNodeCode(NodeCode);
                 return Json(new { status = 1 }, JsonRequestBehavior.AllowGet);
             }
@@ -212,60 +149,24 @@ namespace TXF_OA
             }
         }
         /// <summary>
-        /// 检测当前节点
+        /// 获取数据管理的类别
         /// </summary>
-        /// <param name="item"></param>
-        private void IsValidNode(tb_sys_Item item)
+        /// <param name="Fun_IDs"></param>
+        /// <returns></returns>
+        public string GetMenuList(int id = 0)
         {
-            item.NodeCode = item.NodeCode.Trim('.');
-            if (item.NodeCode.Equals("")) throw new Exception("输入节点无效.");
-            string[] itemNos = item.NodeCode.Split('.');
-            //获取最大的级次
-            int maxLevelId = itemBLL.GetMaxLevel();
-            if (itemNos.Length - maxLevelId > 1) throw new Exception("输入的级次超出范围.");
-            if (maxLevelId == 0)//未添加任何节点，直接返回ParentID
+            List<tb_sys_Module> list = moduleBLL.SelectList(where: "IsItem = 1");
+            string json = "";
+            foreach (tb_sys_Module m in list)
             {
-                item.ParentID = 0;
-                item.NodeLevel = 1;
-                return;
+                json += "{\"id\":" + m.ID + ",\"text\":\"" + m.ModuleName + "\"},";
             }
-            string tempNo = "";
-            string where = "1=1";
-            for (int i = 0; i < itemNos.Length; i++)
+            if (json != "")
             {
-                item.NodeLevel = i + 1;
-                tempNo += itemNos[i] + ".";
-                //查找记录
-                where = string.Format("NodeCode='{0}' AND NodeLevel={1}", tempNo.TrimEnd('.'), item.NodeLevel);
-                if (item.ID > 0)
-                    where += " AND ID<>" + item.ID;
-                tb_sys_Item record = itemBLL.SelectT(where);
-                if (record == null)
-                {
-                    if (itemNos.Length == 1)
-                    {
-                        item.ParentID = 0;
-                        //检测节点类型是否重复
-                        if (item.ID == 0 && !itemBLL.CheckNodeType(item.NodeType))
-                            throw new Exception("当前节点类型已添加.");
-                    }
-                    else
-                    {
-                        if (i < itemNos.Length - 1) { throw new Exception("输入的级次超出范围."); }//当前节次没有重复，还有下级节次的情况
-                        //查找上级节点
-                        string preCode = tempNo.TrimEnd('.').Substring(0, tempNo.TrimEnd('.').LastIndexOf('.'));
-                        where = string.Format("NodeCode='{0}' AND NodeLevel={1}", preCode, item.NodeLevel - 1);
-                        tb_sys_Item parentItem = itemBLL.SelectT(where);
-                        if (!string.IsNullOrEmpty(parentItem.TableName))
-                            throw new Exception("不能在明细节点下面添加类别节点.");
-                        if (parentItem.NodeType != item.NodeType)
-                            throw new Exception("类别不一致.");
-                        item.ParentID = parentItem.ID;
-                    }
-                    return;
-                }
+                json = "[" + json.TrimEnd(',') + "]";
             }
-            throw new Exception("当前代码重复.");
+            else json = "[]";
+            return json;
         }
         private DataTable dt;
         public string LoadTree(string pageUrl = "", int id = 0)
@@ -285,7 +186,6 @@ namespace TXF_OA
                                               + ",\"NodeName\":\"" + row["NodeName"] + "\""
                                               + ",\"NodeType\":\"" + row["NodeType"] + "\""
                                               + ",\"PageUrl\":\"" + row["PageUrl"] + "\""
-                                              + ",\"TableName\":\"" + row["TableName"] + "\""
                                               + "}},");
                 }
                 jsonStr = jsonStr.TrimEnd(',') + "]";

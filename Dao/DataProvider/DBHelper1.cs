@@ -6,7 +6,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Data;
 
-namespace Dao.ORM
+namespace Dao.DataProvider
 {
     public class DBHelper1
     {
@@ -176,12 +176,12 @@ namespace Dao.ORM
         /// <param name="ds"></param>
         /// <param name="tableName"></param>
         /// <returns>受影响的行数</returns>
-        public static int InsertAll(DataTable dt, string tableName)
+        public static int InsertAll(string sql, DataTable dt)
         {
             int iRet = -1;
             try
             {
-                SqlCommand myCommand = new SqlCommand("select * from " + tableName, conn);
+                SqlCommand myCommand = new SqlCommand(sql, conn);
                 SqlDataAdapter myAdapter = new SqlDataAdapter(myCommand);
                 SqlCommandBuilder myCommandBuilder = new SqlCommandBuilder(myAdapter);
                 myAdapter.InsertCommand = myCommandBuilder.GetInsertCommand();
@@ -194,9 +194,9 @@ namespace Dao.ORM
                 conn.Open();
                 iRet = myAdapter.Update(dt);
             }
-            catch (Exception err)
+            catch (Exception ex)
             {
-                throw err;
+                throw ex;
             }
             finally
             {
@@ -208,14 +208,14 @@ namespace Dao.ORM
         /// 大批量更改数据ds.Tables[0] 表名strTblName(数据库表名称,表需要有主键)
         /// </summary>
         /// <param name="ds"></param>
-        /// <param name="strTblName"></param>
+        /// <param name="tableName"></param>
         /// <returns>受影响的行数</returns>
-        public static int UpdateAll(DataTable dt, string strTblName, SqlConnection conn)
+        public static int UpdateAll(string sql, DataTable dt)
         {
             int iRet = 0;
             try
             {
-                SqlCommand myCommand = new SqlCommand("select * from " + strTblName, conn);
+                SqlCommand myCommand = new SqlCommand(sql, conn);
                 SqlDataAdapter myAdapter = new SqlDataAdapter(myCommand);
                 SqlCommandBuilder myCommandBuilder = new SqlCommandBuilder(myAdapter);
                 myAdapter.UpdateCommand = myCommandBuilder.GetUpdateCommand();
@@ -223,10 +223,13 @@ namespace Dao.ORM
                 iRet = myAdapter.Update(dt);
                 conn.Close();
             }
-            catch (Exception err)
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
             {
                 conn.Close();
-                throw err;
             }
             return iRet;
         }

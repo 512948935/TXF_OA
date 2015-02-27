@@ -25,9 +25,17 @@ namespace BLL
         }
         #endregion
 
-        public DataTable GetPageList(int page, int pagesize, out int total, string code, string isDelete, string where)
+        public DataTable GetPageList(int page, int pagesize, out int total, string code, string disabled, List<WhereField> listWhere)
         {
-            return myDao.GetPageList(page, pagesize, out total, code, isDelete, where);
+            return myDao.GetPageList(page, pagesize, out total, code, disabled, listWhere);
+        }
+        public int CheckItemNo(int id, string itemNo)
+        {
+            return myDao.CheckItemNo(id, itemNo);
+        }
+        public void DeleteDepinfo(string id)
+        {
+            myDao.DeleteDepinfo(id);
         }
     }
 }

@@ -76,6 +76,7 @@
                      $("#" + item.id).html('<ul id="ul_tree_' + item.id + '" style="margin:5px;"></ul>');
                      $("#ul_tree_" + item.id).tree({
                          url: "/Home/GetTreeData?id=" + item.id,
+                         async: false,
                          onClick: function (node) {
                              addTabs(node.text, node.attributes["PageUrl"], node.attributes["Icon"], node.id, true);
                          }
@@ -84,10 +85,10 @@
              }
          });
          $("#div_accordion").accordion("add", {
-             "title": "系统管理",
+             "title": "管理员操作",
              "content": '<ul id="ul_tree_00" class="easyui-tree" style="margin:5px;">'
-                      + '<li iconCls="icon-gears"><a id="a_01" href="javascript:void(0)" ref="/Admin/ModuleManage">模块管理</a></li>'
                       + '<li iconCls="icon-gears"><a id="a_01" href="javascript:void(0)" ref="/Item/ItemEdit">数据管理</a></li>'
+                      + '<li iconCls="icon-gears"><a id="a_01" href="javascript:void(0)" ref="/Admin/ModuleManage">模块管理</a></li>'
                       + '</ul>',
              "iconCls": "tu0112",
              "selected": "false"

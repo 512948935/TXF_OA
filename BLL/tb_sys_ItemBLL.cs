@@ -28,29 +28,21 @@ namespace BLL
         {
             return myDao.SelectTreeList(url);
         }
-        public string GetTabelName(string code)
-        {
-            return myDao.GetTabelName(code);
-        }
-        public int GetMaxLevel()
-        {
-            return myDao.GetMaxLevel();
-        }
-        public bool CheckNodeType(int type)
-        {
-            return myDao.CheckNodeType(type);
-        }
-        public void UpdateChildNode(string code, string preCode, string tableName)
-        {
-            myDao.UpdateChildNode(code, preCode, tableName);
-        }
         public void UpdateNodeState(int id, string state)
         {
             myDao.UpdateNodeState(id, state);
         }
+        public void SaveItemInfo(tb_sys_Item entity, string preCode)
+        {
+            myDao.SaveItemInfo(entity, preCode);
+        }
         public void DeleteByNodeCode(string code)
         {
             myDao.DeleteByNodeCode(code);
+        }
+        public void IsValidNode(tb_sys_Item item)
+        {
+            myDao.IsValidNode(item);
         }
     }
 }

@@ -9,8 +9,7 @@ namespace IBLL
 {
     public interface Itb_sys_ModuleBLL : IBaseBLL<tb_sys_Module>
     {
-        int GetMaxLevel();
-        void UpdateChildNode(string code, string preCode);
+        void SaveModule(tb_sys_Module module, string code);
         void UpdateNodeState(string state, int id);
         void DeleteModule(string code);
         /// <summary>

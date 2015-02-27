@@ -25,13 +25,9 @@ namespace BLL
         }
         #endregion
 
-        public int GetMaxLevel()
+        public void SaveModule(tb_sys_Module module, string code)
         {
-            return myDao.GetMaxLevel();
-        }
-        public void UpdateChildNode(string code, string preCode)
-        {
-            myDao.UpdateChildNode(code, preCode);
+            myDao.SaveModule(module, code);
         }
         public void UpdateNodeState(string state, int id)
         {

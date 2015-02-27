@@ -1,9 +1,9 @@
-E:\GitHub\TXF_OA\MyCache.Factory\obj\Debug\MyCache.Factory.csprojResolveAssemblyReference.cache
 E:\GitHub\TXF_OA\MyCache.Factory\bin\Debug\MyCache.Factory.dll
 E:\GitHub\TXF_OA\MyCache.Factory\bin\Debug\MyCache.Factory.pdb
 E:\GitHub\TXF_OA\MyCache.Factory\bin\Debug\MyCache.InProc.dll
 E:\GitHub\TXF_OA\MyCache.Factory\bin\Debug\MyCache.Interface.dll
 E:\GitHub\TXF_OA\MyCache.Factory\bin\Debug\MyCache.InProc.pdb
 E:\GitHub\TXF_OA\MyCache.Factory\bin\Debug\MyCache.Interface.pdb
+E:\GitHub\TXF_OA\MyCache.Factory\obj\Debug\MyCache.Factory.csprojResolveAssemblyReference.cache
 E:\GitHub\TXF_OA\MyCache.Factory\obj\Debug\MyCache.Factory.dll
 E:\GitHub\TXF_OA\MyCache.Factory\obj\Debug\MyCache.Factory.pdb

@@ -51,26 +51,26 @@ if ($.fn.pagination) {
     $.fn.pagination.defaults.afterPageText = '页    共 {pages} 页',
     $.fn.pagination.defaults.displayMsg = '当前显示 {from} - {to} 条记录   共 {total} 条记录'
 }
-//让window居中
-var easyuiPanelOnOpen = function (left, top) {
-    var iframeWidth = $(this).parent().parent().width();
-    var iframeHeight = $(this).parent().parent().height();
-    var windowWidth = $(this).parent().width();
-    var windowHeight = $(this).parent().height();
-    var setWidth = (iframeWidth - windowWidth) / 2;
-    var setHeight = (iframeHeight - windowHeight) / 2;
-    $(this).parent().css({/* 修正面板位置 */
-        left: setWidth,
-        top: setHeight - setHeight * 0.2
-    });
-    if (iframeHeight < windowHeight) {
-        $(this).parent().css({/* 修正面板位置 */
-            left: setWidth,
-            top: 0
-        });
-    }
-}
-$.fn.dialog.defaults.onOpen = easyuiPanelOnOpen;
+////让window居中
+//var easyuiPanelOnOpen = function (left, top) {
+//    var iframeWidth = $(this).parent().parent().width();
+//    var iframeHeight = $(this).parent().parent().height();
+//    var windowWidth = $(this).parent().width();
+//    var windowHeight = $(this).parent().height();
+//    var setWidth = (iframeWidth - windowWidth) / 2;
+//    var setHeight = (iframeHeight - windowHeight) / 2;
+//    $(this).parent().css({/* 修正面板位置 */
+//        left: setWidth,
+//        top: setHeight - setHeight * 0.2
+//    });
+//    if (iframeHeight < windowHeight) {
+//        $(this).parent().css({/* 修正面板位置 */
+//            left: setWidth,
+//            top: 0
+//        });
+//    }
+//}
+//$.fn.dialog.defaults.onOpen = easyuiPanelOnOpen;
 //textbox添加图标
 $.extend($.fn.textbox.methods, {
     addClearBtn: function (jq, iconCls) {

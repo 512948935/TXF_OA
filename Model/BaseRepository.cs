@@ -13,6 +13,7 @@ namespace Model
         /// 当前登录人
         /// </summary>
         public static tb_sys_User User { get; set; }
+        private DateTime m_CreateOn;
         /// <summary>
         ///创建时间
         /// </summary>
@@ -20,6 +21,7 @@ namespace Model
         public DateTime CreateOn
         {
             get { return DateTime.Now; }
+            set { m_CreateOn = value; }
         }
         private int m_CreateUserID;
         /// <summary>
@@ -33,12 +35,13 @@ namespace Model
                 if (User != null) m_CreateUserID = User.ID;
                 return m_CreateUserID;
             }
+            set { m_CreateUserID = value; }
         }
         private string m_CreateBy;
         /// <summary>
         ///创建人
         /// </summary>
-        [Model(Name = "创建人", Empty = true, DataType = DbType.String, MaxLength = 20, Readonly = true)]
+        [Model(Name = "创建人", Empty = true, DataType = DbType.String, MaxLength = 20)]
         public string CreateBy
         {
             get
@@ -46,12 +49,13 @@ namespace Model
                 if (User != null) m_CreateBy = User.UserName;
                 return m_CreateBy;
             }
+            set { m_CreateBy = value; }
         }
         private DateTime m_ModifiedOn;
         /// <summary>
         ///修改时间
         /// </summary>
-        [Model(Name = "修改时间", Empty = true, DataType = DbType.DateTime, Readonly = true)]
+        [Model(Name = "修改时间", Empty = true, DataType = DbType.DateTime)]
         public DateTime ModifiedOn
         {
             set { m_ModifiedOn = value; }
@@ -61,7 +65,7 @@ namespace Model
         /// <summary>
         ///修改人ID
         /// </summary>
-        [Model(Name = "修改人ID", Empty = true, DataType = DbType.Int32, Readonly = true)]
+        [Model(Name = "修改人ID", Empty = true, DataType = DbType.Int32)]
         public int ModifiedUserID
         {
             set { m_ModifiedUserID = value; }
@@ -75,7 +79,7 @@ namespace Model
         /// <summary>
         ///修改人
         /// </summary>
-        [Model(Name = "修改人", Empty = true, DataType = DbType.String, MaxLength = 20, Readonly = true)]
+        [Model(Name = "修改人", Empty = true, DataType = DbType.String, MaxLength = 20)]
         public string ModifiedBy
         {
             set { m_ModifiedBy = value; }

@@ -1,21 +1,21 @@
 ﻿@{
     ViewBag.Title = "数据字典管理";
 }
-<div id="div_Layout" class="easyui-layout" style="width:100%;height:100%">
+<div id="div_layout" class="easyui-layout" style="width:100%;height:100%">
    <!--左边-->
-   <div data-options="region:'west',split:true,tools:'#toolbar',collapsible:false,iconCls:'tu1419',title:'数据类别'" style="width:300px;padding:5px">
+   <div data-options="region:'west',split:true,tools:'#toolbar',iconCls:'tu1419',title:'数据类别'" style="width:250px;padding:5px">
         <ul id="ul_tree"></ul>
    </div>
    <!--中间-->
-   <div data-options="region:'center',title:'数据列表',iconCls:'tu1602'" style="overflow:hidden;">
+   <div data-options="region:'center',iconCls:'tu1602'" style="overflow:hidden;">
        <iframe id="mainFrame" name="mainFrame" frameborder="0" style="width:100%;height:100%;"></iframe>
    </div>
    <!--节点编辑内容-->
-    <div id="div_dialog_node" style="padding:2px;">
-         <form id="form_node" method="post" action="">
+    <div id="div_dialog_edit" style="padding:2px;">
+         <form id="form_edit" method="post" action="">
              <table id="tt" class="tablestyle" width="100%" border="0" cellpadding="0" cellspacing="0">            
                 <tr>
-                    <td class="td1" width="120">节点代码：</td>
+                    <td class="td1" width="120">数据代码：</td>
                     <td class="td2">
                         <input type="text" id="t_NodeCode" name="NodeCode" required="true" missingMessage='必填' />
                         <input type="hidden" id="t_PreCode" name="PreCode" />
@@ -23,7 +23,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="td1">节点名称：</td>
+                    <td class="td1">数据名称：</td>
                     <td class="td2">
                         <input type="text" id="t_NodeName" name="NodeName" required="true" missingMessage='必填' />
                     </td>
@@ -60,152 +60,146 @@
 	 </div> 
      </div>
      <script type="text/javascript">
-     $(function () {
-         $("input:text").each(function () {
-             $(this).addClass('easyui-validatebox textbox txt');
-             if ($(this).attr('required') || $(this).attr('validtype'))
-                 $(this).validatebox();
-         });
-         $("#t_NodeType").combobox('select', "==请选择==");
-
-         //#region 树形控件操作
-         //配置树形控件
-         $('#ul_tree').tree({
-             url: '/Item/LoadTree',
-             animate: true,
-             lines: true,
-             onLoadError: function () { alert("信息获取失败.") },
-             onContextMenu: function (e, node) {
-                 e.preventDefault();
-                 $(this).tree('select', node.target);
-                 $('#uiMenu').menu({
-                     onClick: function (item) {
-                         var isLeaf = $(this).tree('isLeaf', node.target);
-                         if (!isLeaf) {
-                             if (item.text == "折叠节点") {
-                                 $.post('/Item/SetNodeState', { id: node.id, state: 'open' }, function () {
-                                     $("#ul_tree").tree("reload");
-                                 });
-                             }
-                             if (item.text == "展开节点") {
-                                 $.post('/Item/SetNodeState', { id: node.id, state: 'closed' }, function () {
-                                     $("#ul_tree").tree("reload");
-                                 });
-                             }
-                         }
-                     }
-                 });
-                 $('#uiMenu').menu('show', { left: e.pageX, top: e.pageY });
-             },
-             onSelect: function (node) {
-                 if (node.attributes.NodeCode != $("#t_NodeCode").val())
-                     $("#mainFrame").attr("src", node.attributes.PageUrl);
-                 //赋值
-                 $("#form_node").find("input:text,input:hidden").each(function () {
-                     var name = $(this).attr('name');
-                     $(this).val(node.attributes[name]);
-                 });
-                 $("#t_PreCode").val(node.attributes.NodeCode);
-                 $("#t_NodeType").combobox('setValue', node.attributes.NodeType);
-             }
-         });
-         //新增节点
-         $("#btnAdd").click(function () {
-             $("#tt tr:eq(2)").show();
-             $('#div_dialog_node').dialog('open');
-             $("#form_node").form('clear')
-             $("#t_NodeType").combobox('select', "==请选择==");
-         });
-         //修改节点
-         $("#btnModify").click(function () {
-             var node = $("#ul_tree").tree("getSelected");
-             if (node == null)
-                 jqAlert('请选择需要修改节点.', 'warning');
-             else {
-                 //$("#tt tr:eq(2)").hide();
-                 $('#div_dialog_node').dialog('open');
-             }
-         });
-         //删除节点
-         $("#btnDel").click(function () {
-             var node = $("#ul_tree").tree("getSelected");
-             if (node == null)
-                 jqAlert('请选择需要删除的节点.', 'warning');
-             else {
-                 uiConfirm("确定要删除当前节点吗！", function () {
-                     var postData = { "NodeCode": eval(node.attributes).NodeCode };
-                     $.post("/Item/DeleteItem", postData, function (data) {
-                         if (data.status == 1) {//删除成功
-                             $("#ul_tree").tree("reload");
-                             $("#t_NodeCode").val('');
-                             window.frames["mainFrame"].document.write('');
-                             window.frames["mainFrame"].document.clear();
-                         }
-                         else
-                             jqAlert('删除失败:' + data, 'error')
+         $(function () {
+             //调整布局大小
+             parent.$("#body_layout").layout('panel', 'center').panel({
+                 onResize: function (width, height) {
+                     $('#div_layout').layout('resize', {
+                         width: width,
+                         height: height - 33
                      });
-                 });
-             }
-         });
-         //节点编辑对话框
-         $("#div_dialog_node").dialog({
-             iconCls: 'tu1602',
-             title: '节点操作',
-             width: 400,
-             top: 100,
-             closed: true,
-             modal: true,
-             shadow: false,
-             onClose: function () {
-                 var node = $("#ul_tree").tree("getSelected");
-                 if (node == null) {
-                     $("#t_ID").val(0);
-                     $("#t_NodeCode").val('');
-                     $("#t_NodeName").val('');
-                     $("#t_NodeType").combobox('select', "==请选择==");
                  }
-                 else {
-                     $("#t_ID").val(node.attributes.ID);
-                     $("#t_NodeCode").val(node.attributes.NodeCode);
-                     $("#t_NodeName").val(node.attributes.NodeName);
-                     $("#t_NodeType").combobox('setValue', node.attributes.NodeType);
-                 }
-             },
-             buttons: [{
-                 text: '确定',
-                 iconCls: 'icon-ok',
-                 handler: function () {
-                     if ($("#form_node").form('validate')) {
-                         $.ajax({
-                             type: "post",
-                             url: "/Item/SaveItemInfo",
-                             data: $("#form_node").serializeArray(),
-                             async: false,
-                             success: function (data) {
-                                 if (data.status == 1) {//保存成功
-                                     if ($("#t_ID").val() != "") {
-                                         var node = $("#ul_tree").tree("getSelected");
-                                         if (node.attributes.PageUrl != "")
-                                             window.frames["mainFrame"].location = node.attributes.PageUrl;
-                                     }
-                                     $("#ul_tree").tree("reload");
-                                     $('#div_dialog_node').dialog('close');
+             });
+             $("input:text").each(function () {
+                 $(this).addClass('easyui-validatebox textbox txt');
+                 if ($(this).attr('required') || $(this).attr('validtype'))
+                     $(this).validatebox();
+             });
+             $("#t_NodeType").combobox('select', "==请选择==");
+             //#region 树形控件操作
+             //配置树形控件
+             $('#ul_tree').tree({
+                 url: '/Item/LoadTree',
+                 animate: true,
+                 lines: true,
+                 onLoadError: function () { alert("数据加载失败.") },
+                 onContextMenu: function (e, node) {
+                     e.preventDefault();
+                     $(this).tree('select', node.target);
+                     $('#uiMenu').menu({
+                         onClick: function (item) {
+                             var isLeaf = $(this).tree('isLeaf', node.target);
+                             if (!isLeaf) {
+                                 if (item.text == "折叠节点") {
+                                     $.post('/Item/SetNodeState', { id: node.id, state: 'closed' }, function () {
+                                         $("#ul_tree").tree("reload");
+                                     });
                                  }
-                                 else {
-                                     jqAlert('保存失败:' + data, 'error')
+                                 if (item.text == "展开节点") {
+                                     $.post('/Item/SetNodeState', { id: node.id, state: 'open' }, function () {
+                                         $("#ul_tree").tree("reload");
+                                     });
                                  }
                              }
+                         }
+                     });
+                     $('#uiMenu').menu('show', { left: e.pageX, top: e.pageY });
+                 },
+                 onSelect: function (node) {
+                     if (node.attributes.NodeCode != $("#t_NodeCode").val())
+                         $("#mainFrame").attr("src", node.attributes.PageUrl);
+                     //赋值
+                     $("#form_edit").find("input:text,input:hidden").each(function () {
+                         var name = $(this).attr('name');
+                         $(this).val(node.attributes[name]);
+                     });
+                     $("#t_PreCode").val(node.attributes.NodeCode);
+                     $("#t_NodeType").combobox('setValue', '-1');
+                     $("#t_NodeType").combobox('setValue', node.attributes.NodeType);
+                     $("#t_NodeType").combobox("readonly", true);
+                 }
+             });
+             //新增节点
+             $("#btnAdd").click(function () {
+                 $('#div_dialog_edit').dialog('open');
+                 $("#form_edit").form('clear')
+                 $("#t_NodeType").combobox('select',"");
+                 $("#t_NodeType").combobox('select', "==请选择==");
+                 $("#t_NodeType").combobox("readonly",false);
+             });
+             //修改节点
+             $("#btnModify").click(function () {
+                 var node = $("#ul_tree").tree("getSelected");
+                 if (node == null)
+                     jqAlert('请选择需要修改节点.', 'warning');
+                 else
+                     $('#div_dialog_edit').dialog('open');
+             });
+             //删除节点
+             $("#btnDel").click(function () {
+                 var node = $("#ul_tree").tree("getSelected");
+                 if (node == null)
+                     jqAlert('请选择需要删除的节点.', 'warning');
+                 else {
+                     uiConfirm("确定要删除当前节点吗！", function () {
+                         var postData = { "NodeCode": eval(node.attributes).NodeCode };
+                         $.post("/Item/DeleteItem", postData, function (data) {
+                             if (data.status == 1) {//删除成功
+                                 $("#ul_tree").tree("reload");
+                                 $("#t_NodeCode").val('');
+                                 window.frames["mainFrame"].document.write('');
+                                 window.frames["mainFrame"].document.clear();
+                             }
+                             else
+                                 jqAlert('删除失败:' + data, 'error')
                          });
+                     });
+                 }
+             });
+             //节点编辑对话框
+             $("#div_dialog_edit").dialog({
+                 iconCls: 'tu1602',
+                 title: '节点操作',
+                 width: 400,
+                 top: 100,
+                 closed: true,
+                 modal: true,
+                 shadow: false,
+                 buttons: [{
+                     text: '确定',
+                     iconCls: 'icon-ok',
+                     handler: function () {
+                         if ($("#form_edit").form('validate')) {
+                             $.ajax({
+                                 type: "post",
+                                 url: "/Item/SaveItem",
+                                 data: $("#form_edit").serializeArray(),
+                                 async: false,
+                                 success: function (data) {
+                                     if (data.status == 1) {//保存成功
+                                         if ($("#t_ID").val() != "") {
+                                             var node = $("#ul_tree").tree("getSelected");
+                                             if (node.attributes.PageUrl != "")
+                                                 window.frames["mainFrame"].location = node.attributes.PageUrl;
+                                         }
+                                         $("#ul_tree").tree("reload");
+                                         $('#div_dialog_edit').dialog('close');
+                                     }
+                                     else {
+                                         jqAlert('保存失败:' + data, 'error')
+                                     }
+                                 }
+                             });
+                         }
                      }
-                 }
-             }, {
-                 text: '取消',
-                 iconCls: 'icon-cancel',
-                 handler: function () {
-                     $('#div_dialog_node').dialog('close');
-                 }
-             }]
-         });
-         //#endregion
-     })
+                 }, {
+                     text: '取消',
+                     iconCls: 'icon-cancel',
+                     handler: function () {
+                         $('#div_dialog_edit').dialog('close');
+                     }
+                 }]
+             });
+             //#endregion
+         })
  </script>

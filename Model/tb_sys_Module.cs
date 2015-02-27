@@ -93,7 +93,7 @@ namespace Model
         /// <summary>
         ///是否禁用
         /// </summary>
-        [Model(Name = "是否禁用", Empty = true, DataType = DbType.Boolean, Readonly = true)]
+        [Model(Name = "是否禁用", Empty = true, DataType = DbType.Boolean)]
         public bool IsDelete
         {
             get { return m_IsDelete; }

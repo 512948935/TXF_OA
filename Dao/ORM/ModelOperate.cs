@@ -241,7 +241,7 @@ namespace Dao.ORM
                 Type type = typeof(T);
                 string tableName = type.Name;
                 StringBuilder sql = new StringBuilder();
-                sql.AppendFormat("delete from [{0}] where {1}", tableName, where);
+                sql.AppendFormat("DELETE FROM [{0}] WHERE {1}", tableName, where);
                 DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), listParameter.ToArray());
             }
             catch (Exception ex)
@@ -306,8 +306,9 @@ namespace Dao.ORM
                 //获取所有字段
                 string[] fields = _ModelBase.GetAllFields<T>();
                 string selectField = _ModelBase.GetSelectFieldStr(fields);
-                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}", selectField, tableName, where);
-                if (!string.IsNullOrEmpty(sort)) sql += " ORDER BY " + sort;
+                if (sort.Equals(""))
+                    sort = _ModelBase.GetPrimaryKeyName<T>();
+                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2} ORDER BY [{3}]", selectField, tableName, where, sort);
                 DbDataReader reader = DataProvider.DBHelper.ExecuteReader(CommandType.Text, sql);
                 Dictionary<string, object> pNameAndValue = new Dictionary<string, object>();
                 List<T> entities = new List<T>();
@@ -367,8 +368,8 @@ namespace Dao.ORM
             //获取所有字段
             string[] fields = _ModelBase.GetAllFields<T>();
             string selectField = _ModelBase.GetSelectFieldStr(fields);
-            string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}", selectField, tableName, where);
-            if (!string.IsNullOrEmpty(sort)) sql += " ORDER BY " + sort;
+            if (sort.Equals("")) sort = _ModelBase.GetPrimaryKeyName<T>();
+            string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2} ORDER BY [{3}]", selectField, tableName, where, sort);
             DbDataReader reader = DataProvider.DBHelper.ExecuteReader(CommandType.Text, sql);
             Dictionary<string, object> pNameAndValue = new Dictionary<string, object>();
             List<T> entities = new List<T>();
@@ -406,8 +407,8 @@ namespace Dao.ORM
                     string[] fields = _ModelBase.GetAllFields<T>();
                     field = _ModelBase.GetSelectFieldStr(fields);
                 }
-                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}", field, tableName, where);
-                if (!string.IsNullOrEmpty(sort)) sql += " ORDER BY " + sort;
+                if (sort.Equals("")) sort = _ModelBase.GetPrimaryKeyName<T>();
+                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2} ORDER BY [{3}]", field, tableName, where, sort);
                 DataTable dt = DataProvider.DBHelper.ExecuteDataTable(CommandType.Text, sql);
                 return dt;
             }
@@ -455,8 +456,8 @@ namespace Dao.ORM
                     string[] fields = _ModelBase.GetAllFields<T>();
                     field = _ModelBase.GetSelectFieldStr(_ModelBase.GetAllFields<T>());
                 }
-                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}", field, tableName, where);
-                if (!string.IsNullOrEmpty(sort)) sql += " ORDER BY " + sort;
+                if (sort.Equals("")) sort = _ModelBase.GetPrimaryKeyName<T>();
+                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2} ORDER BY [{3}]", field, tableName, where, sort);
                 DataTable dt = DataProvider.DBHelper.ExecuteDataTable(CommandType.Text, sql, listParameter.ToArray());
                 return dt;
             }

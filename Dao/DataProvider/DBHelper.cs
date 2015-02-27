@@ -30,7 +30,8 @@ namespace Dao.DataProvider
             conn = null;
         }
         #endregion
-
+        private static object locker1 = new object();
+        private static object locker2 = new object();
         #region ExecuteNonQuery
         public static int ExecuteNonQuery(CommandType cmdType, string cmdText, params DbParameter[] parameterValues)
         {
@@ -112,28 +113,31 @@ namespace Dao.DataProvider
         #region ExecuteDataset
         public static DataSet ExecuteDataSet(CommandType cmdType, string cmdText, params DbParameter[] parameterValues)
         {
-            DataSet result = null;
-            bool mustCloseConn = true;
-            DbCommand cmd = PrepareCmd(cmdType, cmdText, parameterValues, out mustCloseConn);
-            try
+            lock (locker1)
             {
-                using (DbDataAdapter da = new SqlDataAdapter())
+                DataSet result = null;
+                bool mustCloseConn = true;
+                DbCommand cmd = PrepareCmd(cmdType, cmdText, parameterValues, out mustCloseConn);
+                try
                 {
-                    da.SelectCommand = cmd;
-                    result = new DataSet();
-                    da.Fill(result);
+                    using (DbDataAdapter da = new SqlDataAdapter())
+                    {
+                        da.SelectCommand = cmd;
+                        result = new DataSet();
+                        da.Fill(result);
+                    }
+                    return result;
                 }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                if (mustCloseConn) CloseConn(cmd.Connection);
-                ClearCmdParameters(cmd);
-                cmd.Dispose();
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    if (mustCloseConn) CloseConn(cmd.Connection);
+                    ClearCmdParameters(cmd);
+                    cmd.Dispose();
+                } 
             }
         }
         #endregion ExecuteDataset

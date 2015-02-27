@@ -2,7 +2,7 @@
     ViewBag.Title = "编辑/修改页面信息";
 }
 <!----------------------------------页面编辑对话框------------------------------------------->
-<form id="form_page" method="post" action="">
+<form id="form_edit" method="post" action="">
       <table id="page_tt" class="tablestyle" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">            
         <tr>
             <td class="td1" width="40%">页面代码：</td>
@@ -42,29 +42,29 @@
         </tr>
     </table>    
 </form>
-<div data-options="region:'south',border:false" style="text-align:right;padding:2px">
+<div style="text-align:right;padding:2px">
       <a class="easyui-linkbutton" iconCls="icon-ok" id="btnSave" href="javascript:void(0)">保存</a>
-      <a class="easyui-linkbutton" iconCls="icon-cancel" id="btnClose" href="javascript:void(0)">取消</a>
+      <a class="easyui-linkbutton" iconCls="icon-cancel" id="btnClose" href="javascript:void(0)">关闭</a>
 </div>
 <script type="text/javascript">
     $(function () {
-        $("#form_page input:text").each(function () {
+        $("#form_edit input:text").each(function () {
             $(this).addClass('easyui-validatebox textbox txt');
             if ($(this).attr('required') || $(this).attr('validtype'))
                 $(this).validatebox();
         });
         //保存数据
         $("#btnSave").click(function () {
-            if ($("#form_page").form('validate')) {
+            if ($("#form_edit").form('validate')) {
                 $.ajax({
                     type: "POST",
                     url: "/Admin/SaveAction",
-                    data: $("#form_page").serializeArray(),
+                    data: $("#form_edit").serializeArray(),
                     async: false,
                     success: function (data) {
                         if (data.status == 1) {//保存成功
                             parent.$("#tt_grid").datagrid("reload");
-                            parent.$("#div_win").window("close");
+                            parent.$("#div_win_edit").window("close");
                         }
                         else {
                             jqAlert('保存失败:' + data, 'error')
@@ -74,7 +74,7 @@
             }
         });
         $("#btnClose").click(function () {
-            parent.$("#div_win").window("close");
+            parent.$("#div_win_edit").window("close");
         });
     });
 </script>

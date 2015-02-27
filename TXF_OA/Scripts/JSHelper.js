@@ -18,7 +18,7 @@ $.extend({
         str = $.trim(str).replace(/[~'"!<>@#$%^&*()-+_=:]/g, "");
         return str;
     }
-    });
+});
 $.fn.extend({
      //固定表头
     fixTableHead: function (options) {
@@ -223,13 +223,11 @@ function showMyDialog1(jq, title, icon, href, name, width, height, fn, modal, mi
     });
 }
 //window窗体
-function showMyWindow(jq, title, icon, href, width, height, modal, minimizable, maximizable) {
+function showMyWindow(jq, title, icon, href, name, modal, minimizable, maximizable) {
     var win = jq.window({
         title: title,
-        width: width === undefined ? 750 : width,
-        height: height === undefined ? 480 : height,
         iconCls: "" + icon + "",
-        content: '<iframe name="frame" scrolling="yes" frameborder="0"  src="' + href + '" style="width:100%;height:100%;"></iframe>',
+        content: '<iframe name=' + name + ' scrolling="auto" frameborder="0"  src="' + href + '" style="width:100%;height:100%"></iframe>',
         modal: modal === undefined ? true : modal,
         minimizable: minimizable === undefined ? false : minimizable,
         maximizable: maximizable === undefined ? false : maximizable,

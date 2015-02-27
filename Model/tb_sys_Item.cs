@@ -79,25 +79,5 @@ namespace Model
             get { return m_NodeState; }
             set { m_NodeState = value; }
         }
-        private string m_TableName;
-        /// <summary>
-        ///表名
-        /// </summary>
-        [Model(Name = "表名", Empty = true, DataType = DbType.String, MaxLength = 50)]
-        public string TableName
-        {
-            get { return m_TableName; }
-            set { m_TableName = value; }
-        }
-        private bool m_IsDelete;
-        /// <summary>
-        ///是否删除
-        /// </summary>
-        [Model(Name = "是否删除", Empty = true, DataType = DbType.Boolean)]
-        public bool IsDelete
-        {
-            get { return m_IsDelete; }
-            set { m_IsDelete = value; }
-        }
     }
 }

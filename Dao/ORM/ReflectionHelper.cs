@@ -103,7 +103,7 @@ namespace Dao.ORM
                     object pValue = pNameAndValue[item];
                     if (pValue != null)
                     {
-                        object newValue = Convert.ChangeType(pValue, pInfo.PropertyType);
+                        object newValue = Convert.ChangeType(pValue, pInfo.PropertyType, null);
                         //object newValue = pValue;
                         pInfo.SetValue(obj, newValue, null);
                     }

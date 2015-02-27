@@ -16,8 +16,8 @@ namespace Dao.ORM
     }
     public class ModelBase
     {
-        private static object _LockObj1 = new object();
-        private static object _LockObj2 = new object();
+        private static object locker1 = new object();
+        private static object locker2 = new object();
         private ModelCheck modelCheck = new ModelCheck();
         /// <summary>
         /// 根据Model类型获取表名
@@ -34,7 +34,7 @@ namespace Dao.ORM
         /// </summary>
         private Dictionary<string, ModelAttribute> GetModelAttribute<T>() where T : new()
         {
-            lock (_LockObj1)
+            lock (locker1)
             {
                 string key = typeof(T).Name + "_ModelAttribute";
                 object obj = MyCache.IO.Opation.Get(key);
@@ -80,7 +80,7 @@ namespace Dao.ORM
         /// </summary>
         public string[] GetAllFields<T>() where T : new()
         {
-            lock (_LockObj2)
+            lock (locker2)
             {
                 string key = typeof(T).Name + "_AllFields";
                 List<string> fieldList = MyCache.IO.Opation.Get(key) as List<string>;
@@ -131,7 +131,7 @@ namespace Dao.ORM
             throw new Exception("获取主键失败");
         }
         /// <summary>
-        /// 反射获取字段名与对应的字段值,Key:数据库字段名(非类的属性名),解决类中属性名与数据字段必须一致的方法
+        /// 反射获取字段名与对应的字段值
         /// </summary>
         /// <param name="model">实体对象</param>        
         public Dictionary<string, object> GetModelValue<T>(T model, ActionState state) where T : new()
@@ -146,8 +146,8 @@ namespace Dao.ORM
                 object attrValue = proInfo.GetValue(model, null);
                 try
                 {
-                    if (modelAttr[field].Readonly) continue;
                     if (state == ActionState.Add && modelAttr[field].AutoIncrement) continue;
+                    if (state == ActionState.Update && modelAttr[field].Readonly) continue;
                     if (attrValue != null)
                         this.modelCheck.CheckInput(modelAttr[field], attrValue.ToString());
                     r.Add(fieldName, attrValue);

@@ -10,10 +10,8 @@ namespace IBLL
     public interface Itb_sys_ItemBLL : IBaseBLL<tb_sys_Item>
     {
         DataTable SelectTreeList(string url);
-        string GetTabelName(string code);
-        int GetMaxLevel();
-        bool CheckNodeType(int type);
-        void UpdateChildNode(string code, string preCode, string tableName);
+        void IsValidNode(tb_sys_Item item);
+        void SaveItemInfo(tb_sys_Item entity, string preCode);
         void UpdateNodeState(int id, string state);
         void DeleteByNodeCode(string code);
     }

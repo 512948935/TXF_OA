@@ -74,9 +74,12 @@ namespace MyCache.InProc
         /// <returns></returns>
         public void RemoveAll()
         {
-            for (int i = 0; i < cache.Count; i++)
+            System.Collections.IDictionaryEnumerator DicCache = HttpRuntime.Cache.GetEnumerator();
+            int count = HttpRuntime.Cache.Count;
+            for (int i = 0; i < count; i++)
             {
-
+                DicCache.MoveNext();
+                HttpRuntime.Cache.Remove(DicCache.Entry.Key.ToString());
             }
         }
     }

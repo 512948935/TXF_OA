@@ -89,15 +89,15 @@ namespace Model
             get { return m_Remark; }
             set { m_Remark = value; }
         }
-        private bool m_IsDelete;
+        private bool m_IsDisabled;
         /// <summary>
-        ///
+        ///是否禁用
         /// </summary>
         [Model(Name = "是否禁用", Empty = true, DataType = DbType.Boolean)]
-        public bool IsDelete
+        public bool IsDisabled
         {
-            get { return m_IsDelete; }
-            set { m_IsDelete = value; }
+            get { return m_IsDisabled; }
+            set { m_IsDisabled = value; }
         }
     }
 }
