@@ -73,7 +73,7 @@ namespace Model
         /// <summary>
         /// 节点状态
         /// </summary>
-        [Model(Name = "节点状态", Empty = true, DataType = DbType.String, MaxLength = 10)]
+        [Model(Name = "节点状态", Empty = true, DataType = DbType.String, MaxLength = 10, NotAdd = true)]
         public string NodeState
         {
             get { return m_NodeState; }

@@ -12,12 +12,12 @@ namespace Model
         /// <summary>
         /// 当前登录人
         /// </summary>
-        public static tb_sys_User User { get; set; }
+        public static tb_item_User User { get; set; }
         private DateTime m_CreateOn;
         /// <summary>
         ///创建时间
         /// </summary>
-        [Model(Name = "创建时间", Empty = true, DataType = DbType.DateTime, Readonly = true)]
+        [Model(Name = "创建时间", Empty = true, DataType = DbType.DateTime, NotUpdate = true)]
         public DateTime CreateOn
         {
             get { return DateTime.Now; }
@@ -27,7 +27,7 @@ namespace Model
         /// <summary>
         ///创建人ID
         /// </summary>
-        [Model(Name = "创建人ID", Empty = true, DataType = DbType.Int32, Readonly = true)]
+        [Model(Name = "创建人ID", Empty = true, DataType = DbType.Int32, NotUpdate = true)]
         public int CreateUserID
         {
             get
@@ -41,12 +41,12 @@ namespace Model
         /// <summary>
         ///创建人
         /// </summary>
-        [Model(Name = "创建人", Empty = true, DataType = DbType.String, MaxLength = 20)]
+        [Model(Name = "创建人", Empty = true, DataType = DbType.String, MaxLength = 20, NotUpdate = true)]
         public string CreateBy
         {
             get
             {
-                if (User != null) m_CreateBy = User.UserName;
+                if (User != null) m_CreateBy = User.ItemName;
                 return m_CreateBy;
             }
             set { m_CreateBy = value; }
@@ -85,7 +85,7 @@ namespace Model
             set { m_ModifiedBy = value; }
             get
             {
-                if (User != null) m_ModifiedBy = User.UserName;
+                if (User != null) m_ModifiedBy = User.ItemName;
                 return m_ModifiedBy;
             }
         }

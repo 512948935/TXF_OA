@@ -65,7 +65,7 @@ namespace Dao
             total = Convert.ToInt32(DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql.ToString()));
             int rowNo = (page - 1) * pagesize;
             sql = string.Format(@"SELECT TOP({0})* FROM(SELECT ROW_NUMBER()OVER(ORDER BY ModuleCode)RowNo,ID,ModuleCode,ModuleName
-                                 ,PageUrl,Icon,IsDelete FROM dbo.tb_sys_Module WHERE {1}) as tt WHERE RowNo>{2}", pagesize, where, rowNo);
+                                 ,PageUrl,Icon,IsDisabled FROM dbo.tb_sys_Module WHERE {1}) as tt WHERE RowNo>{2}", pagesize, where, rowNo);
             return DataProvider.DBHelper.ExecuteDataTable(CommandType.Text, sql.ToString());
         }
         public void SaveModule(tb_sys_Module module, string code)

@@ -33,7 +33,7 @@ namespace Dao.DataProvider
         private static object locker1 = new object();
         private static object locker2 = new object();
         #region ExecuteNonQuery
-        public static int ExecuteNonQuery(CommandType cmdType, string cmdText, params DbParameter[] parameterValues)
+        public static int ExecuteNonQuery(CommandType cmdType, string cmdText, List<SqlParameter> parameterValues = null)
         {
             int result = 0;
             bool mustCloseConn = true;
@@ -58,7 +58,7 @@ namespace Dao.DataProvider
         #endregion ExecuteNonQuery
 
         #region ExecuteScalar
-        public static object ExecuteScalar(CommandType cmdType, string cmdText, params DbParameter[] parameterValues)
+        public static object ExecuteScalar(CommandType cmdType, string cmdText, List<SqlParameter> parameterValues = null)
         {
             object result = 0;
             bool mustCloseConn = true;
@@ -83,7 +83,7 @@ namespace Dao.DataProvider
         #endregion ExecuteScalar
 
         #region ExecuteReader
-        public static DbDataReader ExecuteReader(CommandType cmdType, string cmdText, params DbParameter[] parameterValues)
+        public static DbDataReader ExecuteReader(CommandType cmdType, string cmdText, List<SqlParameter> parameterValues = null)
         {
             DbDataReader result = null;
             bool mustCloseConn = true;
@@ -111,7 +111,7 @@ namespace Dao.DataProvider
         #endregion ExecuteReader
 
         #region ExecuteDataset
-        public static DataSet ExecuteDataSet(CommandType cmdType, string cmdText, params DbParameter[] parameterValues)
+        public static DataSet ExecuteDataSet(CommandType cmdType, string cmdText, List<SqlParameter> parameterValues = null)
         {
             lock (locker1)
             {
@@ -137,13 +137,13 @@ namespace Dao.DataProvider
                     if (mustCloseConn) CloseConn(cmd.Connection);
                     ClearCmdParameters(cmd);
                     cmd.Dispose();
-                } 
+                }
             }
         }
         #endregion ExecuteDataset
 
         #region ExecuteDataTable
-        public static DataTable ExecuteDataTable(CommandType cmdType, string cmdText, params DbParameter[] parameterValues)
+        public static DataTable ExecuteDataTable(CommandType cmdType, string cmdText, List<SqlParameter> parameterValues = null)
         {
             DataSet ds = ExecuteDataSet(cmdType, cmdText, parameterValues);
             if (ds != null && ds.Tables.Count > 0)
@@ -216,7 +216,7 @@ namespace Dao.DataProvider
         /// <param>存储过程名或都T-SQL命令文本</param>
         /// <param>和命令相关联的DbParameter参数数组,如果没有参数为'null'</param>
         /// <param><c>true</c> 如果连接是打开的,则为true,其它情况下为false.</param>
-        private static DbCommand PrepareCmd(CommandType cmdType, string cmdText, DbParameter[] cmdParams, out bool mustCloseConn)
+        private static DbCommand PrepareCmd(CommandType cmdType, string cmdText, List<SqlParameter> cmdParams, out bool mustCloseConn)
         {
             DbCommand cmd = new SqlCommand(cmdText);
             DbConnection conn = null;
@@ -244,7 +244,7 @@ namespace Dao.DataProvider
         /// </summary>
         /// <param>命令名</param>
         /// <param>SqlParameters数组</param>
-        private static void AttachParameters(DbCommand command, DbParameter[] commandParameters)
+        private static void AttachParameters(DbCommand command, List<SqlParameter> commandParameters)
         {
             if (command == null) throw new ArgumentNullException("command");
             if (commandParameters != null)

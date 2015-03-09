@@ -34,7 +34,7 @@ namespace Dao.ORM
         /// <param name="value"></param>
         private void CheckEmpty(ModelAttribute modelAttribute, string value)
         {
-            if (!modelAttribute.Empty && !modelAttribute.AutoIncrement && !modelAttribute.Readonly)
+            if (!modelAttribute.Empty && !modelAttribute.AutoIncrement && !modelAttribute.NotAdd && !modelAttribute.NotUpdate)
             {
                 if (string.IsNullOrEmpty(value))
                 {

@@ -107,7 +107,7 @@ namespace Dao.ORM
             List<string> fl = new List<string>();
             foreach (string item in modelAttr.Keys)
             {
-                if (modelAttr[item].AutoIncrement || modelAttr[item].Readonly == true) continue;
+                if (modelAttr[item].AutoIncrement || modelAttr[item].NotAdd == true) continue;
                 fl.Add(item);
             }
             if (fl == null || fl.Count == 0)
@@ -146,8 +146,8 @@ namespace Dao.ORM
                 object attrValue = proInfo.GetValue(model, null);
                 try
                 {
-                    if (state == ActionState.Add && modelAttr[field].AutoIncrement) continue;
-                    if (state == ActionState.Update && modelAttr[field].Readonly) continue;
+                    if (state == ActionState.Add && (modelAttr[field].AutoIncrement || modelAttr[field].NotAdd)) continue;
+                    if (state == ActionState.Update && modelAttr[field].NotUpdate) continue;
                     if (attrValue != null)
                         this.modelCheck.CheckInput(modelAttr[field], attrValue.ToString());
                     r.Add(fieldName, attrValue);

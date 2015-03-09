@@ -17,6 +17,29 @@ $.extend({
     strFilter: function (str) {
         str = $.trim(str).replace(/[~'"!<>@#$%^&*()-+_=:]/g, "");
         return str;
+    },
+    //ajaxGet方法
+    ajaxGet: function (url, data, fn) {
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: data,
+            cache: false,
+            error: function () { alert('执行失败.', 'warning'); },
+            success: function (obj) { fn(obj) }
+        });
+    },
+    //ajaxPost方法
+    ajaxPost: function (url, data, fn) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            cache: false,
+            async: false,
+            error: function () { alert('执行失败.', 'warning'); },
+            success: function (obj) { fn(obj) }
+        });
     }
 });
 $.fn.extend({
@@ -81,10 +104,6 @@ function resizer($this) {
     $("thead:eq(0)>tr td", $this).each(function (i) {
         $("thead:eq(0)>tr td:eq(" + i + ")", $curr).width($(this).width());
     });
-}
-//添加时间戳
-function addTimestamp(url) {
-    return url += "timestamp=" + (new Date()).getTime;
 }
 //格式化日期格式
 function dateFormatter(value) {
@@ -153,8 +172,10 @@ function getUrlParam1(name) {
 //调整datagrid大小
 function datagridResize(jq) {
     jq.layout('panel', 'center').panel({
-        onResize: function (width, height) {
-            $("[name=datagrid]").datagrid("resize", width);
+        onResize: function (w, h) {
+            setTimeout(function () {
+                $("[name='datagrid']").datagrid("resize", { width: w });
+            }, 0);
         }
     });
 }
@@ -178,9 +199,7 @@ function showMyDialog(jq, title, icon, href, width, modal, fn, minimizable, maxi
         buttons: [{//底部按钮
             text: '确定',
             iconCls: 'icon-ok',
-            handler: function () {
-                fn();
-            }
+            handler: function () { fn(); }
         }, {
             text: '取消',
             iconCls: 'icon-cancel',
@@ -190,14 +209,13 @@ function showMyDialog(jq, title, icon, href, width, modal, fn, minimizable, maxi
         }]
     });
 }
-function showMyDialog1(jq, title, icon, href, name, width, height, fn, modal, minimizable, maximizable) {
+function showMyDialog1(jq, title, icon, href, name, width, height, modal, fn, minimizable, maximizable) {
     var dlg = jq.dialog({
         title: title,
         width: width === undefined ? 750 : width,
         height: height === undefined ? 750 : height,
         iconCls: "" + icon + "",
-        content: '<iframe name="' + name + '" scrolling="yes" frameborder="0"  src="' + href + '" style="width:100%;height:100%;"></iframe>',
-        top: 10,
+        content: '<iframe id="' + name + '" name="' + name + '" scrolling="yes" frameborder="0"  src="" style="width:100%;height:100%;"></iframe>',
         shadow: false,
         cache: false,
         closed: true,
@@ -207,6 +225,10 @@ function showMyDialog1(jq, title, icon, href, name, width, height, fn, modal, mi
         minimizable: minimizable === undefined ? false : minimizable,
         maximizable: maximizable === undefined ? false : maximizable,
         loadingMessage: '数据正在加载中，请稍等......',
+        onOpen: function () {
+            if ($("#" + name + "").attr("src") == "")
+                $("#" + name + "").attr("src", href);
+        },
         buttons: [{//底部按钮
             text: '确定',
             iconCls: 'icon-ok',
@@ -227,7 +249,7 @@ function showMyWindow(jq, title, icon, href, name, modal, minimizable, maximizab
     var win = jq.window({
         title: title,
         iconCls: "" + icon + "",
-        content: '<iframe name=' + name + ' scrolling="auto" frameborder="0"  src="' + href + '" style="width:100%;height:100%"></iframe>',
+        content: '<iframe src="' + href + '" name=' + name + ' scrolling="auto" frameborder="0" style="width:100%;height:100%"></iframe>',
         modal: modal === undefined ? true : modal,
         minimizable: minimizable === undefined ? false : minimizable,
         maximizable: maximizable === undefined ? false : maximizable,

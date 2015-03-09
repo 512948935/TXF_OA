@@ -25,9 +25,42 @@ namespace BLL
         }
         #endregion
 
-        public DataTable GetPageList(int page, int pagesize, out int total, string code, string disabled, List<WhereField> listWhere)
+        //静态缓存key
+        private static string cacheKey;
+        private static Dictionary<string, int> CacheKeys = new Dictionary<string, int>();
+        public DataTable GetPageList(bool fromCache, int page, int pagesize, out int total, string code, string disabled, List<WhereField> listWhere)
         {
-            return myDao.GetPageList(page, pagesize, out total, code, disabled, listWhere);
+            DataTable dt = null;
+            if (!fromCache)
+            {
+                dt = myDao.GetPageList(page, pagesize, out total, code, disabled, listWhere);
+                foreach (string cacheKey in CacheKeys.Keys)
+                    MyCache.IO.Opation.Remove(cacheKey);
+                CacheKeys.Clear();
+            }
+            else
+            {
+                cacheKey = string.Format("page:{0},pagesiez:{1},code:'{2}',disabled:'{3}',name:'{4}'", page, pagesize, code, disabled, "tb_item_Department");
+                object obj = MyCache.IO.Opation.Get(cacheKey);
+                if (obj == null)
+                {
+                    dt = myDao.GetPageList(page, pagesize, out total, code, disabled, listWhere);
+                    MyCache.IO.Opation.Set(cacheKey, dt, DateTime.Now.AddSeconds(30));
+                    if (!CacheKeys.Keys.Contains(cacheKey))
+                        CacheKeys.Add(cacheKey, total);
+                }
+                else
+                {
+                    dt = obj as DataTable;
+                    total = CacheKeys[cacheKey];
+                }
+            }
+            return dt;
+        }
+        public DataRow GetModel(int id)
+        {
+            DataTable dt = MyCache.IO.Opation.Get(cacheKey ?? "") as DataTable ?? myDao.GetModel(id);
+            return dt.Select("ID=" + id)[0];
         }
         public int CheckItemNo(int id, string itemNo)
         {

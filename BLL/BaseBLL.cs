@@ -90,6 +90,10 @@ namespace BLL
         {
             return dao.SelectT(where);
         }
+        public virtual T SelectT(List<WhereField> listWhere)
+        {
+            return dao.SelectT(listWhere);
+        }
         /// <summary>
         /// 查找实体类集合
         /// </summary>

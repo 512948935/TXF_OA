@@ -30,7 +30,7 @@
                 <tr>
                     <td class="td1">是否禁用：</td>
                     <td class="td2">
-                        <input type="checkbox" class="checkbox" id="t_IsDelete" name="IsDelete" value="true" />
+                        <input type="checkbox" class="checkbox" id="t_IsDisabled" name="IsDisabled" value="true" />
                     </td>
                 </tr>
                 </table>    
@@ -72,7 +72,7 @@
                         <th data-options="field:'ModuleName',where:'true'">页面名称</th>
                         <th data-options="field:'PageUrl'">链接地址</th>
                         <th data-options="field:'Icon'">页面图标</th>
-                        <th data-options="field:'IsDelete',align:'center',formatter:boolFormatter">是否禁用</th>
+                        <th data-options="field:'IsDisabled',align:'center',formatter:boolFormatter">是否禁用</th>
                     </tr>
                 </thead>
         </table>
@@ -159,7 +159,7 @@
         return "否";
     }
     var rowstyler = function (index, row) {
-        if (row.IsDelete == "True") {
+        if (row.IsDisabled == "True") {
             return 'color:#FF0000';
         }
     }
@@ -212,7 +212,7 @@
                 $('#div_menu').menu('show', { left: e.pageX, top: e.pageY });
             },
             formatter: function (node) {
-                if (node.attributes["IsDelete"] == "True")
+                if (node.attributes["IsDisabled"] == "True")
                     return "<span style='color:red'>" + node.text + "</span>";
                 return node.text;
             },

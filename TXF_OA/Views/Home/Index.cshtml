@@ -12,9 +12,9 @@
              </div>
              <table cellpadding="0" cellspacing="0" border="0" width="100%">
                  <tr style="background:url(../../Content/images/BackWhite.gif)">
-                    <td width="185" height="27" style="background:url../../Contentimages/BackWhite.gif)">
+                    <td width="185" height="27" style="background:url(@Url.Content("/images/BackWhite.gif")">
                         &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src="../../Content/images/node_user.gif" alt="" />
-                        &nbsp;<strong><span id="userName" style="color: #ffffff"></span></strong>
+                        &nbsp;<strong><span id="userName" style="color: #ffffff">@ViewBag.UserName</span></strong>
                         &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src="../../Content/images/U01.gif" alt="" />
                         &nbsp;<strong><span style="color: #ffffff">联机</span></strong>
                     </td>
@@ -31,12 +31,12 @@
                         &nbsp;&nbsp;<a class="white" target="rform" href="../WorkFlow/MyWorkFlow.aspx">
                                     <img height="16" src="../../Content/images/TreeImages/workflow.gif" width="16" alt=""/>&nbsp;我的工作&nbsp;</a>  
                     </td>
-                     <td align="right" style="background:url(../images/BackWhite.gif)">
+                     <td align="right" style="background:url(@Url.Content("/images/BackWhite.gif")">
                         <a class="white" href="MyDesk.aspx" target="rform">
                             <img alt="我的办公桌" width="16" height="16" src="../../Content/images/TreeImages/mytable.gif" />&nbsp;桌面</a>&nbsp;
                         <a class="white"  href="../../Content/Personal/SystemTiXing.aspx" target="rform">
                             <img alt="提醒" height="16" width="16" src="../../Content/images/TreeImages/theme.gif" />&nbsp;提醒</a>&nbsp;
-                        <a class="white"  href="../../Content/Member/Login.aspx">
+                        <a class="white"  href="/Home/LogOut">
                             <img alt="注销用户" src="../../Content/images/login.gif"/>&nbsp;注销</a>&nbsp;&nbsp;&nbsp;
                       </td>
                 </tr>

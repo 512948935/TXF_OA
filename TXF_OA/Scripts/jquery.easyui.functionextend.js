@@ -23,6 +23,7 @@ if ($.fn.datebox) {
     $.fn.datebox.defaults.closeText = '关闭';
     $.fn.datebox.defaults.okText = '确定';
     $.fn.datebox.defaults.missingMessage = '该输入项为必输项';
+    $.fn.datebox.defaults.buttons = ClearButton();
     //修改后日期格式-->
     $.fn.datebox.defaults.formatter = function (date) {
         var y = date.getFullYear();
@@ -43,6 +44,7 @@ if ($.fn.datagrid) {
     $.fn.datagrid.defaults.striped = true, //显示斑马纹
     $.fn.datagrid.defaults.collapsible = true,
     $.fn.datagrid.defaults.remoteSort = false,
+    $.fn.datagrid.defaults.singleSelect = true,
     $.fn.datagrid.defaults.loadMsg = '数据加载中，请稍后……'
 }
 //改写分页条默认值
@@ -71,6 +73,18 @@ if ($.fn.pagination) {
 //    }
 //}
 //$.fn.dialog.defaults.onOpen = easyuiPanelOnOpen;
+//扩展datebox的清除按钮
+function ClearButton() {
+    var buttons = $.extend([], $.fn.datebox.defaults.buttons);
+    buttons.splice(1, 0, {
+        text: '清空',
+        handler: function (target) {
+            $(target).datebox("setValue", "");
+            $(target).combo("hidePanel")
+        }
+    });
+    return buttons;
+}
 //textbox添加图标
 $.extend($.fn.textbox.methods, {
     addClearBtn: function (jq, iconCls) {
@@ -124,3 +138,32 @@ function easyuiPanelOnMove(left, top) {
 $.fn.dialog.defaults.onMove = easyuiPanelOnMove;
 $.fn.window.defaults.onMove = easyuiPanelOnMove;
 $.fn.panel.defaults.onMove = easyuiPanelOnMove;
+
+//Layout隐藏显示标题
+$.extend($.fn.layout.paneldefaults, {
+    onBeforeCollapse: function () {
+        var popts = $(this).panel('options');
+        var dir = popts.region;
+        var buttonDir = { north: 'down', south: 'up', east: 'left', west: 'right' };
+        var btnDir = buttonDir[dir];
+        if (!btnDir) return false;
+        setTimeout(function () {
+            var pDiv = $('.layout-button-' + btnDir).closest('.layout-expand').css({
+                "text-align": 'center', "line-height": "18px", "font-family": "黑体", "font-weight": 'bold'
+            });
+            if (popts.title) {
+                var vTitle = popts.title;
+                if (dir == "east" || dir == "west") {
+                    var vTitle = popts.title.split('').join('<br/>');
+                    pDiv.find('.panel-body').html(vTitle);
+                } else {
+                    $('.layout-button-' + btnDir).closest('.layout-expand').find('.panel-title')
+                        .css({ textAlign: 'left' })
+                        .html(vTitle)
+                }
+
+            }
+        }, 100);
+
+    }
+});

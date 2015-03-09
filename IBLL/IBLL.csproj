@@ -42,7 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IBaseBLL.cs" />
+    <Compile Include="Itb_item_CompanyBLL.cs" />
     <Compile Include="Itb_item_DepartmentBLL.cs" />
+    <Compile Include="Itb_item_RoleBLL.cs" />
+    <Compile Include="Itb_item_UserBLL.cs" />
     <Compile Include="Itb_sys_ItemBLL.cs" />
     <Compile Include="Itb_sys_ModuleBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

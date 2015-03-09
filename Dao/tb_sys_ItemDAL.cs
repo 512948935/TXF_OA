@@ -64,8 +64,8 @@ namespace Dao
         {
             try
             {
-                string sql = string.Format("SELECT DISTINCT TableName FROM dbo.View_tb_sys_Item WHERE LEFT(NodeCode,{0})='{1}'", code.Length, code);
-                object obj = DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql).ToString();
+                string sql = string.Format("SELECT DISTINCT TableName FROM dbo.View_tb_sys_Item WHERE TableName<>'' AND LEFT(NodeCode,{0})='{1}'", code.Length, code);
+                object obj = DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql);
                 return obj == null ? "" : obj.ToString();
             }
             catch (Exception ex)
@@ -78,16 +78,16 @@ namespace Dao
             try
             {
                 int len = preCode.Length;
-                //更新节点
+                //更新子节点
                 string sql = string.Format(@"UPDATE dbo.tb_sys_Item SET NodeCode =(REPLACE(LEFT(NodeCode,'{0}')
                              ,LEFT(NodeCode,{1}),'{2}')+SUBSTRING(NodeCode,{3},LEN(NodeCode))) FROM dbo.tb_sys_Item
-                              WHERE LEFT(NodeCode,{4})='{5}'", len, len, code, len + 1, len, preCode);
+                              WHERE LEFT(NodeCode,{4})='{5}' AND NodeCode<>'{2}'", len, len, code, len + 1, len, preCode);
                 //更新业务表(目前只更新名称和代码)
                 if (!string.IsNullOrEmpty(tableName))
                 {
                     sql += string.Format(@";UPDATE {0} SET ItemNo= (REPLACE(LEFT(ItemNo,'{1}'),LEFT(ItemNo,{2}),'{3}')+SUBSTRING(ItemNo,{4},LEN(ItemNo)))
                                             ,ItemName=a.NodeName FROM dbo.tb_sys_Item a
-                           WHERE a.ID=ItemID AND LEFT(ItemNo,{5})='{6}'",tableName,len, len, code, len + 1, len, preCode);
+                           WHERE Marks=1 AND a.ID=ItemID AND LEFT(ItemNo,{5})='{6}'", tableName, len, len, code, len + 1, len, preCode);
                 }
                 DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql);
             }
@@ -179,7 +179,7 @@ namespace Dao
                         if (!string.IsNullOrEmpty(row["TableName"].ToString()))
                             throw new Exception("不允许在明细节点下面添加子节点.");
                         if (Convert.ToInt32(row["NodeType"]) != item.NodeType)
-                            throw new Exception("类别不一致.");
+                            throw new Exception("数据类型不一致.");
                         item.ParentID = Convert.ToInt32(row["ID"]);
                     }
                     return;

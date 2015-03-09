@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Data;
 using IBLL;
 using Ninject;
+using Model;
 
 namespace TXF_OA
 {
@@ -16,6 +17,9 @@ namespace TXF_OA
 
         public ActionResult Index()
         {
+            if (BaseRepository.User == null)
+                return Redirect("/Account/Login");
+            ViewBag.UserName = BaseRepository.User.ItemName;
             return View();
         }
         #region 加载菜单
@@ -46,19 +50,30 @@ namespace TXF_OA
                 jsonStr = "[";
                 foreach (DataRow row in rows)
                 {
+                    string pageUrl = row["PageUrl"].ToString();
+                    if (Convert.ToInt32(row["IsItem"]) > 0)
+                        pageUrl += "?isRedirect=true";
                     jsonStr += ("{\"id\":" + row["ID"] + ",\"text\":\"" + row["ModuleName"] + "\",\"state\":\"" + row["NodeState"] + "\",\"iconCls\":\"" + row["Icon"] + "\""
                               + ",\"children\":" + GetTreeData(Convert.ToInt32(row["ID"])) + ""
                               + ",\"attributes\":{\"ID\":\"" + row["ID"] + "\""
                               + ",\"ModuleCode\":\"" + row["ModuleCode"] + "\""
                               + ",\"ModuleName\":\"" + row["ModuleName"] + "\""
-                              + ",\"PageUrl\":\"" + row["PageUrl"] + "\""
+                              + ",\"PageUrl\":\"" + pageUrl + "\""
                               + ",\"Icon\":\"" + row["Icon"] + "\""
-                              + ",\"IsDelete\":\"" + row["IsDelete"] + "\""
+                              + ",\"IsDisabled\":\"" + row["IsDisabled"] + "\""
                               + "}},");
                 }
                 jsonStr = jsonStr.TrimEnd(',') + "]";
             }
             return jsonStr;
+        }
+        #endregion
+
+        #region 注销
+        public ActionResult LogOut()
+        {
+            BaseRepository.User = null;
+            return Redirect("/Account/Login");
         }
         #endregion
     }

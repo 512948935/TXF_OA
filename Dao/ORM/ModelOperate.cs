@@ -60,7 +60,7 @@ namespace Dao.ORM
         /// </summary>
         public int Add(T entity)
         {
-            List<SqlParameter> listParameter = new List<SqlParameter>();
+            List<SqlParameter> Parameters = new List<SqlParameter>();
             string tableName = typeof(T).Name;
             //获取需要插入的字段和值
             Dictionary<string, object> models = _ModelBase.GetModelValue<T>(entity, ActionState.Add);
@@ -70,10 +70,10 @@ namespace Dao.ORM
             {
                 columnName += "[" + field + "],";
                 paramName += "@" + field + ",";
-                listParameter.Add(new SqlParameter("@" + field, models[field]));
+                Parameters.Add(new SqlParameter("@" + field, models[field]));
             }
             string sql = string.Format("SET NOCOUNT ON;INSERT INTO [{0}]({1}) VALUES({2});SELECT SCOPE_IDENTITY()", tableName, columnName.TrimEnd(','), paramName.TrimEnd(','));
-            object result = DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql, listParameter.ToArray());
+            object result = DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql, Parameters);
             return Convert.ToInt32(result);
         }
         #endregion
@@ -91,22 +91,22 @@ namespace Dao.ORM
             //获取主键
             string keyField = _ModelBase.GetPrimaryKeyName<T>();
             string where = "[" + keyField + "]=@" + keyField + "";
-            List<SqlParameter> listParameter = new List<SqlParameter>();
+            List<SqlParameter> Parameters = new List<SqlParameter>();
             string sets = string.Empty;
             foreach (string field in models.Keys)
             {
                 if (field == keyField)
-                    listParameter.Add(new SqlParameter("@" + keyField, models[keyField]));
+                    Parameters.Add(new SqlParameter("@" + keyField, models[keyField]));
                 else
                 {
                     sets += "[" + field + "]=@" + field + ",";
-                    listParameter.Add(new SqlParameter("@" + field, models[field]));
+                    Parameters.Add(new SqlParameter("@" + field, models[field]));
                 }
             }
             try
             {
                 string sql = string.Format("UPDATE [{0}] SET {1} WHERE {2}", tableName, sets.TrimEnd(','), where);
-                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql, listParameter.ToArray());
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql, Parameters);
             }
             catch (Exception ex)
             {
@@ -123,23 +123,23 @@ namespace Dao.ORM
             string tableName = typeof(T).Name;
             if (listField.Count() == 0 || listWhere.Count == 0) return;
             string sets = string.Empty;
-            List<SqlParameter> listParameter = new List<SqlParameter>();
+            List<SqlParameter> Parameters = new List<SqlParameter>();
             string where = " 1=1 ";
             foreach (UpdateField field in listField)
             {
                 sets += "[" + field.Key + "]=@" + field.Key + ",";
-                listParameter.Add(new SqlParameter("@" + field.Key, field.Value));
+                Parameters.Add(new SqlParameter("@" + field.Key, field.Value));
             }
             foreach (WhereField item in listWhere)
             {
                 where += " and [" + item.Key + "]=@" + item.Key + " ";
-                listParameter.Add(new SqlParameter("@" + item.Key, item.Value));
+                Parameters.Add(new SqlParameter("@" + item.Key, item.Value));
             }
             try
             {
                 StringBuilder sql = new StringBuilder();
                 sql.AppendFormat("UPDATE [{0}] SET {1} WHERE {2}", tableName, sets.TrimEnd(','), where);
-                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), listParameter.ToArray());
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), Parameters);
             }
             catch (Exception ex)
             {
@@ -156,17 +156,17 @@ namespace Dao.ORM
             if (listField.Count() == 0) return;
             string tableName = typeof(T).Name;
             string sets = string.Empty;
-            List<SqlParameter> listParameter = new List<SqlParameter>();
+            List<SqlParameter> Parameters = new List<SqlParameter>();
             foreach (UpdateField field in listField)
             {
                 sets += "[" + field.Key + "]=@" + field.Key + ",";
-                listParameter.Add(new SqlParameter("@" + field.Key, field.Value));
+                Parameters.Add(new SqlParameter("@" + field.Key, field.Value));
             }
             try
             {
                 StringBuilder sql = new StringBuilder();
                 sql.AppendFormat("UPDATE [{0}] SET {1} WHERE {2}", tableName, sets.TrimEnd(','), where);
-                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), listParameter.ToArray());
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), Parameters);
             }
             catch (Exception ex)
             {
@@ -185,14 +185,14 @@ namespace Dao.ORM
             //获取主键
             string keyField = _ModelBase.GetPrimaryKeyName<T>();
             string where = " WHERE [" + keyField + "]=@" + keyField + "";
-            List<SqlParameter> listParameter = new List<SqlParameter>();
+            List<SqlParameter> Parameters = new List<SqlParameter>();
             Dictionary<string, object> models = _ModelBase.GetModelValue<T>(entity, ActionState.Add);
-            listParameter.Add(new SqlParameter("@" + keyField, models[keyField]));
+            Parameters.Add(new SqlParameter("@" + keyField, models[keyField]));
             try
             {
                 StringBuilder sql = new StringBuilder();
                 sql.AppendFormat("DELETE FROM {0} WHERE {1}", tableName, where);
-                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql.ToString(), listParameter.ToArray());
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql.ToString(), Parameters);
             }
             catch (Exception)
             {
@@ -229,12 +229,12 @@ namespace Dao.ORM
         public void Delete(List<WhereField> listWhere)
         {
             if (listWhere.Count() == 0) return;
-            List<SqlParameter> listParameter = new List<SqlParameter>();
+            List<SqlParameter> Parameters = new List<SqlParameter>();
             string where = " 1=1 ";
             foreach (WhereField item in listWhere)
             {
                 where += " and [" + item.Key + "]=@" + item.Key + " ";
-                listParameter.Add(new SqlParameter("@" + item.Key, item.Value));
+                Parameters.Add(new SqlParameter("@" + item.Key, item.Value));
             }
             try
             {
@@ -242,7 +242,7 @@ namespace Dao.ORM
                 string tableName = type.Name;
                 StringBuilder sql = new StringBuilder();
                 sql.AppendFormat("DELETE FROM [{0}] WHERE {1}", tableName, where);
-                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), listParameter.ToArray());
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), Parameters);
             }
             catch (Exception ex)
             {
@@ -290,6 +290,61 @@ namespace Dao.ORM
                 throw ex;
             }
         }
+        public T SelectT(List<WhereField> listWhere)
+        {
+            try
+            {
+                string where = " 1=1 ";
+                List<SqlParameter> Parameters = null;
+                if (listWhere != null)
+                {
+                    Parameters = new List<SqlParameter>();
+                    foreach (WhereField item in listWhere)
+                    {
+                        if (!string.IsNullOrEmpty(item.Value.ToString()))
+                        {
+                            if (item.Symbol.Equals("like"))
+                            {
+                                where += " AND [" + item.Key + "] " + item.Symbol + " @" + item.Key + " ";
+                                Parameters.Add(new SqlParameter("@" + item.Key, "%" + item.Value + "%"));
+                            }
+                            else
+                            {
+                                where += " AND [" + item.Key + "] " + item.Symbol + " @" + item.Key + " ";
+                                Parameters.Add(new SqlParameter("@" + item.Key, item.Value));
+                            }
+                        }
+                    }
+                }
+                Type type = typeof(T);
+                string tableName = type.Name;
+                //获取所有字段
+                string[] fields = _ModelBase.GetAllFields<T>();
+                string selectField = _ModelBase.GetSelectFieldStr(fields);
+                string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2}", selectField, tableName, where);
+                DbDataReader reader = DataProvider.DBHelper.ExecuteReader(CommandType.Text, sql, Parameters);
+                Dictionary<string, object> pNameAndValue = new Dictionary<string, object>();
+                while (reader.Read())
+                {
+                    T entity = (T)Activator.CreateInstance(type);
+                    foreach (string field in fields)
+                    {
+                        //取得当前数据库字段的顺序
+                        int Ordinal = reader.GetOrdinal(field);
+                        object obj = reader.GetValue(Ordinal);
+                        if (obj != DBNull.Value)
+                            pNameAndValue.Add(field, obj);
+                    }
+                    ReflectionHelper.SetPropertyValue<T>(entity, pNameAndValue);
+                    return entity;
+                }
+                return default(T);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         /// <summary>
         /// 查找实体类集合
         /// </summary>
@@ -310,10 +365,10 @@ namespace Dao.ORM
                     sort = _ModelBase.GetPrimaryKeyName<T>();
                 string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2} ORDER BY [{3}]", selectField, tableName, where, sort);
                 DbDataReader reader = DataProvider.DBHelper.ExecuteReader(CommandType.Text, sql);
-                Dictionary<string, object> pNameAndValue = new Dictionary<string, object>();
                 List<T> entities = new List<T>();
                 while (reader.Read())
                 {
+                    Dictionary<string, object> pNameAndValue = new Dictionary<string, object>();
                     T entity = (T)Activator.CreateInstance(type);
                     foreach (string field in fields)
                     {
@@ -343,9 +398,10 @@ namespace Dao.ORM
         public List<T> SelectList(List<WhereField> listWhere = null, string sort = "")
         {
             string where = " 1=1 ";
-            List<SqlParameter> listParameter = new List<SqlParameter>();
+            List<SqlParameter> Parameters = null;
             if (listWhere != null)
             {
+                Parameters = new List<SqlParameter>();
                 foreach (WhereField item in listWhere)
                 {
                     if (!string.IsNullOrEmpty(item.Value.ToString()))
@@ -353,12 +409,12 @@ namespace Dao.ORM
                         if (item.Symbol.Equals("like"))
                         {
                             where += " AND [" + item.Key + "] " + item.Symbol + " @" + item.Key + " ";
-                            listParameter.Add(new SqlParameter("@" + item.Key, "%" + item.Value + "%"));
+                            Parameters.Add(new SqlParameter("@" + item.Key, "%" + item.Value + "%"));
                         }
                         else
                         {
                             where += " AND [" + item.Key + "] " + item.Symbol + " @" + item.Key + " ";
-                            listParameter.Add(new SqlParameter("@" + item.Key, item.Value));
+                            Parameters.Add(new SqlParameter("@" + item.Key, item.Value));
                         }
                     }
                 }
@@ -429,10 +485,11 @@ namespace Dao.ORM
             try
             {
                 string tableName = typeof(T).Name;
-                List<SqlParameter> listParameter = new List<SqlParameter>();
+                List<SqlParameter> Parameters = null;
                 string where = " 1=1 ";
                 if (listWhere != null)
                 {
+                    Parameters = new List<SqlParameter>();
                     foreach (WhereField item in listWhere)
                     {
                         if (!string.IsNullOrEmpty(item.Value.ToString()))
@@ -440,12 +497,12 @@ namespace Dao.ORM
                             if (item.Symbol.Equals("like"))
                             {
                                 where += " AND [" + item.Key + "] " + item.Symbol + " @" + item.Key + " ";
-                                listParameter.Add(new SqlParameter("@" + item.Key, "%" + item.Value + "%"));
+                                Parameters.Add(new SqlParameter("@" + item.Key, "%" + item.Value + "%"));
                             }
                             else
                             {
                                 where += " AND [" + item.Key + "] " + item.Symbol + " @" + item.Key + " ";
-                                listParameter.Add(new SqlParameter("@" + item.Key, item.Value));
+                                Parameters.Add(new SqlParameter("@" + item.Key, item.Value));
                             }
                         }
                     }
@@ -458,7 +515,7 @@ namespace Dao.ORM
                 }
                 if (sort.Equals("")) sort = _ModelBase.GetPrimaryKeyName<T>();
                 string sql = string.Format("SELECT {0} FROM [{1}] WHERE {2} ORDER BY [{3}]", field, tableName, where, sort);
-                DataTable dt = DataProvider.DBHelper.ExecuteDataTable(CommandType.Text, sql, listParameter.ToArray());
+                DataTable dt = DataProvider.DBHelper.ExecuteDataTable(CommandType.Text, sql, Parameters);
                 return dt;
             }
             catch (Exception ex)
@@ -495,12 +552,13 @@ namespace Dao.ORM
         /// <returns></returns>
         public int SelectCount(List<WhereField> listWhere)
         {
-            List<SqlParameter> listParameter = new List<SqlParameter>();
             Type type = typeof(T);
             string tableName = type.Name;
             string where = " 1=1 ";
+            List<SqlParameter> Parameters = null;
             if (listWhere != null)
             {
+                Parameters = new List<SqlParameter>();
                 foreach (WhereField item in listWhere)
                 {
                     if (!string.IsNullOrEmpty(item.Value.ToString()))
@@ -508,12 +566,12 @@ namespace Dao.ORM
                         if (item.Symbol.Equals("like"))
                         {
                             where += " AND [" + item.Key + "] " + item.Symbol + " @" + item.Key + " ";
-                            listParameter.Add(new SqlParameter("@" + item.Key, "%" + item.Value + "%"));
+                            Parameters.Add(new SqlParameter("@" + item.Key, "%" + item.Value + "%"));
                         }
                         else
                         {
                             where += " AND [" + item.Key + "] " + item.Symbol + " @" + item.Key + " ";
-                            listParameter.Add(new SqlParameter("@" + item.Key, item.Value));
+                            Parameters.Add(new SqlParameter("@" + item.Key, item.Value));
                         }
                     }
                 }
@@ -522,7 +580,7 @@ namespace Dao.ORM
             {
                 StringBuilder sql = new StringBuilder();
                 sql.AppendFormat("SELECT COUNT(1) FROM [{0}] WHERE {1}", tableName, where);
-                return (int)DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql.ToString(), listParameter.ToArray());
+                return (int)DataProvider.DBHelper.ExecuteScalar(CommandType.Text, sql.ToString(), Parameters);
             }
             catch (Exception ex)
             {

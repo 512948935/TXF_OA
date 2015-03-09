@@ -1,13 +1,17 @@
 ﻿@{
-    ViewBag.Title = "部门管理";
+    ViewBag.Title = "部门信息";
 }
 <div style="height:100%">
     <table class="easyui-datagrid" id="tt_grid" name="datagrid" width="100%" border="0"
            data-options="title:'部门信息',
-                         url: url,
+                         url:encodeURI(url),
+                         pageNumber:page,
+                         pageSize:pagesize,
+                         onLoadSuccess:loadSuccess,
                          fit:true,
                          rowStyler:rowstyler,
-                         toolbar:toolbar">
+                         toolbar:toolbar
+                         ">
             <thead data-options="frozen:true">
                 <tr>
                     <th data-options="field:'ck',checkbox:true"></th>
@@ -17,7 +21,7 @@
             </thead>
             <thead>
                 <tr>
-                    <th data-options="field:'ItemNo',width:'120',align:'center',sortable:'true',where:'true'">部门代码</th>
+                    <th data-options="field:'ItemNo',align:'left',sortable:'true',where:'true'">部门代码</th>
                     <th data-options="field:'ItemName',where:'true'">部门名称</th>
                     <th data-options="field:'Manager',width:'80',align:'center'">部门主管</th>
                     <th data-options="field:'DepTel',width:'80',align:'center'">部门电话</th>
@@ -27,17 +31,35 @@
             </thead>
     </table>
     <div id="div_dialog_search" style="padding:2px;"></div>
-    <div id="div_win_edit" style="width:80%;height:328px;padding:2px;overflow:hidden;"></div>
+    <div id="div_win_edit" style="width:80%;height:70%;padding:2px;overflow:hidden;"></div>
 </div>
-<script type="text/javascript">
 
-    //#region List
-    var url = '/Item/GetDepinfoList?code=' + parent.$("#t_NodeCode").val();
+<script type="text/javascript">
+    var page = getUrlParam('page') == '' ? 1 : parseInt(getUrlParam('page'));
+    var pagesize = getUrlParam('pagesize') == '' ? 1 : getUrlParam('pagesize');
+    var param = {
+        "code": parent.$("#t_NodeCode").val(),
+        "isDisabled": getUrlParam("choose") == "True" ? "1" : "",
+        "where": getUrlParam1("where"),
+        "fromCache": getUrlParam1("fromCache") == "false" ? false : true,
+        "getUrl": function () {
+            return '/Item/GetDepinfoList?fromCache=' + this.fromCache + '&code=' + this.code + '&disabled=' + this.isDisabled + '&where=' + param.where;
+        }
+    }
+    var url = param.getUrl();
     $(function () {
+        if (getUrlParam("choose") == "True") {
+            $("#btnadd").hide();
+            $("#btnadd").parent().next().hide();
+            $("#btnedit").hide();
+            $("#btnedit").parent().next().hide();
+            $("#btnremove").hide();
+            $("#btnremove").parent().next().hide();
+            $("#btnexport").hide();
+            $("#btnexport").parent().next().hide();
+        }
         //调整datagrid大小
         datagridResize(parent.$("#div_layout"));
-        //初始化页面编辑对话框
-        showMyWindow($("#div_win_edit"), '编辑部门信息', 'icon-edit', "/Item/DepinfoEdit", 'frame1', true, false, true);
         //创建过滤查询对话框
         getWhereColumns($("#tt_grid"), function (col) {
             var href = '/Item/CreateWhereHTML?col=' + col;
@@ -48,20 +70,30 @@
                 });
                 if (where != "") {
                     where = "[" + $.trimend(where, ',') + "]";
-                    $('#tt_grid').datagrid('options').url = '/Item/GetDepinfoList?code=' + parent.$("#t_PreCode").val() + '&where=' + escape(where);
+                    param.where = where;
+                    param.fromCache = false;
+                    $('#tt_grid').datagrid('options').url = param.getUrl();
                     $("#tt_grid").datagrid('load');
-                    $('#div_dialog_search').dialog('close');
                 }
+                $('#div_dialog_search').dialog('close');
             });
         });
-    });
+    })
+    var backUrl;
+    var loadSuccess = function () {
+        var p = $('#tt_grid').datagrid('getPager');
+        var page = p.data("pagination").options.pageNumber;
+        var size = p.data("pagination").options.pageSize;
+        backUrl = '/Item/DepinfoManage?where=' + param.where + '&page=' + page + '&pagesize=' + size;
+        parent.hideMask();
+    }
     var toolbar = [{
         id: 'btnadd',
         text: '添加',
         iconCls: 'icon-add',
         handler: function () {
-            window.frames["frame1"].ClearForm();
-            $('#div_win_edit').window('open');
+            parent.showMask();
+            document.location = '/Item/DepinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
         }
     }, '-', {
         id: 'btnedit',
@@ -70,8 +102,8 @@
         handler: function () {
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
-                window.frames["frame1"].LoadForm(selections[0].ID);
-                $('#div_win_edit').window('open');
+                parent.showMask();
+                document.location = '/Item/DepinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
             }
             else
                 jqAlert('请选择一条记录！', 'warning')
@@ -93,6 +125,8 @@
                 uiConfirm("您确认要删除当前信息吗.", function () {
                     $.post("/Item/DelDepinfo", { "ID": id }, function (data) {
                         if (data.status == 1) {
+                            param.fromCache = false;
+                            $('#tt_grid').datagrid('options').url = param.getUrl();
                             $("#tt_grid").datagrid('reload');
                         }
                         else
@@ -114,10 +148,10 @@
                 text: '导出',
                 iconCls: 'icon-excelcss',
                 handler: function () {
-                    getExportColumns($("#tt"), function (data) {
+                    getExportColumns($("#tt_grid"), function (data) {
                         if (data != "") {
                             $("#tt").datagrid('reload');
-                            var url = "/Item/ExportDepinfo?title=" + escape("部门信息") + "&code=" + code + "&columns=" + data;
+                            var url = "/Item/ExportDepinfo?title=" + escape("公司信息") + "&columns=" + data;
                             window.open(url);
                         }
                     });
@@ -132,6 +166,11 @@
             return 'color:#FF0000;';
         }
     }
-    //#endregion
-
+    function reloadGird(code) {
+        param.code = code;
+        param.where = "";
+        param.fromCache = true;
+        $('#tt_grid').datagrid('options').url = param.getUrl();
+        $("#tt_grid").datagrid('load');
+    }
 </script>

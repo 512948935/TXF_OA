@@ -59,6 +59,7 @@ namespace IBLL
         /// <param name="where"></param>
         /// <returns></returns>
         T SelectT(string where);
+        T SelectT(List<WhereField> listWhere);
         /// <summary>
         /// 查找实体类集合
         /// </summary>

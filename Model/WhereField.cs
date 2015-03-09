@@ -9,12 +9,13 @@ namespace Model
     {
         public string Key { get; set; }
         public object Value { get; set; }
-        private string symbol = "=";
-
-        public string Symbol
+        public string Symbol { get; set; }
+        public WhereField() { }
+        public WhereField(string key, object value, string symbol = "=")
         {
-            get { return symbol; }
-            set { symbol = value; }
+            this.Key = key;
+            this.Value = value;
+            this.Symbol = symbol;
         }
     }
 }

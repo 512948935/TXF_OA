@@ -58,8 +58,12 @@ namespace TXF.Attributes
         /// </summary>
         public string isEqualText { get; set; }
         /// <summary>
-        /// 只读字段
+        /// 不需要添加的字段
         /// </summary>
-        public bool Readonly { get; set; }
+        public bool NotAdd { get; set; }
+        /// <summary>
+        /// 不需要更新的字段
+        /// </summary>
+        public bool NotUpdate { get; set; }
     }
 }

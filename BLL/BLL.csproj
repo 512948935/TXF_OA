@@ -46,10 +46,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseBLL.cs" />
+    <Compile Include="tb_item_CompanyBLL.cs" />
     <Compile Include="tb_item_DepartmentBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tb_item_RoleBLL.cs" />
     <Compile Include="tb_sys_ItemBLL.cs" />
     <Compile Include="tb_sys_ModuleBLL.cs" />
+    <Compile Include="tb_sys_UserBLL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Entity\Entity.csproj">
@@ -67,6 +70,10 @@
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{6E2C6DB2-A7DB-4C56-854F-89EF74216709}</Project>
       <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCache.IO\MyCache.IO.csproj">
+      <Project>{E8EDF160-08F9-480C-991F-60D147D678C6}</Project>
+      <Name>MyCache.IO</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

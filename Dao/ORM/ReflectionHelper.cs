@@ -101,11 +101,17 @@ namespace Dao.ORM
                 if (pInfo != null)
                 {
                     object pValue = pNameAndValue[item];
-                    if (pValue != null)
+                    if (pValue != null || pValue != DBNull.Value)
                     {
-                        object newValue = Convert.ChangeType(pValue, pInfo.PropertyType, null);
-                        //object newValue = pValue;
-                        pInfo.SetValue(obj, newValue, null);
+                        try
+                        {
+                            object newValue = Convert.ChangeType(pValue, pInfo.PropertyType, null);
+                            pInfo.SetValue(obj, newValue, null);
+                        }
+                        catch (Exception)
+                        {
+                            pInfo.SetValue(obj, pValue, null);
+                        }
                     }
                 }
             }

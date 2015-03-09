@@ -1,14 +1,15 @@
 ﻿@{
-    ViewBag.Title = "新增/编辑部门";
+    ViewBag.Title = "新增/编辑部门信息";
 }
  <form id="form_edit" method="post" action="">
         <table width="100%" cellpadding="0" cellspacing="0" align="center" class="tablestyle" id="tt">
             <tr>
                 <td class="td1" width="40%">部门代码：</td>
                 <td class="td2">
-                    <input type="text" id="t_Code" name="Code" required="true" missingMessage='必填' />
-                    <input type="hidden" id="t_ItemID" name="ItemID" />
+                    <input id="t_Code" name="Code" style="width:130px"
+                  /><input type="text" id="t_Suff_Code" name="Suff_Code" required="true" missingMessage='必填' style="width:50px" />
                     <input type="hidden" id="t_ItemNo" name="ItemNo" />
+                    <input type="hidden" id="t_ItemID" name="ItemID" />
                     <input type="hidden" id="t_ID" name="ID" value="0" />
                 </td>
             </tr>
@@ -21,8 +22,8 @@
             <tr>
                 <td class="td1">部门主管：</td>
                 <td class="td2">
-                    <input type="text" id="t_Manager" name="Manager" readonly="readonly" />
-                    <input type="hidden" id="t_EmpID" name="EmpID" />
+                    <input id="t_Manager" name="Manager" />
+                    <input type="hidden" id="t_UserID" name="UserID" />
                 </td>
             </tr>
             <tr>
@@ -51,12 +52,16 @@
             </tr>
         </table>
     </form>
-    <div style="text-align:right;padding:2px;">
+    <div style="text-align:center;padding:2px;">
         <a class="easyui-linkbutton" iconCls="icon-ok" id="btnSave" href="javascript:void(0)">保存</a>
-        <a class="easyui-linkbutton" iconCls="icon-cancel" id="btnClose" href="javascript:void(0)">关闭</a>
+        <a class="easyui-linkbutton" iconCls="icon-back" id="btnBack" href="javascript:void(0)">返回</a>
     </div>
+<!--基础数据选择对话框-->
+<div id="div_dialog_choose_user" style="overflow:hidden;padding:2px"></div>
+
   <script type="text/javascript">
-      var NodeCode = parent.parent.$("#t_NodeCode").val() + ".";
+      var backUrl = encodeURI(getUrlParam('backUrl'));
+      var id = getUrlParam("ID");
       $(function () {
           //添加textbox样式
           $("#form_edit input:text").each(function () {
@@ -64,25 +69,41 @@
               if ($(this).attr('required') || $(this).attr('validtype'))
                   $(this).validatebox();
           });
-          $("#t_Code").textbox({
-              "buttonText": NodeCode,
-              "buttonAlign": "left"
+          $("#t_Code").combotree({
+              url: '/Item/LoadComboTree?pageUrl=/Item/DepinfoManage',
+              valueField: 'ID',
+              textField: 'NodeCode',
+              panelHeight: 'auto',
+              required: true,
+              missingMessage: '必填',
+              onSelect: function (node) {
+                  $("#t_ItemID").val(node.id);
+              }
+          });
+          $("#t_Manager").textbox({
+              prompt: '点我选择部门主管哦.',
+              buttonIcon: 'icon-clear',
+              onClickButton: function () {
+                  $(this).textbox('clear')
+                  $("#t_UserID").val('');
+              }
           });
           //保存
           $("#btnSave").click(function () {
               if ($("#form_edit").form('validate')) {
-                  $("#t_ItemID").val(parent.parent.$("#t_ID").val());
-                  var code = $("#t_Code").textbox("getValue");
-                  $("#t_ItemNo").val(NodeCode + code.replace(/\./g, ""));
+                  var suff_code = $("#t_Suff_Code").val().replace(/\./g, "");
+                  $("#t_ItemNo").val($("#t_Code").textbox("getText") + suff_code);
                   $.ajax({
                       type: "post",
-                      url: "/Item/SaveDepinfo?typeID=" + parent.parent.$("#t_NodeType").combobox("getValue"),
+                      url: "/Item/SaveDepinfo",
                       data: $("#form_edit").serializeArray(),
                       async: false,
                       success: function (data) {
                           if (data.status == 1) {//保存成功
-                              parent.$("#tt_grid").datagrid('reload');
-                              parent.$('#div_win_edit').window('close');
+                              if (id > 0)
+                                  jqAlert('保存成功.', 'info', backUrl + "&fromCache=false");
+                              else
+                                  jqAlert('保存成功.', 'info', '/Item/DepinfoManage?fromCache=false');
                           }
                           else {
                               jqAlert('保存失败:' + data, 'error')
@@ -91,33 +112,55 @@
                   });
               }
           });
-          $("#btnClose").click(function () {
-              parent.$("#div_win_edit").window("close");
+          //返回
+          $("#btnBack").click(function () {
+              document.location = backUrl + "&fromCache=true";
+          });
+          //加载数据
+          if (id > 0) {
+              $.ajaxGet("/Item/GetDepinfo", { "id": id, "code": getUrlParam("code") }, function (data) {
+                  if (data.status == 1) {
+                      var model = eval(data.model)[0];
+                      $("#form_edit input").each(function () {
+                          var val = model[this.name];
+                          if (this.type == "text" || this.type == "hidden") {
+                              $(this).val(val);
+                          }
+                          else if (this.type == "checkbox") {
+                              $(this).attr("checked", val == "True")
+                          }
+                      });
+                      $("#t_Manager").textbox("setText", model.Manager);
+                      $("#t_Remark").val(model.Remark);
+                      var itemNo = model.ItemNo;
+                      var len = itemNo.lastIndexOf(".") + 1;
+                      $("#t_Code").combotree("setValue", itemNo.substr(0, len));
+                      $("#t_Suff_Code").val(itemNo.substr(len));
+                  }
+                  else
+                      jqAlert('数据加载失败:' + data, 'error')
+              });
+          }
+          //加载部门选择对话框
+          showMyDialog1($("#div_dialog_choose_user"), '选择数据', 'icon-tip', '/Item/UserinfoManage?isRedirect=true&choose=true', 'frame1', 780, 400, false
+          , function () {
+              var child = window.frames["frame1"].window.frames["mainFrame"];
+              if (child != null) {
+                  var selections = child.$("#tt_grid").datagrid('getSelections');
+                  if (selections.length == 1) {
+                      $("#t_UserID").val(selections[0].ID);
+                      $("#t_Manager").textbox("setText", selections[0].RealName);
+                      $("#div_dialog_choose_user").dialog('close');
+                  }
+                  else
+                      jqAlert('请选择一条记录！', 'warning')
+              }
+          });
+          var txt = $("#t_Manager").textbox("textbox");
+          $(txt).keydown(function () { return false });
+          $(txt).click(function () {
+              $("#div_dialog_choose_user").dialog('open');
           });
       });
-      function ClearForm() {
-          $("#form_edit")[0].reset();
-          $("#t_ID").val("0");
-          $("#t_ItemNo").val("");
-      }
-      function LoadForm(id) {
-          $.get("/Item/GetDepinfo", { "ID": id }, function (data) {
-              if (data.status == 1) {
-                  var model = data.model;
-                  $("#form_edit input").each(function () {
-                      var val = model[this.name];
-                      if (this.type == "text" || this.type == "hidden") {
-                          $(this).val(val);
-                      }
-                      else if (this.type == "checkbox") {
-                          $(this).attr("checked", val == true)
-                      }
-                  });
-                  $("#t_Code").textbox("setValue", $("#t_ItemNo").val().replace(NodeCode, ""));
-              }
-              else
-                  jqAlert('数据加载失败:' + data, 'error')
-          });
-      }
    </script>
 

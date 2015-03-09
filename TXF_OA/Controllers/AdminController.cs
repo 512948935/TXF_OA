@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data;
-using System.Transactions;
 using Model;
 using IBLL;
 using Ninject;
@@ -83,7 +82,7 @@ namespace TXF_OA
                              + ",\"ModuleCode\":\"" + row["ModuleCode"] + "\""
                              + ",\"ModuleName\":\"" + row["ModuleName"] + "\""
                              + ",\"Icon\":\"" + row["Icon"] + "\""
-                             + ",\"IsDelete\":\"" + row["IsDelete"] + "\""
+                             + ",\"IsDisabled\":\"" + row["IsDisabled"] + "\""
                              + "}},");
                 }
                 jsonStr = jsonStr.TrimEnd(',') + "]";

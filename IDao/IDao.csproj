@@ -41,7 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IBaseDAL.cs" />
+    <Compile Include="Itb_item_CompanyDAL.cs" />
     <Compile Include="Itb_item_DepartmentDAL.cs" />
+    <Compile Include="Itb_item_RoleDAL.cs" />
+    <Compile Include="Itb_item_UserDAL.cs" />
     <Compile Include="Itb_sys_ItemDAL.cs" />
     <Compile Include="Itb_sys_ModuleDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

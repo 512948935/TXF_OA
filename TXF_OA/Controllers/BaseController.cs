@@ -46,8 +46,28 @@ namespace TXF_OA
             Json.Append("]");
             return Json.ToString();
         }
+        public static string DataRowToJson(DataRow row)
+        {
+            StringBuilder Json = new StringBuilder();
+            Json.Append("[");
+            if (row != null)
+            {
+                Json.Append("{");
+                for (int j = 0; j < row.Table.Columns.Count; j++)
+                {
+                    Json.Append("\"" + row.Table.Columns[j].ColumnName.ToString() + "\":\"" + StringFilter(row[j].ToString()) + "\"");
+                    if (j < row.Table.Columns.Count - 1)
+                    {
+                        Json.Append(",");
+                    }
+                }
+                Json.Append("}");
+            }
+            Json.Append("]");
+            return Json.ToString();
+        }
         /// <summary>
-        /// DataTable to JSON
+        /// DataTable to TreeJson
         /// </summary>
         /// <param name="jsonName">返回json的名称</param>
         /// <param name="dt">转换成json的表</param>

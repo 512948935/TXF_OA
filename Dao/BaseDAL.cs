@@ -80,6 +80,10 @@ namespace Dao
         {
             return ORM.ModelOperate<T>.Instance().SelectT(where);
         }
+        public virtual T SelectT(List<WhereField> listWhere)
+        {
+            return ORM.ModelOperate<T>.Instance().SelectT(listWhere);
+        }
         /// <summary>
         /// 查找实体类集合
         /// </summary>
