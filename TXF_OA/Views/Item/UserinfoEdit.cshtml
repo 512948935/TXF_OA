@@ -1,0 +1,199 @@
+﻿@{
+    ViewBag.Title = "新增/编辑人员信息";
+}
+ <form id="form_edit" method="post" action="">
+     <table width="100%" cellpadding="0" cellspacing="0" align="center" class="tablestyle" id="tt">      
+             <tr>
+                <td class="td1" width="40%">用户代码：</td>
+                <td class="td2">
+                    <input id="t_Code" name="Code" style="width:130px"
+                  /><input type="text" id="t_Suff_Code" name="Suff_Code" required="true" missingMessage='必填' style="width:50px" />
+                    <input type="hidden" id="t_ItemNo" name="ItemNo" />
+                    <input type="hidden" id="t_ItemID" name="ItemID" />
+                    <input type="hidden" id="t_ID" name="ID" value="0" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1" width="40%">用户帐号：</td>
+                <td class="td2">
+                    <input type="text" id="t_ItemName" name="ItemName" required="true" missingMessage='必填' />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">用户密码：</td>
+                <td class="td2">
+                     <input type="text" id="t_UserPwd" name="UserPwd" required="true" missingMessage='必填' validtype='isPassword' />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">所属部门：</td>
+                <td class="td2">
+                    <input id="t_DepName" name="DepName"/>
+                    <input type="hidden" id="t_DepID" name="DepID" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">所属角色：</td>
+                <td class="td2">
+                     <input id="t_RoleName" name="RoleName" />
+                     <input type="hidden" id="t_RoleID" name="RoleID" />
+                </td>
+            </tr>
+             <tr>
+                <td class="td1">是否禁用：</td>
+                <td class="td2">
+                    <input type="checkbox" id="t_IsDisabled" name="IsDisabled" value="true" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">备注：</td>
+                <td class="td2">
+                    <textarea id="t_Remark" name="Remark" cols="20" rows="5" class="txtaa" ></textarea>
+                </td>
+            </tr>
+         </table>
+</form>
+<div style="text-align:center;padding:2px;">
+    <a class="easyui-linkbutton" iconCls="icon-ok" id="btnSave" href="javascript:void(0)">保存</a>
+    <a class="easyui-linkbutton" iconCls="icon-back" id="btnBack" href="javascript:void(0)">返回</a>
+</div>
+<!--基础数据选择对话框-->
+<div id="div_dialog_choose_dep" style="overflow:hidden;padding:2px"></div>
+<div id="div_dialog_choose_role" style="overflow:hidden;padding:2px"></div>
+
+ <script type="text/javascript">
+      var backUrl = encodeURI(getUrlParam('backUrl'));
+      var id = getUrlParam("ID");
+      $(function () {
+          //添加textbox样式
+          $("#form_edit input:text").each(function () {
+              $(this).addClass('easyui-validatebox textbox txt');
+              if ($(this).attr('required') || $(this).attr('validtype'))
+                  $(this).validatebox();
+          });
+          $("#t_Code").combotree({
+              url: '/Item/LoadComboTree?pageUrl=/Item/UserinfoManage',
+              valueField: 'ID',
+              textField: 'NodeCode',
+              panelHeight: 'auto',
+              required: true,
+              missingMessage: '必填',
+              onSelect: function (node) {
+                  $("#t_ItemID").val(node.id);
+              }
+          });
+          $("#t_DepName").textbox({
+              prompt: '点我选择部门哦.',
+              buttonIcon: 'icon-clear',
+              required: true,
+              missingMessage: '必填',
+              onClickButton: function () {
+                  $(this).textbox('clear')
+                  $("#t_DepID").val('');
+              }
+          });
+          $("#t_RoleName").textbox({
+              prompt: '点我选择角色哦.',
+              buttonIcon: 'icon-clear',
+              onClickButton: function () {
+                  $(this).textbox('clear')
+                  $("#t_RepID").val('');
+              }
+          });
+          //保存
+          $("#btnSave").click(function () {
+              if ($("#form_edit").form('validate')) {
+                  var suff_code = $("#t_Suff_Code").val().replace(/\./g, "");
+                  $("#t_ItemNo").val($("#t_Code").textbox("getText") + suff_code);
+                  $.ajax({
+                      type: "post",
+                      url: "/Item/SaveUserinfo",
+                      data: $("#form_edit").serializeArray(),
+                      async: false,
+                      success: function (data) {
+                          if (data.status == 1) {//保存成功
+                              if (id > 0)
+                                  jqAlert('保存成功.', 'info', backUrl + "&fromCache=false");
+                              else
+                                  jqAlert('保存成功.', 'info', '/Item/UserinfoManage?fromCache=false');
+                          }
+                          else {
+                              jqAlert('保存失败:' + data, 'error')
+                          }
+                      }
+                  });
+              }
+          });
+          //返回
+          $("#btnBack").click(function () {
+              document.location = backUrl + "&fromCache=true";
+          });
+          //加载数据
+          if (id > 0) {
+              $.ajaxGet("/Item/GetUserinfo", { "id": id, "code": getUrlParam("code") }, function (data) {
+                  if (data.status == 1) {
+                      var model = eval(data.model)[0];
+                      $("#form_edit input").each(function () {
+                          var val = model[this.name];
+                          if (this.type == "text" || this.type == "hidden") {
+                              $(this).val(val);
+                          }
+                          else if (this.type == "checkbox") {
+                              $(this).attr("checked", val == "True")
+                          }
+                      });
+                      $("#t_DepName").textbox("setText", model.DepName);
+                      $("#t_RoleName").textbox("setText", model.RoleName);
+                      $("#t_Remark").val(model.Remark);
+                      var itemNo = model.ItemNo;
+                      var len = itemNo.lastIndexOf(".") + 1;
+                      $("#t_Code").combotree("setValue", itemNo.substr(0, len));
+                      $("#t_Suff_Code").val(itemNo.substr(len));
+                  }
+                  else
+                      jqAlert('数据加载失败:' + data, 'error')
+              });
+          }
+          //加载部门选择对话框
+          showMyDialog1($("#div_dialog_choose_dep"), '选择数据', 'icon-tip', '/Item/DepinfoManage?isRedirect=true&choose=true', 'frame1', 780, 400, false
+          , function () {
+              var child = window.frames["frame1"].window.frames["mainFrame"];
+              if (child != null) {
+                  var selections = child.$("#tt_grid").datagrid('getSelections');
+                  if (selections.length == 1) {
+                      $("#t_DepID").val(selections[0].ID);
+                      $("#t_DepName").textbox("setText", selections[0].ItemName);
+                      $("#div_dialog_choose_dep").dialog('close');
+                  }
+                  else
+                      jqAlert('请选择一条记录！', 'warning')
+              }
+          });
+          var txtDep = $("#t_DepName").textbox("textbox");
+          $(txtDep).keydown(function () { return false });
+          $(txtDep).click(function () {
+              $("#div_dialog_choose_dep").dialog('open');
+          });
+          //加载角色选择对话框
+          showMyDialog1($("#div_dialog_choose_role"), '选择数据', 'icon-tip', '/Item/RoleinfoManage?isRedirect=true&choose=true', 'frame2', 780, 400, false
+          , function () {
+              var child = window.frames["frame2"].window.frames["mainFrame"];
+              if (child != null) {
+                  var selections = child.$("#tt_grid").datagrid('getSelections');
+                  if (selections.length == 1) {
+                      $("#t_RoleID").val(selections[0].ID);
+                      $("#t_RoleName").textbox("setText", selections[0].ItemName);
+                      $("#div_dialog_choose_role").dialog('close');
+                  }
+                  else
+                      jqAlert('请选择一条记录！', 'warning')
+              }
+          });
+          var txtRole = $("#t_RoleName").textbox("textbox");
+          $(txtRole).keydown(function () { return false });
+          $(txtRole).click(function () {
+              $("#div_dialog_choose_role").dialog('open');
+          });
+      });
+   </script>
+

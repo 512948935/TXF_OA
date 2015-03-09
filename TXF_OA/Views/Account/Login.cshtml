@@ -1,0 +1,142 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>企业OA综合管理平台</title>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/themes/login.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.8.0.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JSHelper.js")"></script>
+</head>
+ <script type="text/javascript">
+     $(function () {
+         $imgCode = $("#imgCode");
+         $imgCode.click(function () {
+             $(this).attr('src', '/Account/CreateCode?abc=' + Math.random());
+         });
+         $("#changeCode").click(function () {
+             $imgCode.attr('src', '/Account/CreateCode?abc=' + Math.random());
+         });
+         $("#mapLogin").click(function () {
+             var $name = $('#txtUserName');
+             var $pwd = $('#txtUserPassword');
+             var $code = $('#txtCode');
+             if (checkLogin($name, $pwd, $code)) {
+                 var queryParams = { "name": $name.val()
+                                   , "pwd": $pwd.val()
+                                   , "codeValue": $code.val()
+                 };
+                 $.ajaxPost("/Account/CheckLogin", queryParams, function (msg) {
+                     if (msg == "success")
+                         document.location = "/Home/Index?UserName=" + $('#txtUserName').val();
+                     else {
+                         $imgCode.attr('src', '/Account/CreateCode?abc=' + Math.random());
+                         alert(msg);
+                     }
+                 });
+             }
+         });
+     })
+     function checkLogin($name, $pwd, $code) {
+         $name.next().remove();
+         $pwd.next().remove();
+         $code.next().remove();
+         if ($name.val() == "") {
+             $name.focus();
+             $name.after("<span style='color:red'><acronym title='请输入帐号.'> * </acronym></span>");
+             return false;
+         }
+         if ($pwd.val() == "") {
+             $pwd.focus();
+             $pwd.after("<span style='color:red'><acronym title='请输入密码.'> * </acronym></span>");
+             return false;
+         }
+         var re=/^[\A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,22}$/;
+         if (!re.test($pwd.val())) {
+             $pwd.focus();
+             $pwd.after("<span style='color:red'><acronym title='密码格式不正确.'> * </acronym></span>");
+             return false;
+         }
+         if ($code.val() == "") {
+             $code.focus();
+             $code.after("<span style='color:red'><acronym title='请输入验证.'> * </acronym></span>");
+             return false;
+         }
+         if ($code.val().length != 5) {
+             $code.focus();
+             $code.after("<span style='color:red'><acronym title='验证码长度不对.'> * </acronym></span>");
+             return false;
+         }
+         return true;
+     }
+     function keyLogin() {
+         if (event.keyCode == 13)   //回车键的键值为13
+             $("#mapLogin").click();
+     }
+    </script>
+<body id="userlogin_body" onkeydown="keyLogin();">
+    <form id="form1" runat="server">
+    <div id="user_login">
+            <dl>
+                <dd id="user_top">
+                <ul>
+                    <li class="user_top_l"></li>
+                    <li class="user_top_c"></li>
+                    <li class="user_top_r"></li>
+                </ul>
+                </dd>
+                <dd id="user_main">
+                <ul>
+                    <li class="user_main_l"></li>
+                    <li class="user_main_c">
+                        <div class="user_main_box">
+                            <ul>
+                                <li class="user_main_text">帐&nbsp;&nbsp;&nbsp;&nbsp;号：</li>
+                                <li class="user_main_input">
+                                    <input type="text" class="TxtUserNameCssClass" id="txtUserName" name="UserName" />
+                                </li>
+                            </ul>
+                            <ul>
+                                <li class="user_main_text">密&nbsp;&nbsp;&nbsp;&nbsp;码：</li>
+                                <li class="user_main_input">
+                                    <input type="password" class="TxtPasswordCssClass" id="txtUserPassword" name="UserPassword" /> 
+                                </li>
+                            </ul>
+                            <ul>
+                                <li class="user_main_text">验证码：</li>
+                                <li class="user_main_input">
+                                    <input type="text" class="TxtValidateCodeCssClass" id="txtCode" name="Code" />
+                                </li>
+                            </ul>
+                            <ul>
+                                <li class="user_main_text"></li>
+                                <li class="user_main_input">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="javascript:void(0)"><img style="border:0" src="/Account/CreateCode" id="imgCode" alt="单击可刷新" /></a>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <a href="javascript:void(0)" id="changeCode">看不清,换一张</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="user_main_r">
+                         <img src="@Url.Content("~/Content/images/user_botton.gif")" border="0" usemap="#mapLogin" alt="登录" class="IbtnEnterCssClass" />
+                         <map name="mapLogin" id="mapLogin">
+                              <area  shape="rect" coords="0, 3, 83, 78" alt="登录" /></map>
+                    </li>
+                </ul>
+                </dd>
+                <dd id="user_bottom">
+                    <ul>
+                        <li class="user_bottom_l"></li>
+                        <li class="user_bottom_c"></li>
+                        <li class="user_bottom_r"></li>
+                    </ul>
+                </dd>
+            </dl> 
+        </div>
+    </form>
+</body>
+</html>

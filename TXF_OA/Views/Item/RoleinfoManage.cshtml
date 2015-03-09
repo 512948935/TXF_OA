@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "角色信息";
+}
+<div style="height:100%">
+    <table class="easyui-datagrid" id="tt_grid" name="datagrid" width="100%" border="0"
+           data-options="title:'角色信息',
+                         url:encodeURI(url),
+                         pageNumber:page,
+                         pageSize:pagesize,
+                         onLoadSuccess:loadSuccess,
+                         fit:true,
+                         rowStyler:rowstyler,
+                         toolbar:toolbar
+                         ">
+            <thead data-options="frozen:true">
+                <tr>
+                    <th data-options="field:'ck',checkbox:true"></th>
+                    <th data-options="field:'ID',hidden:true,title:'ID'"></th>
+                    <th data-options="field:'ItemID',hidden:true,title:'ItemID'"></th>
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <th data-options="field:'ItemNo',sortable:'true',where:'true'">角色代码</th>
+                    <th data-options="field:'ItemName',where:'true'">角色名称</th>
+                    <th data-options="field:'DepName',width:'80',align:'center'">角色部门</th>
+                </tr>
+            </thead>
+    </table>
+    <div id="div_dialog_search" style="padding:2px;"></div>
+</div>
+
+
+<script type="text/javascript">
+    var page = getUrlParam('page') == '' ? 1 : parseInt(getUrlParam('page'));
+    var pagesize = getUrlParam('pagesize') == '' ? 1 : getUrlParam('pagesize');
+    var param = {
+        "code": parent.$("#t_NodeCode").val(),
+        "isDisabled": getUrlParam("choose") == "True" ? "1" : "",
+        "where": getUrlParam1("where"),
+        "fromCache": getUrlParam1("fromCache") == "false" ? false : true,
+        "getUrl": function () {
+            return '/Item/GetRoleinfoList?fromCache=' + this.fromCache + '&code=' + this.code + '&disabled=' + this.isDisabled + '&where=' + param.where;
+        }
+    }
+    var url = param.getUrl();
+    $(function () {
+        //调整datagrid大小
+        datagridResize(parent.$("#div_layout"));
+        //创建过滤查询对话框
+        getWhereColumns($("#tt_grid"), function (col) {
+            var href = '/Item/CreateWhereHTML?col=' + col;
+            showMyDialog($("#div_dialog_search"), '筛选条件', 'tu1611', href, 350, true, function () {
+                var where = "";
+                $("#ttSearch input:text").each(function () {
+                    where += '{Key:"' + $(this).attr('name') + '",Value:"' + $.strFilter($(this).val()) + '",Symbol:"like"},';
+                });
+                if (where != "") {
+                    where = "[" + $.trimend(where, ',') + "]";
+                    param.where = where;
+                    param.fromCache = false;
+                    $('#tt_grid').datagrid('options').url = param.getUrl();
+                    $("#tt_grid").datagrid('load');
+                }
+                $('#div_dialog_search').dialog('close');
+            });
+        });
+    })
+    var backUrl;
+    var loadSuccess = function () {
+        var p = $('#tt_grid').datagrid('getPager');
+        var page = p.data("pagination").options.pageNumber;
+        var size = p.data("pagination").options.pageSize;
+        backUrl = '/Item/RoleinfoManage?where=' + param.where + '&page=' + page + '&pagesize=' + size;
+        parent.hideMask();
+    }
+    var toolbar = [{
+        id: 'btnadd',
+        text: '添加',
+        iconCls: 'icon-add',
+        handler: function () {
+            parent.showMask();
+            document.location = '/Item/RoleinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
+        }
+    }, '-', {
+        id: 'btnedit',
+        text: '修改',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var selections = $('#tt_grid').datagrid('getSelections');
+            if (selections.length == 1) {
+                parent.showMask();
+                document.location = '/Item/RoleinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
+            }
+            else
+                jqAlert('请选择一条记录！', 'warning')
+        }
+    }, '-', {
+        id: 'btnremove',
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: function () {
+            var selections = $('#tt_grid').datagrid('getSelections');
+            if (selections.valueOf() == '')
+                jqAlert('请选择一条记录！', 'warning')
+            else {
+                var id = "(";
+                for (var i = 0; i < selections.length; i++) {
+                    id += selections[i].ID + ",";
+                }
+                id += "-1)";
+                uiConfirm("您确认要删除当前信息吗.", function () {
+                    $.post("/Item/DelRoleinfo", { "ID": id }, function (data) {
+                        if (data.status == 1) {
+                            param.fromCache = false;
+                            $('#tt_grid').datagrid('options').url = param.getUrl();
+                            $("#tt_grid").datagrid('reload');
+                        }
+                        else
+                            jqAlert('删除失败:' + data, 'error')
+                    });
+                });
+            }
+        }
+    }, '-',
+            {
+                id: 'btnsearch',
+                text: '查询',
+                iconCls: 'icon-search',
+                handler: function () {
+                    $('#div_dialog_search').dialog('open');
+                }
+            }, '-', {
+                id: "btnexport",
+                text: '导出',
+                iconCls: 'icon-excelcss',
+                handler: function () {
+                    getExportColumns($("#tt_grid"), function (data) {
+                        if (data != "") {
+                            $("#tt").datagrid('reload');
+                            var url = "/Item/ExportRoleinfo?title=" + escape("公司信息") + "&columns=" + data;
+                            window.open(url);
+                        }
+                    });
+                }
+            }];
+    var boolFormatter = function (value) {
+        if (value == "True") return "是"
+        return "否";
+    }
+    var rowstyler = function (index, row) {
+        if (row.IsDisabled == "True") {
+            return 'color:#FF0000;';
+        }
+    }
+    function reloadGird(code) {
+        param.code = code;
+        param.where = "";
+        param.fromCache = true;
+        $('#tt_grid').datagrid('options').url = param.getUrl();
+        $("#tt_grid").datagrid('load');
+    }
+</script>
