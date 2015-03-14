@@ -1,61 +1,68 @@
 ﻿@{
     ViewBag.Title = "新增/编辑人员信息";
 }
- <form id="form_edit" method="post" action="">
-     <table width="100%" cellpadding="0" cellspacing="0" align="center" class="tablestyle" id="tt">      
-             <tr>
-                <td class="td1" width="40%">用户代码：</td>
-                <td class="td2">
-                    <input id="t_Code" name="Code" style="width:130px"
-                  /><input type="text" id="t_Suff_Code" name="Suff_Code" required="true" missingMessage='必填' style="width:50px" />
-                    <input type="hidden" id="t_ItemNo" name="ItemNo" />
-                    <input type="hidden" id="t_ItemID" name="ItemID" />
-                    <input type="hidden" id="t_ID" name="ID" value="0" />
-                </td>
-            </tr>
+
+<form id="form_edit" method="post" action="" style="padding:2px">
+    <table width="100%" cellpadding="0" cellspacing="0" align="center" class="tablestyle" id="tt">      
             <tr>
-                <td class="td1" width="40%">用户帐号：</td>
-                <td class="td2">
-                    <input type="text" id="t_ItemName" name="ItemName" required="true" missingMessage='必填' />
-                </td>
-            </tr>
+            <td class="td1" width="35%">用户代码：</td>
+            <td class="td2">
+                <input id="t_Code" name="Code" style="width:130px"
+                /><input type="text" id="t_Suff_Code" name="Suff_Code" required="true" missingMessage='必填' style="width:50px" />
+                <input type="hidden" id="t_ItemNo" name="ItemNo" />
+                <input type="hidden" id="t_ItemID" name="ItemID" />
+                <input type="hidden" id="t_ID" name="ID" value="0" />
+            </td>
+        </tr>
+        <tr>
+            <td class="td1">用户帐号：</td>
+            <td class="td2">
+                <input type="text" id="t_ItemName" name="ItemName" required="true" missingMessage='必填' />
+            </td>
+        </tr>
+        <tr>
+            <td class="td1">用户密码：</td>
+            <td class="td2">
+                    <input type="text" id="t_UserPwd" name="UserPwd" required="true" missingMessage='必填' validtype='isPassword' />
+            </td>
+        </tr>
+        <tr>
+            <td class="td1">用户姓名：</td>
+            <td class="td2">
+                <input type="text" id="t_RealName" name="RealName" required="true" missingMessage='必填' />
+            </td>
+        </tr>
+        <tr>
+            <td class="td1">所属部门：</td>
+            <td class="td2">
+                <input id="t_DepName" name="DepName"/>
+                <input type="hidden" id="t_DepID" name="DepID" />
+            </td>
+        </tr>
+        <tr>
+            <td class="td1">所属角色：</td>
+            <td class="td2">
+                    <input id="t_RoleName" name="RoleName" />
+                    <input type="hidden" id="t_RoleID" name="RoleID" />
+            </td>
+        </tr>
             <tr>
-                <td class="td1">用户密码：</td>
-                <td class="td2">
-                     <input type="text" id="t_UserPwd" name="UserPwd" required="true" missingMessage='必填' validtype='isPassword' />
-                </td>
-            </tr>
-            <tr>
-                <td class="td1">所属部门：</td>
-                <td class="td2">
-                    <input id="t_DepName" name="DepName"/>
-                    <input type="hidden" id="t_DepID" name="DepID" />
-                </td>
-            </tr>
-            <tr>
-                <td class="td1">所属角色：</td>
-                <td class="td2">
-                     <input id="t_RoleName" name="RoleName" />
-                     <input type="hidden" id="t_RoleID" name="RoleID" />
-                </td>
-            </tr>
-             <tr>
-                <td class="td1">是否禁用：</td>
-                <td class="td2">
-                    <input type="checkbox" id="t_IsDisabled" name="IsDisabled" value="true" />
-                </td>
-            </tr>
-            <tr>
-                <td class="td1">备注：</td>
-                <td class="td2">
-                    <textarea id="t_Remark" name="Remark" cols="20" rows="5" class="txtaa" ></textarea>
-                </td>
-            </tr>
-         </table>
+            <td class="td1">是否禁用：</td>
+            <td class="td2">
+                <input type="checkbox" id="t_IsDisabled" name="IsDisabled" value="true" />
+            </td>
+        </tr>
+        <tr>
+            <td class="td1">备注：</td>
+            <td class="td2">
+                <textarea id="t_Remark" name="Remark" cols="20" rows="5" class="txtaa" ></textarea>
+            </td>
+        </tr>
+        </table>
 </form>
 <div style="text-align:center;padding:2px;">
-    <a class="easyui-linkbutton" iconCls="icon-ok" id="btnSave" href="javascript:void(0)">保存</a>
-    <a class="easyui-linkbutton" iconCls="icon-back" id="btnBack" href="javascript:void(0)">返回</a>
+     <a class="easyui-linkbutton" iconCls="icon-ok" id="btnSave" href="javascript:void(0)">保存</a>
+     <a class="easyui-linkbutton" iconCls="icon-back" id="btnBack" href="javascript:void(0)">返回</a>
 </div>
 <!--基础数据选择对话框-->
 <div id="div_dialog_choose_dep" style="overflow:hidden;padding:2px"></div>
@@ -130,7 +137,7 @@
           });
           //加载数据
           if (id > 0) {
-              $.ajaxGet("/Item/GetUserinfo", { "id": id, "code": getUrlParam("code") }, function (data) {
+              $.ajaxGet("/Item/GetUserinfo", { "id": id }, function (data) {
                   if (data.status == 1) {
                       var model = eval(data.model)[0];
                       $("#form_edit input").each(function () {

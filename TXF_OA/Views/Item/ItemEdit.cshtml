@@ -111,6 +111,11 @@
                      });
                      $('#uiMenu').menu('show', { left: e.pageX, top: e.pageY });
                  },
+                 onLoadSuccess: function () {
+                     var node = $('#ul_tree').tree('find', $("#t_ID").val());
+                     if (node != null)
+                         $('#ul_tree').tree('select', node.target);
+                 },
                  onSelect: function (node) {
                      //赋值
                      $("#form_edit").find("input:text,input:hidden").each(
@@ -190,11 +195,6 @@
                                  async: false,
                                  success: function (data) {
                                      if (data.status == 1) {//保存成功
-                                         if ($("#t_ID").val() != "") {
-                                             var node = $("#ul_tree").tree("getSelected");
-                                             if (node.attributes.PageUrl != "")
-                                                 window.frames["mainFrame"].location = node.attributes.PageUrl;
-                                         }
                                          $("#ul_tree").tree("reload");
                                          $('#div_dialog_edit').dialog('close');
                                      }

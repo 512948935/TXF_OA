@@ -1,0 +1,68 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>头像上传</title>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/fineuploader.css")"  />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/jquery.Jcrop.min.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/crop.min.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.8.0.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/js/jquery.fineuploader-3.1.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/js/jquery.Jcrop.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/js/crop.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JSHelper.js")"></script>
+</head>
+<body>
+<div id="jquery-wrapped-fine-uploader"></div>
+<div style="clear:both"></div>
+<div id="message"></div>
+<div id="crop_wrap">
+		<div id="crop_holder">
+			<div id="crop_area" class="border">
+				 <img id="crop_image" alt="" src="" class="preview-image" style="display:none" /></div>
+			<div id="preview_area">
+				<div id="preview_title"> 当前头像 </div>
+				<div id="preview_small_text" class="preview-text"> 48px &times; 48px </div>
+				<div id="preview_small_wrap" class="border">
+					<img id="preview_small" alt="小头像" src="/Content/images/face_1.gif" class="preview-image" />
+				</div>
+				<div id="preview_large_text" class="preview-text">180px &times; 180px </div>
+				<div id="preview_large_wrap" class="border">
+					<img id="preview_large" alt="大头像" src="/Content/images/face_2.gif" class="preview-image" />
+				</div>
+			</div>
+		</div>
+		<div id="crop_operation" style="display:none;">
+			<form id="form_crop" action="">
+					<input type="hidden" name="x" id="x" />
+					<input type="hidden" name="y" id="y" />
+					<input type="hidden" name="w" id="w" />
+					<input type="hidden" name="h" id="h" />
+					<input type="hidden" name="imgsrc" id="imgsrc" />
+					<input id="crop_operation_submit" type="button" value="裁切并保存" />
+					<span id="crop_operation_msg" style="display:none" class="green"></span>
+			</form>
+		</div>
+		<div id="croped_message" class="green"></div>
+</div>
+</body>
+ <script type="text/javascript">
+      var id = getUrlParam("ID");
+      $(function () {
+          //加载数据
+          if (id > 0) {
+              $.ajaxGet("/Item/GetUserinfo", { "id": id }, function (data) {
+                  if (data.status == 1) {
+                      var model = eval(data.model)[0];
+                      if (model.FaceSrc != "")
+                          $("#preview_small").attr("src", model.FaceSrc);
+                      if (model.AvatarSrc != "")
+                          $("#preview_large").attr("src", model.AvatarSrc);
+                  }
+              });
+          }
+      });
+</script>
+</html>

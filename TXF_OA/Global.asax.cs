@@ -21,6 +21,7 @@ namespace TXF_OA
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //routes.Add(new TestRoute("Account"));
             routes.MapRoute(
                 "Default", // 路由名称
                 "{controller}/{action}/{id}", // 带有参数的 URL
@@ -28,15 +29,12 @@ namespace TXF_OA
             );
 
         }
-
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-
-            DependencyResolver.SetResolver(new NinjectDependencyResolver());
         }
     }
 }

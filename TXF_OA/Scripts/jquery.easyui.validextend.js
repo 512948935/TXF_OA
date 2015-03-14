@@ -89,7 +89,7 @@ $.extend($.fn.validatebox.defaults.rules, {
         validator: function (value) {
             return /^\d{15}(\d{2}[A-Za-z0-9])?$/i.test(value);
         },
-        message: '身份证号码格式不正确'
+        message: '身份证号码格式不正确.'
     },
     //时间验证    
     isDateTime: {
@@ -97,7 +97,7 @@ $.extend($.fn.validatebox.defaults.rules, {
             //格式yyyy-MM-dd或yyyy-M-d
             return /^(?:(?!0000)[0-9]{4}([-]?)(?:(?:0?[1-9]|1[0-2])\1(?:0?[1-9]|1[0-9]|2[0-8])|(?:0?[13-9]|1[0-2])\1(?:29|30)|(?:0?[13578]|1[02])\1(?:31))|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)([-]?)0?2\2(?:29))$/i.test(value);
         },
-        message: '清输入合适的日期格式'
+        message: '清输入合适的日期格式.'
     },
     //时间比较
     isStart: {
@@ -106,7 +106,7 @@ $.extend($.fn.validatebox.defaults.rules, {
             var dateB = $.fn.datebox.defaults.parser($(param[0]).datebox('getValue'));
             return dateA < dateB;
         },
-        message: '开始时间不能大于结束时间'
+        message: '开始时间不能大于结束时间.'
     },
     isEnd: {
         validator: function (value, param) {
@@ -114,7 +114,7 @@ $.extend($.fn.validatebox.defaults.rules, {
             var dateA = $.fn.datebox.defaults.parser($(param[0]).datebox('getValue'));
             return dateB > dateA;
         },
-        message: '结束时间不能小于开始时间'
+        message: '结束时间不能小于开始时间.'
     },
     isEmail: {
         validator: function (value, param) {

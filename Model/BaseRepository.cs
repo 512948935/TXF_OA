@@ -12,7 +12,7 @@ namespace Model
         /// <summary>
         /// 当前登录人
         /// </summary>
-        public static tb_item_User User { get; set; }
+        public tb_item_User User { get; set; }
         private DateTime m_CreateOn;
         /// <summary>
         ///创建时间

@@ -38,6 +38,7 @@ namespace Dao
                                                             ,c.ItemName RoleName
                                                             ,a.UserPwd
                                                             ,a.RealName
+                                                            ,a.JoinTime
                                                             ,a.IsDisabled
                                                      FROM   dbo.tb_item_User a
                                                             LEFT JOIN dbo.tb_item_Department b ON b.ID=a.DepID 
@@ -57,6 +58,9 @@ namespace Dao
                                                            ,c.ItemName RoleName
                                                            ,a.UserPwd
                                                            ,a.RealName
+                                                           ,a.FaceSrc
+                                                           ,a.AvatarSrc
+                                                           ,a.JoinTime
                                                            ,a.IsDisabled
                                                            ,a.Remark
                                                      FROM   dbo.tb_item_User a

@@ -33,15 +33,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\Lib\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
-      <HintPath>..\Lib\Ninject.dll</HintPath>
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net40\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.Conventions">
+      <HintPath>..\packages\Ninject.Extensions.Conventions.3.2.0.0\lib\net40\Ninject.Extensions.Conventions.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common">
+      <HintPath>..\packages\Ninject.Web.Common.3.2.3.0\lib\net40-full\Ninject.Web.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Mvc">
+      <HintPath>..\packages\Ninject.MVC3.3.2.1.0\lib\net40-full\Ninject.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Transactions" />
@@ -71,10 +83,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\WebActivator.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivatorEx">
+      <HintPath>..\packages\WebActivatorEx.2.0.6\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Areas\_1uu\Controllers\UsersController.cs" />
     <Compile Include="Areas\_1uu\_1uuAreaRegistration.cs" />
+    <Compile Include="AutoMappings\AutoMapperConfig.cs" />
+    <Compile Include="AutoMappings\DomainModelToViewModelAutoMappings.cs" />
+    <Compile Include="AutoMappings\ViewModelToDomainModelAutoMappings.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\FlowController.cs" />
@@ -84,11 +103,17 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CropImage.cs" />
     <Compile Include="Models\ValidateCode.cs" />
-    <Compile Include="NinjectDependencyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestRoute.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\crop.min.css" />
+    <Content Include="Content\css\fineuploader.css" />
+    <Content Include="Content\css\Jcrop.gif" />
+    <Content Include="Content\css\jquery.Jcrop.min.css" />
+    <Content Include="Content\css\loading.gif" />
     <Content Include="Content\GooFlow\default.css" />
     <Content Include="Content\GooFlow\GooFlow.css" />
     <Content Include="Content\GooFlow\GooFlow.js" />
@@ -468,6 +493,7 @@
     <Content Include="Content\images\U01.gif" />
     <Content Include="Content\images\U02.gif" />
     <Content Include="Content\images\U03.gif" />
+    <Content Include="Content\images\UploadFile\TempImg\201503\1317113164.jpg" />
     <Content Include="Content\images\user_all_bg.gif" />
     <Content Include="Content\images\user_bottom_c.gif" />
     <Content Include="Content\images\user_bottom_l.gif" />
@@ -707,8 +733,8 @@
     <Content Include="Content\themes\icons\undo.png" />
     <Content Include="Content\themes\icons\username_bg.gif" />
     <Content Include="Content\themes\icons\view.png" />
-    <Content Include="Content\themes\login.css" />
-    <Content Include="Content\themes\main.css" />
+    <Content Include="Content\css\login.css" />
+    <Content Include="Content\css\main.css" />
     <Content Include="Content\themes\metro-blue\accordion.css" />
     <Content Include="Content\themes\metro-blue\calendar.css" />
     <Content Include="Content\themes\metro-blue\combo.css" />
@@ -1049,10 +1075,19 @@
     <Content Include="Views\Item\UserinfoEdit.cshtml" />
     <Content Include="Views\Item\RoleinfoManage.cshtml" />
     <Content Include="Views\Item\RoleinfoEdit.cshtml" />
-    <Content Include="Views\Item\SetPersonalinfo.cshtml" />
+    <Content Include="Views\Item\UserPersonalInfo.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Item\UserHeader.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{E93A0088-E639-4D34-B545-617370C1DE69}</Project>
+      <Name>BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dao\Dao.csproj">
+      <Project>{612DEC20-5BAE-47FB-8341-CDB1BFF278DA}</Project>
+      <Name>Dao</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Entity\Entity.csproj">
       <Project>{5CBA8F40-3FE7-4F7D-8752-0BE8A3737D1E}</Project>
       <Name>Entity</Name>
@@ -1061,13 +1096,13 @@
       <Project>{BBEEF91A-8D26-4567-AA6B-79E85C2CFAB3}</Project>
       <Name>IBLL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\IDao\IDao.csproj">
+      <Project>{C380E851-A4E2-4C23-B09D-FC3D255079D6}</Project>
+      <Name>IDao</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{6E2C6DB2-A7DB-4C56-854F-89EF74216709}</Project>
       <Name>Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TXF.IOC\TXF.IOC.csproj">
-      <Project>{32EFD69A-0ECF-478B-8467-8B87397D0086}</Project>
-      <Name>TXF.IOC</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

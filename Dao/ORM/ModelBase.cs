@@ -16,13 +16,13 @@ namespace Dao.ORM
     }
     public class ModelBase
     {
-        private static object locker1 = new object();
-        private static object locker2 = new object();
-        private ModelCheck modelCheck = new ModelCheck();
+        private  object locker1 = new object();
+        private  object locker2 = new object();
+        ModelCheck modelCheck = new ModelCheck();
         /// <summary>
         /// 根据Model类型获取表名
         /// </summary>
-        public static string GetTableName<T>()
+        public string GetTableName<T>()
         {
             string str = typeof(T).ToString();
             int a = str.LastIndexOf('.');
@@ -32,7 +32,7 @@ namespace Dao.ORM
         /// <summary>
         /// 获取Model的属性对象,获取第一次后会放入一个缓存列表中(反射一次)
         /// </summary>
-        private Dictionary<string, ModelAttribute> GetModelAttribute<T>() where T : new()
+        public Dictionary<string, ModelAttribute> GetModelAttribute<T>() where T : new()
         {
             lock (locker1)
             {
@@ -59,19 +59,12 @@ namespace Dao.ORM
             foreach (PropertyInfo item in pros)
             {
                 var attr = ReflectionHelper.GetCustomAttribute<ModelAttribute>(item);
-                if (attr == null)
+                if (attr != null)
                 {
-                    //如果实体没定义属性则创建一个新的
-                    attr = new ModelAttribute();
-                    attr.Name = item.Name;
-                }
-                else
-                {
-                    //如果列名没有赋值,则将列名定义和属性名一样的值
                     if (string.IsNullOrEmpty(attr.Name))
                         attr.Name = item.Name;
+                    list.Add(item.Name, attr);
                 }
-                list.Add(item.Name, attr);
             }
             return list;
         }
@@ -148,8 +141,8 @@ namespace Dao.ORM
                 {
                     if (state == ActionState.Add && (modelAttr[field].AutoIncrement || modelAttr[field].NotAdd)) continue;
                     if (state == ActionState.Update && modelAttr[field].NotUpdate) continue;
-                    if (attrValue != null)
-                        this.modelCheck.CheckInput(modelAttr[field], attrValue.ToString());
+                    //if (attrValue != null)
+                    this.modelCheck.CheckInput(modelAttr[field], attrValue);
                     r.Add(fieldName, attrValue);
                 }
                 catch (Exception ex)
@@ -173,35 +166,6 @@ namespace Dao.ORM
                 fdStr.AppendFormat("[{0}],", fieldArr[i]);
             }
             return fdStr.ToString().TrimEnd(',');
-        }
-        /// <summary>
-        /// 删除指定的忽略字段
-        /// </summary>
-        /// <param name="fields">要删除的字段源</param>
-        /// <param name="removeFields">指定要删除的字段</param>
-        /// <returns>返回删除后的字段列表</returns>
-        public string[] RemoveFields(string[] sourceFields, params string[] removeFields)
-        {
-            if (removeFields == null || removeFields.Length == 0) return sourceFields;
-            List<string> list = new List<string>();
-            bool ignore;
-            for (int i = 0; i < sourceFields.Length; i++)
-            {
-                ignore = false;
-                for (int j = 0; j < removeFields.Length; j++)
-                {
-                    if (removeFields[j].Equals(sourceFields[i], StringComparison.OrdinalIgnoreCase))
-                    {
-                        ignore = true;
-                        break;
-                    }
-                }
-                if (ignore == false)
-                {
-                    list.Add(sourceFields[i]);
-                }
-            }
-            return list.ToArray();
         }
     }
 }

@@ -7,11 +7,30 @@ using System.Text;
 using System.Data;
 using Newtonsoft.Json;
 using System.IO;
+using Model;
 
 namespace TXF_OA
 {
     public class BaseController : Controller
     {
+        //定义一个基类的UserInfo对象
+        public tb_item_User CurrentUser { get; set; }
+
+        /// <summary>
+        /// 重写基类在Action之前执行的方法
+        /// </summary>
+        /// <param name="filterContext"></param>
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+            CurrentUser = Session["User"] as tb_item_User;
+
+            //检验用户是否已经登录，如果登录则不执行，否则则执行下面的跳转代码
+            if (CurrentUser == null)
+            {
+                Response.Redirect("/Account/Login");
+            }
+        }
         #region JsonHelper
         /// <summary>
         /// DataTable to JSON

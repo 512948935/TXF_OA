@@ -8,6 +8,9 @@ using Ninject;
 using IBLL;
 using System.Data;
 using System.Transactions;
+using AutoMapper;
+using TXF_OA.Models;
+using System.IO;
 
 namespace TXF_OA
 {
@@ -103,6 +106,7 @@ namespace TXF_OA
             {
                 if (companyBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
                     throw new Exception("当前代码重复,请重新输入.");
+                model.User = CurrentUser;
                 if (model.ID == 0)
                     companyBLL.Add(model);
                 else
@@ -194,6 +198,7 @@ namespace TXF_OA
             {
                 if (depBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
                     throw new Exception("当前代码重复,请重新输入.");
+                model.User = CurrentUser;
                 if (model.ID == 0)
                     depBLL.Add(model);
                 else
@@ -285,6 +290,7 @@ namespace TXF_OA
             {
                 if (userBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
                     throw new Exception("当前代码重复,请重新输入.");
+                model.User = CurrentUser;
                 if (model.ID == 0)
                     userBLL.Add(model);
                 else
@@ -300,6 +306,119 @@ namespace TXF_OA
         public ActionResult SetPersonalinfo()
         {
             return View();
+        }
+        #endregion
+
+        #region 个人信息
+        public ActionResult UserPersonalInfo()
+        {
+            return View();
+        }
+        public ActionResult GetPersonalinfo(int id)
+        {
+            try
+            {
+                tb_item_User model = userBLL.SelectT("ID=" + id);
+                return Json(new { status = 1, model = model }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
+        }
+        public ActionResult SavePersonalInfo(tb_item_User user)
+        {
+            try
+            {
+                List<UpdateField> fields = new List<UpdateField>
+                {
+                     new UpdateField("RealName",user.RealName)
+                    ,new UpdateField("Sex",user.Sex)
+                    ,new UpdateField("UserDuty",user.UserDuty)
+                    ,new UpdateField("Email",user.Email)
+                    ,new UpdateField("BirthDay",user.BirthDay)
+                    ,new UpdateField("Ethnic",user.Ethnic)
+                    ,new UpdateField("IDCardNo",user.IDCardNo)
+                    ,new UpdateField("BankNo",user.BankNo)
+                    ,new UpdateField("IsWedding",user.IsWedding)
+                    ,new UpdateField("Faction",user.Faction)
+                    ,new UpdateField("Origin",user.Origin)
+                    ,new UpdateField("Household",user.Household)
+                    ,new UpdateField("Education",user.Education)
+                    ,new UpdateField("Technical",user.Technical)
+                    ,new UpdateField("University",user.University)
+                    ,new UpdateField("Major",user.Major)
+                    ,new UpdateField("JoinTime",user.JoinTime)
+                    ,new UpdateField("Phone",user.Phone)
+                    ,new UpdateField("FamilyAddress",user.FamilyAddress)
+                    ,new UpdateField("IsWorking",user.IsWorking)
+                };
+                userBLL.Update(fields, "ID=" + user.ID);
+                return Json(new { status = 1 }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
+        }
+        #endregion
+
+        #region 上传头像
+        public ActionResult UserHeader()
+        {
+            return View();
+        }
+        public string UploadImage()
+        {
+            string qqfile = Request["qqfile"];
+            var inputStream = Request.InputStream;
+            if (string.IsNullOrEmpty(qqfile))
+            {
+                //ie浏览器
+                HttpPostedFileBase file = new HttpPostedFileWrapper(System.Web.HttpContext.Current.Request.Files[0]);
+                qqfile = file.FileName;
+                inputStream = file.InputStream;
+            }
+            string uploadFolder = Url.Content("~/Content/images/UploadFile/TempImg/" + DateTime.Now.ToString("yyyyMM") + "/");
+            string imgName = DateTime.Now.ToString("ddHHmmssff");
+            string imgType = qqfile.Substring(qqfile.LastIndexOf("."));
+            string uploadPath = Server.MapPath(uploadFolder);
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+            uploadPath = uploadPath + imgName + imgType;
+            using (var flieStream = new FileStream(uploadPath, FileMode.Create))
+            {
+                inputStream.CopyTo(flieStream);
+            }
+            inputStream.Dispose();
+            System.Drawing.Image img = System.Drawing.Image.FromFile(uploadPath);
+            if (img.Width > 400 || img.Height > 400)
+            {
+                System.Drawing.Image newImg = CropImage.GetThumbNailImage(img, 400, 400, true);
+                img.Dispose();
+                newImg.Save(uploadPath);
+            }
+            string json = "{\"success\":true,\"message\":\"" + uploadFolder + imgName + imgType + "\"}";
+            return json;
+        }
+        public string SaveImage(int id)
+        {
+            int x = Convert.ToInt32(Request["x"]);
+            int y = Convert.ToInt32(Request["y"]);
+            int w = Convert.ToInt32(Request["w"]);
+            int h = Convert.ToInt32(Request["h"]);
+            string imgsrc = Request["imgsrc"].Substring(0, Request["imgsrc"].LastIndexOf("?"));
+            var faceSrc = CropImage.CutImage(imgsrc, x, y, w, h, 48, 48, "_1");
+            var avatarSrc = CropImage.CutImage(imgsrc, x, y, w, h, 180, 180, "_2");
+            string path = "({\"FaceSrc\":\"" + faceSrc + "\",\"AvatarSrc\":\"" + avatarSrc + "\"})";
+            List<UpdateField> fields = new List<UpdateField>{
+                     new UpdateField("FaceSrc",faceSrc)
+                    ,new UpdateField("AvatarSrc",avatarSrc)
+            };
+            userBLL.Update(fields, "ID=" + id);
+            return path;
         }
         #endregion
         #endregion
@@ -381,6 +500,7 @@ namespace TXF_OA
             {
                 if (roleBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
                     throw new Exception("当前代码重复,请重新输入.");
+                model.User = CurrentUser;
                 if (model.ID == 0)
                     roleBLL.Add(model);
                 else

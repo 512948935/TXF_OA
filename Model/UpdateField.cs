@@ -9,5 +9,10 @@ namespace Model
     {
         public string Key { get; set; }
         public object Value { get; set; }
+        public UpdateField(string key,object value)
+        {
+            this.Key = key;
+            this.Value = value;
+        }
     }
 }

@@ -21,6 +21,7 @@
             </thead>
             <thead>
                 <tr>
+                    <th data-options="field:'FaceSrc',align:'center',formatter:imgFormatter"">头像</th>
                     <th data-options="field:'ItemNo',sortable:'true',where:'true'">用户代码</th>
                     <th data-options="field:'ItemName',where:'true'">用户帐号</th>
                     <th data-options="field:'UserPwd'">用户密码</th>
@@ -33,6 +34,7 @@
             </thead>
     </table>
     <div id="div_dialog_search" style="padding:2px;"></div>
+    <div id="div_dialog_upload" style="padding:2px;width:90%;height:90%;overflow:hidden"></div>
 </div>
 
 <script type="text/javascript">
@@ -69,7 +71,29 @@
                 $('#div_dialog_search').dialog('close');
             });
         });
-    })
+        //创建图片上传对话框
+        showMyDialog1($("#div_dialog_upload"), '头像上传', 'icon-header', "", "frame1").dialog({
+            onOpen: function () {
+                var selections = $('#tt_grid').datagrid('getSelections');
+                $("#frame1").attr("src", "/Item/UserHeader?ID=" + selections[0].ID);
+            },
+            onClose: function () {
+                var msg = window.frames["frame1"].$("#croped_message").html()
+                if (msg != '') {
+                    param.fromCache = false;
+                    $('#tt_grid').datagrid('options').url = param.getUrl();
+                    $("#tt_grid").datagrid('load');
+                }
+            },
+            buttons: [{
+                text: '关闭',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#div_dialog_upload").dialog("close");
+                }
+            }]
+        });
+    });
     var backUrl;
     var loadSuccess = function () {
         var p = $('#tt_grid').datagrid('getPager');
@@ -96,6 +120,30 @@
                 parent.showMask();
                 document.location = '/Item/UserinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
             }
+            else
+                jqAlert('请选择一条记录！', 'warning')
+        }
+    }, '-', {
+        id: 'btnedit',
+        text: '设置人事信息',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var selections = $('#tt_grid').datagrid('getSelections');
+            if (selections.length == 1) {
+                parent.showMask();
+                document.location = '/Item/UserPersonalInfo?backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
+            }
+            else
+                jqAlert('请选择一条记录！', 'warning')
+        }
+    }, '-', {
+        id: "toolbar_header",
+        text: '设置头像',
+        iconCls: 'icon-header',
+        handler: function () {
+            var selections = $('#tt_grid').datagrid('getSelections');
+            if (selections.length == 1)
+                $("#div_dialog_upload").dialog("open");
             else
                 jqAlert('请选择一条记录！', 'warning')
         }
@@ -151,6 +199,13 @@
     var boolFormatter = function (value) {
         if (value == "True") return "是"
         return "否";
+    }
+    var imgFormatter = function (value) {
+        if (value != "")
+            return '<img width="18" height="18" alt="头像" src="' + value + '" />';
+        else
+            return '<img width="18" height="18" alt="头像" src="/Content/images/face_1.gif" />';
+
     }
     var rowstyler = function (index, row) {
         if (row.IsDisabled == "True") {

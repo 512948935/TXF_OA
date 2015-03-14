@@ -1,0 +1,52 @@
+﻿
+.border {
+	border:solid 1px #ccc;
+	background-color:#f0f0ee}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.border {
+}
+}
+#crop_wrap {
+	margin:10px 20px}
+#crop_holder {
+	margin-bottom:10px}
+#crop_area {
+	display:table-cell;
+	height:400px;
+	width:400px;
+	vertical-align:bottom}
+#crop_image {
+    max-height:400px;
+	max-width:400px;
+}
+#preview_area {
+	display:table-cell;
+	width:200px;
+	padding-left:10px;
+	vertical-align:bottom}
+#preview_title {
+	font-weight:bold}
+img {
+	border-style:none;
+	max-width:none}
+#preview_small_wrap {
+	position:relative;
+	overflow:hidden;
+	height:48px;
+	width:48px;
+	margin-bottom:10px}
+#preview_small {
+}
+#preview_large_wrap {
+	position:relative;
+	overflow:hidden;
+	height:180px;
+	width:180px}
+#preview_large {
+}
+.preview-text {
+}
+#crop_operation_msg {
+	margin-left:5px}
+.green {
+	color:#468847}

@@ -7,6 +7,7 @@ using Model;
 using IBLL;
 using Ninject;
 using System.Text;
+using TXF_OA.Models;
 
 
 namespace TXF_OA.Controllers
@@ -30,24 +31,22 @@ namespace TXF_OA.Controllers
             //最后将验证码返回;
             return File(bytes, "image/gif");
         }
-        public ActionResult CheckLogin()
+        [HttpPost]
+        public ActionResult LogIn(string name,string pwd,string code)
         {
-            string userName = Request["name"];
-            string pwd = Request["pwd"];
-            string codeValue = Request["codeValue"];
             try
             {
-                if (string.IsNullOrEmpty(userName))
+                if (string.IsNullOrEmpty(name))
                     throw new Exception("请输入帐号.");
                 if (string.IsNullOrEmpty(pwd))
                     throw new Exception("请输入密码.");
-                if (string.IsNullOrEmpty(codeValue))
+                if (string.IsNullOrEmpty(code))
                     throw new Exception("请输入验证码.");
                 List<WhereField> wheres = new List<WhereField>(){
-                                          new WhereField ("ItemName",userName)
+                                          new WhereField ("ItemName",name)
                                          ,new WhereField("UserPwd",pwd )
                 };
-                CheckUserInfo(wheres, codeValue);
+                CheckUserInfo(wheres, code);
                 return Content("success");
             }
             catch (Exception ex)
@@ -70,7 +69,7 @@ namespace TXF_OA.Controllers
                 tb_item_User user = userBLL.SelectT(wheres);
                 if (user == null)
                     throw new Exception("用户名或密码不正确.");
-                BaseRepository.User = user;
+               Session["User"] = user;
             }
             catch (Exception ex)
             {

@@ -19,6 +19,7 @@ namespace Dao.ORM
     public class ModelOperate<T> where T:class,new()
     {
         private ModelBase _ModelBase = new ModelBase();
+        private ModelCheck modelCheck = new ModelCheck();
         private static ModelOperate<T> _modelHelper;
         /// <summary>
         /// 获取当前类的实例
@@ -125,21 +126,23 @@ namespace Dao.ORM
             string sets = string.Empty;
             List<SqlParameter> Parameters = new List<SqlParameter>();
             string where = " 1=1 ";
-            foreach (UpdateField field in listField)
-            {
-                sets += "[" + field.Key + "]=@" + field.Key + ",";
-                Parameters.Add(new SqlParameter("@" + field.Key, field.Value));
-            }
-            foreach (WhereField item in listWhere)
-            {
-                where += " and [" + item.Key + "]=@" + item.Key + " ";
-                Parameters.Add(new SqlParameter("@" + item.Key, item.Value));
-            }
             try
             {
+                Dictionary<string, ModelAttribute> modelAttr = _ModelBase.GetModelAttribute<T>();
+                foreach (UpdateField field in listField)
+                {
+                    sets += "[" + field.Key + "]=@" + field.Key + ",";
+                    modelCheck.CheckInput(modelAttr[field.Key], field.Value);
+                    Parameters.Add(new SqlParameter("@" + field.Key, field.Value));
+                }
+                foreach (WhereField item in listWhere)
+                {
+                    where += " and [" + item.Key + "]=@" + item.Key + " ";
+                    Parameters.Add(new SqlParameter("@" + item.Key, item.Value));
+                }
                 StringBuilder sql = new StringBuilder();
                 sql.AppendFormat("UPDATE [{0}] SET {1} WHERE {2}", tableName, sets.TrimEnd(','), where);
-                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), Parameters);
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql.ToString(), Parameters);
             }
             catch (Exception ex)
             {
@@ -157,16 +160,18 @@ namespace Dao.ORM
             string tableName = typeof(T).Name;
             string sets = string.Empty;
             List<SqlParameter> Parameters = new List<SqlParameter>();
-            foreach (UpdateField field in listField)
-            {
-                sets += "[" + field.Key + "]=@" + field.Key + ",";
-                Parameters.Add(new SqlParameter("@" + field.Key, field.Value));
-            }
+            Dictionary<string, ModelAttribute> modelAttr = _ModelBase.GetModelAttribute<T>();
             try
             {
+                foreach (UpdateField field in listField)
+                {
+                    sets += "[" + field.Key + "]=@" + field.Key + ",";
+                    modelCheck.CheckInput(modelAttr[field.Key], field.Value);
+                    Parameters.Add(new SqlParameter("@" + field.Key, field.Value));
+                }
                 StringBuilder sql = new StringBuilder();
                 sql.AppendFormat("UPDATE [{0}] SET {1} WHERE {2}", tableName, sets.TrimEnd(','), where);
-                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text,sql.ToString(), Parameters);
+                DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql.ToString(), Parameters);
             }
             catch (Exception ex)
             {

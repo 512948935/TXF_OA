@@ -22,7 +22,8 @@ $(function () {
             //保存
             $.ajax({
                 type: "POST",
-                url: "../JsonData/UploadHandler.aspx?action=save&" + $('#form_crop').serialize().replace(/\+/g, " "),
+                data: $('#form_crop').serialize().replace(/\+/g, " "),
+                url: "/Item/SaveImage?ID=" + getUrlParam("ID"),
                 cache: false,
                 error: function () { alert('执行失败.', 'warning'); },
                 success: function (obj) {
@@ -50,7 +51,7 @@ var Uploader = function () {
                 sizeLimit: 10485760
             },
             request: {
-                endpoint: "../JsonData/UploadHandler.aspx?action=upload"
+                endpoint: "/Item/UploadImage"
             },
             text: {
                 uploadButton: '<i class="icon-upload icon-white"><\/i> 上传头像图片',
@@ -73,7 +74,8 @@ var Uploader = function () {
         })
     };
     //裁剪计算方法.
-    return n.prototype = { constructor: n }, n} (),
+    return n.prototype = { constructor: n }, n
+} (),
 	Previewer = function () {
 	    var n, t = function (t) {
 	        n = t

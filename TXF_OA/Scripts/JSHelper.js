@@ -209,58 +209,42 @@ function showMyDialog(jq, title, icon, href, width, modal, fn, minimizable, maxi
         }]
     });
 }
-function showMyDialog1(jq, title, icon, href, name, width, height, modal, fn, minimizable, maximizable) {
+function showMyDialog1(jq, title, icon, href, name, modal, minimizable, maximizable) {
     var dlg = jq.dialog({
         title: title,
-        width: width === undefined ? 750 : width,
-        height: height === undefined ? 750 : height,
         iconCls: "" + icon + "",
         content: '<iframe id="' + name + '" name="' + name + '" scrolling="yes" frameborder="0"  src="" style="width:100%;height:100%;"></iframe>',
         shadow: false,
         cache: false,
         closed: true,
         collapsible: false,
+        draggable: true,
         resizable: false,
         modal: modal === undefined ? true : modal,
         minimizable: minimizable === undefined ? false : minimizable,
         maximizable: maximizable === undefined ? false : maximizable,
-        loadingMessage: '数据正在加载中，请稍等......',
-        onOpen: function () {
-            if ($("#" + name + "").attr("src") == "")
-                $("#" + name + "").attr("src", href);
-        },
-        buttons: [{//底部按钮
-            text: '确定',
-            iconCls: 'icon-ok',
-            handler: function () {
-                fn();
-            }
-        }, {
-            text: '取消',
-            iconCls: 'icon-cancel',
-            handler: function () {
-                jq.dialog('close');
-            }
-        }]
+        loadingMessage: '数据正在加载中，请稍等......'
     });
+    return dlg;
 }
 //window窗体
 function showMyWindow(jq, title, icon, href, name, modal, minimizable, maximizable) {
     var win = jq.window({
         title: title,
         iconCls: "" + icon + "",
-        content: '<iframe src="' + href + '" name=' + name + ' scrolling="auto" frameborder="0" style="width:100%;height:100%"></iframe>',
-        modal: modal === undefined ? true : modal,
-        minimizable: minimizable === undefined ? false : minimizable,
-        maximizable: maximizable === undefined ? false : maximizable,
+        content: '<iframe id="' + name + '" name=' + name + ' src="" scrolling="auto" frameborder="0" style="width:100%;height:100%"></iframe>',
         shadow: false,
-        closed: true,
         cache: false,
+        closed: true,
         collapsible: true,
         draggable: true,
         resizable: false,
+        modal: modal === undefined ? true : modal,
+        minimizable: minimizable === undefined ? false : minimizable,
+        maximizable: maximizable === undefined ? false : maximizable,
         loadingMessage: '数据正在加载中，请稍等......'
     });
+    return win;
 }
 //获取datagrid查询列
 function getWhereColumns(jq, fn) {

@@ -6,7 +6,7 @@
 <html>
 <head>
     <title>企业OA综合管理平台</title>
-    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/themes/login.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/login.css")" />
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.8.0.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/JSHelper.js")"></script>
 </head>
@@ -26,9 +26,9 @@
              if (checkLogin($name, $pwd, $code)) {
                  var queryParams = { "name": $name.val()
                                    , "pwd": $pwd.val()
-                                   , "codeValue": $code.val()
+                                   , "code": $code.val()
                  };
-                 $.ajaxPost("/Account/CheckLogin", queryParams, function (msg) {
+                 $.ajaxPost("/Account/LogIn", queryParams, function (msg) {
                      if (msg == "success")
                          document.location = "/Home/Index?UserName=" + $('#txtUserName').val();
                      else {

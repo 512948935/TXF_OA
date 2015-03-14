@@ -7,7 +7,7 @@ using TXF.Attributes;
 
 namespace Model
 {
-    public class tb_item_User:BaseRepository
+    public class tb_item_User : BaseRepository
     {
         private int m_ID;
         /// <summary>
@@ -59,6 +59,16 @@ namespace Model
             get { return m_UserPwd; }
             set { m_UserPwd = value; }
         }
+        private string m_RealName;
+        /// <summary>
+        ///用户姓名
+        /// </summary>
+        [Model(Name = "用户姓名", Empty = true, DataType = DbType.String, MaxLength = 50)]
+        public string RealName
+        {
+            get { return m_RealName; }
+            set { m_RealName = value; }
+        }
         private int m_DepID;
         /// <summary>
         ///部门ID
@@ -99,22 +109,13 @@ namespace Model
             get { return m_IsDisabled; }
             set { m_IsDisabled = value; }
         }
-        #region 人事部信息
-        private string m_RealName;
-        /// <summary>
-        ///用户姓名
-        /// </summary>
-        [Model(Name = "用户姓名", Empty = true, DataType = DbType.String, MaxLength = 50)]
-        public string RealName
-        {
-            get { return m_RealName; }
-            set { m_RealName = value; }
-        }
+
+        #region 人事信息
         private string m_Sex;
         /// <summary>
         ///性别
         /// </summary>
-        [Model(Name = "性别", Empty = true, DataType = DbType.Int32, MaxLength = 4)]
+        [Model(Name = "性别", Empty = true, DataType = DbType.String, MaxLength = 4)]
         public string Sex
         {
             get { return m_Sex; }
@@ -187,25 +188,25 @@ namespace Model
         [Model(Name = "身份证", Empty = true, DataType = DbType.String, MaxLength = 50)]
         public string IDCardNo
         {
-            get { return m_BankNo; }
-            set { m_BankNo = value; }
+            get { return m_IDCardNo; }
+            set { m_IDCardNo = value; }
         }
         private string m_BankNo;
         /// <summary>
         ///身份证
         /// </summary>
-        [Model(Name = "身份证", Empty = true, DataType = DbType.String, MaxLength = 50)]
+        [Model(Name = "银行帐号", Empty = true, DataType = DbType.String, MaxLength = 50)]
         public string BankNo
         {
             get { return m_BankNo; }
             set { m_BankNo = value; }
         }
-        private bool m_IsWedding;
+        private string m_IsWedding;
         /// <summary>
         ///婚宴状况
         /// </summary>
-        [Model(Name = "婚宴状况", Empty = true, DataType = DbType.Boolean)]
-        public bool IsWedding
+        [Model(Name = "婚宴状况", Empty = true, DataType = DbType.String, MaxLength = 5)]
+        public string IsWedding
         {
             get { return m_IsWedding; }
             set { m_IsWedding = value; }
@@ -284,7 +285,7 @@ namespace Model
         /// <summary>
         ///入职时间
         /// </summary>
-        [Model(Name = "入职时间", Empty = true, DataType = DbType.DateTime, MaxLength = 8)]
+        [Model(Name = "入职时间", Empty = true, DataType = DbType.DateTime)]
         public DateTime? JoinTime
         {
             get { return m_JoinTime; }
@@ -310,7 +311,7 @@ namespace Model
             get { return m_FamilyAddress; }
             set { m_FamilyAddress = value; }
         }
-        private bool m_IsWorking;
+        private bool m_IsWorking = true;
         /// <summary>
         ///是否在岗
         /// </summary>

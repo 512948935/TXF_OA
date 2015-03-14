@@ -1,0 +1,226 @@
+﻿@{
+    ViewBag.Title = "个人信息";
+}
+<form id="form_edit" method="post" action="" style="padding:2px">
+	<table width="100%" cellpadding="0" cellspacing="0" align="center" class="tablestyle" id="tt">
+	<tr>
+		<td class="td1" width="35%">真实姓名：</td>
+		<td class="td2">
+			<input type="text" id="t_RealName" name="RealName" required="true" missingmessage="必填"/>
+            <input type="hidden" id="t_ID" name="ID" value="0" />
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">员工性别：</td>
+		<td class="td2">
+           &nbsp;<input type="radio" name="Sex" value="男" />男 
+           &nbsp;<input type="radio" name="Sex" value="女" />女
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务：</td>
+		<td class="td2">
+			<input type="text" id="t_UserDuty" name="UserDuty"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">Email：</td>
+		<td class="td2">
+			<input type="text" id="t_Email" name="Email" validtype="isEmail"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">出生日期：</td>
+		<td class="td2">
+			<input type="text" id="t_BirthDay" name="BirthDay"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;族：</td>
+		<td class="td2">
+			<select id="t_Ethnic" name="Ethnic" style="width:184px;">
+                <option value="" selected="selected">&nbsp;</option>
+				<option value="汉族">汉族</option>
+				<option value="壮族">壮族</option>
+				<option value="满族">满族</option>
+				<option value="回族">回族</option>
+				<option value="其他">其他</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">身份证号：</td>
+		<td class="td2">
+			<input type="text" id="t_IDCardNo" name="IDCardNo"  validtype="isIdCard"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">银行卡号：</td>
+		<td class="td2">
+			<input type="text" id="t_BankNo" name="BankNo"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">婚姻情况：</td>
+		<td class="td2">
+          &nbsp;<input type="radio" name="IsWedding" value="已婚"/>已婚
+          &nbsp;<input type="radio" name="IsWedding" value="未婚"/>未婚
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">政治面貌：</td>
+		<td class="td2">
+            <select id="t_Faction" name="Faction" style="width:184px;">
+            	<option value="" selected="selected">&nbsp;</option>
+				<option value="群众">群众</option>
+				<option value="团员">团员</option>
+				<option value="党员">党员</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">籍&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;贯：</td>
+		<td class="td2">
+			<input type="text" id="t_Origin" name="Origin"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;历：</td>
+		<td class="td2">
+          <select id="t_Education" name="Education" style="width:184px;">
+            	<option value="" selected="selected">&nbsp;</option>
+				<option value="初中">初中</option>
+				<option value="高中">高中</option>
+                <option value="大专">大专</option>
+                <option value="本科">本科</option>
+                <option value="本科以上">本科以上</option>
+                <option value="其他">其他</option>
+			</select>
+		</td>
+	</tr>
+    <tr>
+		<td class="td1">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</td>
+		<td class="td2">
+			<input type="text" id="t_Technical" name="Technical"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">毕业院校：</td>
+		<td class="td2">
+			<input type="text" id="t_University" name="University"/>
+		</td>
+	</tr>
+    <tr>
+		<td class="td1">专&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;业：</td>
+		<td class="td2">
+			<input type="text" id="t_Major" name="Major"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">入职时间：</td>
+		<td class="td2">
+			<input type="text" id="t_JoinTime" name="JoinTime"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">手机号码：</td>
+		<td class="td2">
+			<input type="text" id="t_Phone" name="Phone" validtype="isTel"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">家庭住址：</td>
+		<td class="td2">
+			<input type="text" id="t_FamilyAddress" name="FamilyAddress"/>
+		</td>
+	</tr>
+    <tr>
+		<td class="td1">户籍所在地址：</td>
+		<td class="td2">
+			<input type="text" id="t_Household" name="Household"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="td1">是否在职：</td>
+		<td class="td2">
+			<input type="checkbox" id="t_IsWorking" name="IsWorking" value="true" checked="checked" />
+		</td>
+	</tr>
+	</table>
+</form>
+<div style="text-align:center;padding:2px;">
+	<a class="easyui-linkbutton" iconcls="icon-ok" id="btnSave" href="javascript:void(0)">保存</a>
+	<a class="easyui-linkbutton" iconcls="icon-back" id="btnBack" href="javascript:void(0)">返回</a>
+</div>
+
+ <script type="text/javascript">
+     var backUrl = encodeURI(getUrlParam('backUrl'));
+     var id = getUrlParam("ID");
+     $(function () {
+         //添加textbox样式
+         $("#form_edit input:text").each(function () {
+             $(this).addClass('easyui-validatebox textbox txt');
+             if ($(this).attr('required') || $(this).attr('validtype'))
+                 $(this).validatebox();
+         });
+         $("#t_Faction").combobox({ editable: false, panelHeight: 90 });
+         $("#t_Ethnic").combobox({ editable: false, panelHeight: 130 });
+         $("#t_Education").combobox({ editable: false, panelHeight: 130 });
+         $("#t_BirthDay").datebox({ editable: false });
+         $("#t_JoinTime").datebox({ editable: false });
+         //加载数据
+         if (id > 0) {
+             $.ajaxGet("/Item/GetPersonalinfo", { "id": id }, function (data) {
+                 if (data.status == 1) {
+                     var model = data.model;
+                     $("#form_edit input").each(function () {
+                         var val = model[this.name];
+                         if (this.type == "text" || this.type == "hidden") {
+                             $(this).val(val);
+                         }
+                         else if (this.type == "checkbox") {
+                             $(this).attr("checked", val == true)
+                         }
+                         else if ((this.type == "radio")) {
+                             $("input[name=" + this.name + "][value=" + val + "]").attr("checked", true);
+                         }
+                     });
+                     $("#t_Ethnic").combobox("setValue", model.Ethnic);
+                     $("#t_Faction").combobox("setValue", model.Faction);
+                     $("#t_Education").combobox("setValue", model.Education);
+                     $("#t_BirthDay").datebox('setValue', dateFormatter(model.BirthDay));
+                     $("#t_JoinTime").datebox('setValue', dateFormatter(model.JoinTime));
+                 }
+                 else
+                     jqAlert('数据加载失败:' + data, 'error')
+             });
+         }
+         //保存
+         $("#btnSave").click(function () {
+             if ($("#form_edit").form('validate')) {
+                 $.ajax({
+                     type: "post",
+                     url: "/Item/SavePersonalInfo",
+                     data: $("#form_edit").serializeArray(),
+                     async: false,
+                     success: function (data) {
+                         if (data.status == 1) {//保存成功
+                             if (id > 0)
+                                 jqAlert('保存成功.', 'info', backUrl + "&fromCache=false");
+                             else
+                                 jqAlert('保存成功.', 'info', '/Item/UserinfoManage?fromCache=false');
+                         }
+                         else {
+                             jqAlert('保存失败:' + data, 'error')
+                         }
+                     }
+                 });
+             }
+         });
+         //返回
+         $("#btnBack").click(function () {
+             document.location = backUrl + "&fromCache=true";
+         });
+     });
+</script>
+

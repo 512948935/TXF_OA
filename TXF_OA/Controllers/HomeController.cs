@@ -17,9 +17,8 @@ namespace TXF_OA
 
         public ActionResult Index()
         {
-            if (BaseRepository.User == null)
-                return Redirect("/Account/Login");
-            ViewBag.UserName = BaseRepository.User.ItemName;
+            if (CurrentUser != null)
+                ViewBag.UserName = CurrentUser.ItemName;
             return View();
         }
         #region 加载菜单
@@ -72,7 +71,6 @@ namespace TXF_OA
         #region 注销
         public ActionResult LogOut()
         {
-            BaseRepository.User = null;
             return Redirect("/Account/Login");
         }
         #endregion

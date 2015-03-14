@@ -15,9 +15,10 @@ namespace Dao.ORM
         /// <param name="modelAttribute"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public void CheckInput(ModelAttribute modelAttribute, string value)
+        public void CheckInput(ModelAttribute modelAttribute, object o)
         {
             //判断是否允许为空，如果不允许为空
+            string value = Convert.ToString(o);
             this.CheckEmpty(modelAttribute, value);//非空验证
             if (!string.IsNullOrEmpty(value))
             {
