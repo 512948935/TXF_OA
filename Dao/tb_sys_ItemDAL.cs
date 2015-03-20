@@ -82,11 +82,11 @@ namespace Dao
                 string sql = string.Format(@"UPDATE dbo.tb_sys_Item SET NodeCode =(REPLACE(LEFT(NodeCode,'{0}')
                              ,LEFT(NodeCode,{1}),'{2}')+SUBSTRING(NodeCode,{3},LEN(NodeCode))) FROM dbo.tb_sys_Item
                               WHERE LEFT(NodeCode,{4})='{5}' AND NodeCode<>'{2}'", len, len, code, len + 1, len, preCode);
-                //更新业务表(目前只更新名称和代码)
+                //更新业务表(目前只更新代码)
                 if (!string.IsNullOrEmpty(tableName))
                 {
-                    sql += string.Format(@";UPDATE {0} SET ItemNo= (REPLACE(LEFT(ItemNo,'{1}'),LEFT(ItemNo,{2}),'{3}')+SUBSTRING(ItemNo,{4},LEN(ItemNo)))
-                                            ,ItemName=a.NodeName FROM dbo.tb_sys_Item a
+                    sql += string.Format(@";UPDATE {0} SET ItemNo= (REPLACE(LEFT(ItemNo,'{1}'),LEFT(ItemNo,{2}),'{3}')
+                                           +SUBSTRING(ItemNo,{4},LEN(ItemNo))) FROM dbo.tb_sys_Item a
                            WHERE Marks=1 AND a.ID=ItemID AND LEFT(ItemNo,{5})='{6}'", tableName, len, len, code, len + 1, len, preCode);
                 }
                 DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql);

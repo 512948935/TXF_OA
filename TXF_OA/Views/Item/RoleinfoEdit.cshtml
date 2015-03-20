@@ -45,7 +45,7 @@
     <a class="easyui-linkbutton" iconCls="icon-back" id="btnBack" href="javascript:void(0)">返回</a>
 </div>
 <!--基础数据选择对话框-->
-<div id="div_dialog_choose_dep" style="overflow:hidden;padding:2px"></div>
+<div id="div_dialog_choose_dep" style="overflow:hidden;padding:2px;width:85%;height:80%"></div>
 
   <script type="text/javascript">
       var backUrl = encodeURI(getUrlParam('backUrl'));
@@ -83,17 +83,15 @@
               if ($("#form_edit").form('validate')) {
                   var suff_code = $("#t_Suff_Code").val().replace(/\./g, "");
                   $("#t_ItemNo").val($("#t_Code").textbox("getText") + suff_code);
-                  $.ajax({
-                      type: "post",
+                  $.ajaxPost({
                       url: "/Item/SaveRoleinfo",
                       data: $("#form_edit").serializeArray(),
-                      async: false,
                       success: function (data) {
                           if (data.status == 1) {//保存成功
                               if (id > 0)
                                   jqAlert('保存成功.', 'info', backUrl + "&fromCache=false");
                               else
-                                  jqAlert('保存成功.', 'info', '/Item/UserinfoManage?fromCache=false');
+                                  jqAlert('保存成功.', 'info', '/Item/RoleinfoManage?fromCache=false');
                           }
                           else {
                               jqAlert('保存失败:' + data, 'error')
@@ -108,32 +106,35 @@
           });
           //加载数据
           if (id > 0) {
-              $.ajaxGet("/Item/GetRoleinfo", { "id": id, "code": getUrlParam("code") }, function (data) {
-                  if (data.status == 1) {
-                      var model = eval(data.model)[0];
-                      $("#form_edit input").each(function () {
-                          var val = model[this.name];
-                          if (this.type == "text" || this.type == "hidden") {
-                              $(this).val(val);
-                          }
-                          else if (this.type == "checkbox") {
-                              $(this).attr("checked", val == "True")
-                          }
-                      });
-                      $("#t_DepName").textbox("setText", model.DepName);
-                      $("#t_Remark").val(model.Remark);
-                      var itemNo = model.ItemNo;
-                      var len = itemNo.lastIndexOf(".") + 1;
-                      $("#t_Code").combotree("setValue", itemNo.substr(0, len));
-                      $("#t_Suff_Code").val(itemNo.substr(len));
+              $.ajaxGet({
+                  url: "/Item/GetRoleinfo",
+                  data: { "id": id, "code": getUrlParam("code") },
+                  success: function (data) {
+                      if (data.status == 1) {
+                          var model = eval(data.model)[0];
+                          $("#form_edit input").each(function () {
+                              var val = model[this.name];
+                              if (this.type == "text" || this.type == "hidden") {
+                                  $(this).val(val);
+                              }
+                              else if (this.type == "checkbox") {
+                                  $(this).attr("checked", val == "True")
+                              }
+                          });
+                          $("#t_DepName").textbox("setText", model.DepName);
+                          $("#t_Remark").val(model.Remark);
+                          var itemNo = model.ItemNo;
+                          var len = itemNo.lastIndexOf(".") + 1;
+                          $("#t_Code").combotree("setValue", itemNo.substr(0, len));
+                          $("#t_Suff_Code").val(itemNo.substr(len));
+                      }
+                      else
+                          jqAlert('数据加载失败:' + data, 'error')
                   }
-                  else
-                      jqAlert('数据加载失败:' + data, 'error')
               });
           }
           //加载部门选择对话框
-          showMyDialog1($("#div_dialog_choose_dep"), '选择数据', 'icon-tip', '/Item/DepinfoManage?isRedirect=true&choose=true', 'frame1', 780, 400, false
-          , function () {
+          showMyDialog1($("#div_dialog_choose_dep"), '选择数据', 'icon-tip', '/Item/DepinfoManage?isRedirect=true&choose=true', 'frame1', false, function () {
               var child = window.frames["frame1"].window.frames["mainFrame"];
               if (child != null) {
                   var selections = child.$("#tt_grid").datagrid('getSelections');

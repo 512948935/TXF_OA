@@ -27,7 +27,7 @@
                 </tr>
             </thead>
     </table>
-    <div id="div_dialog_search" style="padding:2px;"></div>
+    <div id="div_dialog_search" style="padding:2px;width:350px;top:30%;"></div>
 </div>
 
 
@@ -45,12 +45,22 @@
     }
     var url = param.getUrl();
     $(function () {
+        if (getUrlParam("choose") == "True") {
+            $("#btnadd").hide();
+            $("#btnadd").parent().next().hide();
+            $("#btnedit").hide();
+            $("#btnedit").parent().next().hide();
+            $("#btnremove").hide();
+            $("#btnremove").parent().next().hide();
+            $("#btnexport").hide();
+            $("#btnexport").parent().next().hide();
+        }
         //调整datagrid大小
         datagridResize(parent.$("#div_layout"));
         //创建过滤查询对话框
         getWhereColumns($("#tt_grid"), function (col) {
             var href = '/Item/CreateWhereHTML?col=' + col;
-            showMyDialog($("#div_dialog_search"), '筛选条件', 'tu1611', href, 350, true, function () {
+            showMyDialog($("#div_dialog_search"), '筛选条件', 'tu1611', href, true, function () {
                 var where = "";
                 $("#ttSearch input:text").each(function () {
                     where += '{Key:"' + $(this).attr('name') + '",Value:"' + $.strFilter($(this).val()) + '",Symbol:"like"},';
@@ -72,15 +82,15 @@
         var page = p.data("pagination").options.pageNumber;
         var size = p.data("pagination").options.pageSize;
         backUrl = '/Item/RoleinfoManage?where=' + param.where + '&page=' + page + '&pagesize=' + size;
-        parent.hideMask();
+        parent.hideMask(); 
     }
     var toolbar = [{
         id: 'btnadd',
         text: '添加',
         iconCls: 'icon-add',
         handler: function () {
-            parent.showMask();
             document.location = '/Item/RoleinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
+            showMask(parent.$("#div_layout_west"));
         }
     }, '-', {
         id: 'btnedit',
@@ -89,8 +99,8 @@
         handler: function () {
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
-                parent.showMask();
                 document.location = '/Item/RoleinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
+                showMask(parent.$("#div_layout_west"));
             }
             else
                 jqAlert('请选择一条记录！', 'warning')

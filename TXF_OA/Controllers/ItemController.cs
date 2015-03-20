@@ -24,10 +24,12 @@ namespace TXF_OA
         public Itb_item_DepartmentBLL depBLL { get; set; }
         [Inject]
         public Itb_item_CompanyBLL companyBLL { get; set; }
-        [Inject]
-        public Itb_item_UserBLL userBLL { get; set; }
+        //[Inject]
+        //public Itb_item_UserBLL userBLL { get; set; }
         [Inject]
         public Itb_item_RoleBLL roleBLL { get; set; }
+        [Inject]
+        public Itb_sys_ButtonBLL buttonBLL { get; set; }
 
         #region 公司信息
         #region List
@@ -53,6 +55,10 @@ namespace TXF_OA
             jsonStr += "\"rows\":" + DataTableToJson(dt) + "";
             jsonStr += "\n}";
             return jsonStr;
+        }
+        public string GetButtons()
+        {
+            return "[{ \"id\": \"btnadd\",\"text\": \"添加\",\"iconCls\": \"icon-cancel\",\"handler\":\"toolbar_add\"}]";
         }
         public ActionResult DelCompanyinfo(string id)
         {
@@ -294,7 +300,24 @@ namespace TXF_OA
                 if (model.ID == 0)
                     userBLL.Add(model);
                 else
-                    userBLL.Update(model);
+                {
+                    List<UpdateField> fields = new List<UpdateField>
+                    {
+                         new UpdateField("ItemID",model.ItemID)
+                        ,new UpdateField("ItemNo",model.ItemNo)
+                        ,new UpdateField("ItemName",model.ItemName)
+                        ,new UpdateField("RealName",model.RealName)
+                        ,new UpdateField("UserPwd",model.UserPwd)
+                        ,new UpdateField("DepID",model.DepID)
+                        ,new UpdateField("RoleID",model.RoleID)
+                        ,new UpdateField("IsDisabled",model.IsDisabled)
+                        ,new UpdateField("Remark",model.Remark)
+                        ,new UpdateField("ModifiedUserID",CurrentUser.ID)
+                        ,new UpdateField("ModifiedBy",CurrentUser.ItemName)
+                        ,new UpdateField("ModifiedOn",DateTime.Now)
+                    };
+                    userBLL.Update(fields, "ID=" + model.ID);
+                }
                 return Json(new { status = 1 }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -505,6 +528,104 @@ namespace TXF_OA
                     roleBLL.Add(model);
                 else
                     roleBLL.Update(model);
+                return Json(new { status = 1 }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
+        }
+        #endregion
+
+        #region 设置权限
+        public ActionResult RoleSetting()
+        {
+            return View();
+        }
+        #endregion
+        #endregion
+
+        #region 系统按钮
+        #region List
+        public ActionResult ButtonInfoManage(bool isRedirect = false, bool choose = false)
+        {
+            if (isRedirect)
+                return Redirect("/Item/ItemEdit?pageUrl=/Item/ButtoninfoManage?choose=" + choose);
+            return View();
+        }
+        //TODO:显示角色信息
+        public string GetButtoninfoList(bool fromCache = false, string code = "", string disabled = "", string where = "")
+        {
+            int page = Request["page"] == null ? 1 : int.Parse(Request["page"]);
+            if (page == 0) return "[]";
+            int pagesize = Request["rows"] == null ? 20 : int.Parse(Request["rows"]);
+            int total = 0;
+            List<WhereField> wheres = JSONStringToList<WhereField>(where);
+            DataTable dt = buttonBLL.GetPageList(fromCache, page, pagesize, out total, code, disabled, wheres);
+            Session["exportData"] = dt;
+            string jsonStr = "";
+            jsonStr += "{\n";
+            jsonStr += "\"total\":" + total + ",\n";
+            jsonStr += "\"rows\":" + DataTableToJson(dt) + "";
+            jsonStr += "\n}";
+            return jsonStr;
+        }
+        public ActionResult DelButtoninfo(string id)
+        {
+            try
+            {
+                buttonBLL.DeleteDepinfo(id);
+                return Json(new { status = 1 }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
+        }
+        //导出
+        public string ExportButtoninfo()
+        {
+            try
+            {
+                DataTable dt = (DataTable)Session["exportData"];
+                ExportToExcel(dt);
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        #endregion
+        #region Edit
+        public ActionResult ButtoninfoEdit()
+        {
+            return View();
+        }
+        public ActionResult GetButtoninfo(int id, string code)
+        {
+            try
+            {
+                DataRow dt =buttonBLL.GetModel(id);
+                return Json(new { status = 1, model = DataRowToJson(dt) }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
+        }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult SaveButtoninfo(tb_sys_Button model)
+        {
+            try
+            {
+                if (roleBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
+                    throw new Exception("当前代码重复,请重新输入.");
+                model.User = CurrentUser;
+                if (model.ID == 0)
+                    buttonBLL.Add(model);
+                else
+                    buttonBLL.Update(model);
                 return Json(new { status = 1 }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

@@ -49,6 +49,7 @@
     <Compile Include="Itb_sys_ItemBLL.cs" />
     <Compile Include="Itb_sys_ModuleBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Itb_sys_ButtonBLL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Entity\Entity.csproj">

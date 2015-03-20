@@ -53,6 +53,7 @@ namespace Dao
                                                            ,a.DepTel
                                                            ,a.DepFax
                                                            ,a.IsDisabled
+                                                           ,a.Remark
                                                      FROM   dbo.tb_item_Department a
                                                             LEFT JOIN dbo.tb_item_User b ON b.ID=a.UserID WHERE a.Marks=1
                                                     ) t WHERE {1}

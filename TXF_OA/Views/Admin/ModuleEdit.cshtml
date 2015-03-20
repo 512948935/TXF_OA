@@ -1,6 +1,23 @@
 ﻿@{
     ViewBag.Title = "编辑/修改页面信息";
 }
+<style type="text/css">
+        .drag-item{
+            list-style-type:none;
+            display:block;
+            margin-left:10px;
+            width:80px;
+        }
+        .indicator
+        {
+            position:absolute;
+            font-size:9px;
+            width:20px;
+            height:10px;
+            display:none;
+            color:red;
+        }
+ </style>
 <!----------------------------------页面编辑对话框------------------------------------------->
 <form id="form_edit" method="post" action="">
       <table id="page_tt" class="tablestyle" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">            
@@ -24,14 +41,13 @@
         </tr>
         <tr>
             <td class="td1">页面图标：</td>
-            <td class="td2"><input type="text" id="t_Icon" name="Icon"/></td>
+            <td class="td2"><input id="t_Icon" name="Icon"/></td>
         </tr>
             <tr>
             <td class="td1">页面按钮：</td>
             <td class="td2">
-                <div class="txt" style="float:left" id="DivText"></div>
-                <input type="hidden" id="t_ButtonID" name="ButtonID" />
-                <img class="hand" id="btnChoose" src="../../Content/images/Button/search.gif" alt="搜索" />
+               <div class="txtDiv" id="t_Button">双击我选择按钮哦.</div>
+               <input type="hidden" id="t_ButtonID" name="ButtonID" />
             </td>
         </tr>
         <tr>
@@ -46,35 +62,170 @@
       <a class="easyui-linkbutton" iconCls="icon-ok" id="btnSave" href="javascript:void(0)">保存</a>
       <a class="easyui-linkbutton" iconCls="icon-cancel" id="btnClose" href="javascript:void(0)">关闭</a>
 </div>
+<div id="div_dialog_icon" style="padding:2px;width:477px;height:350px"></div>
+<div id="div_dialog_choose_button" style="overflow:hidden;padding:2px;width:85%;height:80%"></div>
+
 <script type="text/javascript">
+    var id = getUrlParam("ID");
+    var code = getUrlParam("Code");
     $(function () {
         $("#form_edit input:text").each(function () {
             $(this).addClass('easyui-validatebox textbox txt');
             if ($(this).attr('required') || $(this).attr('validtype'))
                 $(this).validatebox();
         });
+        $("#t_Icon").textbox({
+            prompt: '双击我选择图标哦.',
+            buttonIcon: 'icon-clear',
+            onClickButton: function () {
+                $(this).textbox('clear')
+            }
+        });
         //保存数据
         $("#btnSave").click(function () {
             if ($("#form_edit").form('validate')) {
-                $.ajax({
-                    type: "POST",
+                $.ajaxPost({
                     url: "/Admin/SaveAction",
                     data: $("#form_edit").serializeArray(),
-                    async: false,
                     success: function (data) {
-                        if (data.status == 1) {//保存成功
+                        if (data.status == 1) {
+                            //保存成功
                             parent.$("#tt_grid").datagrid("reload");
                             parent.$("#div_win_edit").window("close");
                         }
-                        else {
+                        else
                             jqAlert('保存失败:' + data, 'error')
-                        }
                     }
                 });
             }
         });
         $("#btnClose").click(function () {
-            parent.$("#div_win_edit").window("close");
+            parent.$("#div_win_edit").window("close")
+        });
+        if (id > 0) {
+            $.ajaxGet({
+                url: "/Admin/GetModel",
+                data: { "ID": id },
+                success: function (data) {
+                    if (data.status == 1) {
+                        var model = data.model;
+                        //子窗体的form
+                        $("#form_edit input").each(function () {
+                            var val = model[this.name];
+                            if (this.type == "text" || this.type == "hidden")
+                                $(this).val(val);
+                            else if (this.type == "checkbox")
+                                $(this).attr("checked", val == "True");
+                        });
+                        $("#t_Icon").textbox("setText", model.Icon);
+                        createButtons($("#t_Button"), $("#t_ButtonID"), data.buttons || []);
+                    }
+                    else {
+                        jqAlert('数据加载失败:' + data, 'error')
+                    }
+                }
+            });
+        }
+        else {
+            $("#t_ModuleCode").val(code);
+            $("#t_Button").children().remove();
+        }
+        var selectedIcon;
+        showMyDialog($("#div_dialog_icon"), '页面图标', 'tu0511', "/Admin/CreateButtonIcon", false, function () {
+            $("#t_Icon").textbox("setValue", selectedIcon.title);
+            $("#div_dialog_icon").window("close")
+        }).dialog({
+            onLoad: function () {
+                $("#tt td a img").click(function () {
+                    if (selectedIcon != null)
+                        $(selectedIcon).css("border-color", "#fffffb");
+                    $(this).css("border-color", "#ffd400");
+                    selectedIcon = this;
+                });
+            }
+        });
+        var txt = $("#t_Icon").textbox("textbox");
+        $(txt).dblclick(function () {
+            $("#div_dialog_icon").dialog('open');
+        });
+        //加载按钮对话框
+        showMyDialog1($("#div_dialog_choose_button"), '选择数据', 'icon-tip', '/Item/ButtoninfoManage?isRedirect=true&choose=true', 'frame1', false, function () {
+            var child = window.frames["frame1"].window.frames["mainFrame"];
+            if (child != null) {
+                var selections = child.$("#tt_grid").datagrid('getSelections');
+                if (selections.length > 0) {
+                    $("#t_Button").children().remove();
+                    $("#t_ButtonID").val("");
+                    createButtons($("#t_Button"),$("#t_ButtonID"), selections);
+                    $("#div_dialog_choose_button").dialog('close');
+                }
+                else
+                    jqAlert('请选择一条记录！', 'warning')
+            }
+        });
+        $("#t_Button").keydown(function () { return false });
+        $("#t_Button").dblclick(function () {
+            $("#div_dialog_choose_button").dialog('open');
         });
     });
+    //创建按钮
+    function createButtons($container, jq, buttons) {
+        var buttonID = "";
+        if (buttons.length > 0)
+            $container.html("");
+        var $ul = $("<ul style='margin:0;padding:0;margin-left:10px;'></ul>").appendTo($container);
+        for (var i = 0; i < buttons.length; i++) {
+            var $li = $("<li class='drag-item'></li>").appendTo($ul);
+            var $btn = $("<a id='btn_" + buttons[i].ID + "' href=\"javascript:void(0)\" style='cursor:default'></a>").appendTo($li);
+            $btn.linkbutton({
+                text: buttons[i].ButtonText,
+                iconCls: buttons[i].ButtonIcon,
+                plain: true
+            });
+            var $a = $("<a href=\"javascript:void(0)\" class='hand' id='" + buttons[i].ID + "'>×</a>").appendTo($li);
+            $a.click(function () {
+                $(this).parent().remove();
+                buttonID = (buttonID + ",").replace(this.id + ",", "");
+                buttonID = $.trimend(buttonID, ',');
+                jq.val(buttonID);
+            });
+            buttonID += buttons[i].ID + ",";
+        }
+        buttonID = $.trimend(buttonID, ',');
+        jq.val(buttonID);
+        drapDropButton($container, jq);
+    }
+    //拖拽按钮
+    function drapDropButton($container, jq) {
+        var indicator = $('<div class="indicator">--></div>').appendTo($container);
+        $container.find("ul .drag-item").draggable({
+            revert: true,
+            deltaX: 0,
+            deltaY: 0,
+            onBeforeDrag: function (e) {
+                if (e.srcElement == "javascript:void(0)")
+                    return false;
+            }
+        }).droppable({
+            onDragOver: function (e, source) {
+                indicator.css({
+                    display: 'block',
+                    left: $(this).offset().left - 10,
+                    top: $(this).offset().top + $(this).outerHeight() - 5
+                });
+            },
+            onDragLeave: function (e, source) {
+                indicator.hide();
+            },
+            onDrop: function (e, source) {
+                $(source).insertAfter(this);
+                indicator.hide();
+                var buttonID = "";
+                $container.find("ul li .hand").each(function (i, o) {
+                    buttonID += o.id + ",";
+                });
+                jq.val($.trimend(buttonID, ','));
+            }
+        });
+    }
 </script>

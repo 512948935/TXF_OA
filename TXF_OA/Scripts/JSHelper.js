@@ -19,26 +19,28 @@ $.extend({
         return str;
     },
     //ajaxGet方法
-    ajaxGet: function (url, data, fn) {
+    ajaxGet: function (params) {
         $.ajax({
             type: "GET",
-            url: url,
-            data: data,
-            cache: false,
-            error: function () { alert('执行失败.', 'warning'); },
-            success: function (obj) { fn(obj) }
+            dataType: params.dataType || "json",
+            url: params.url || "",
+            data: params.data || {},
+            cache: params.cache || false,
+            error: function () { params.error || alert('执行失败.', 'warning'); },
+            success: function (obj) { params.success(obj) }
         });
     },
     //ajaxPost方法
-    ajaxPost: function (url, data, fn) {
+    ajaxPost: function (params) {
         $.ajax({
             type: "POST",
-            url: url,
-            data: data,
-            cache: false,
-            async: false,
-            error: function () { alert('执行失败.', 'warning'); },
-            success: function (obj) { fn(obj) }
+            dataType: params.dataType || "json",
+            url: params.url || "",
+            data: params.data || {},
+            cache: params.cache || false,
+            async: params.async || false,
+            error: function () { params.error || alert('执行失败.', 'warning'); },
+            success: function (obj) { params.success(obj) }
         });
     }
 });
@@ -173,22 +175,20 @@ function getUrlParam1(name) {
 function datagridResize(jq) {
     jq.layout('panel', 'center').panel({
         onResize: function (w, h) {
-            setTimeout(function () {
-                $("[name='datagrid']").datagrid("resize", { width: w });
-            }, 0);
+            $("[name='datagrid']").datagrid("resize", { width: w });
+//            setTimeout(function () {
+//                $("[name='datagrid']").datagrid("resize", { width: w });
+//            }, 0);
         }
     });
 }
 //对话框
-function showMyDialog(jq, title, icon, href, width, modal, fn, minimizable, maximizable) {
+function showMyDialog(jq, title, icon, href, modal, fn, minimizable, maximizable) {
     var dlg = jq.dialog({
         title: title,
-        width: width === undefined ? 750 : width,
         iconCls: "" + icon + "",
         href: href,
-        top: 100,
         shadow: false,
-        cache: false,
         closed: true,
         collapsible: false,
         resizable: false,
@@ -208,8 +208,53 @@ function showMyDialog(jq, title, icon, href, width, modal, fn, minimizable, maxi
             }
         }]
     });
+    return dlg;
 }
-function showMyDialog1(jq, title, icon, href, name, modal, minimizable, maximizable) {
+function showMyDialog1(jq, title, icon, href, name, modal, fn, minimizable, maximizable) {
+    var dlg = jq.dialog({
+        title: title,
+        iconCls: "" + icon + "",
+        content: '<iframe id="' + name + '" name="' + name + '" scrolling="yes" frameborder="0"  src="" style="width:100%;height:100%;">',
+        shadow: false,
+        cache: false,
+        closed: true,
+        collapsible: true,
+        draggable: true,
+        resizable: false,
+        modal: modal === undefined ? true : modal,
+        minimizable: minimizable === undefined ? false : minimizable,
+        maximizable: maximizable === undefined ? false : maximizable,
+        loadingMessage: '数据正在加载中，请稍等......',
+        onBeforeOpen: function () {
+            if ($("#" + name + "").attr("src") == "") {
+                showMask(jq);
+                $("#" + name + "").attr("src", href);
+            }
+            var iframe = document.getElementById(name);
+            if (iframe.attachEvent) {
+                iframe.attachEvent("onload", function () {
+                    hideMask();
+                });
+            } else {
+                iframe.onload = function () {
+                    hideMask();
+                };
+            }
+        },
+        buttons: [{//底部按钮
+            text: '确定',
+            iconCls: 'icon-ok',
+            handler: function () { fn(); }
+        }, {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                jq.dialog('close');
+            }
+        }]
+    });
+}
+function showMyDialog2(jq, title, icon, href, name, modal, minimizable, maximizable) {
     var dlg = jq.dialog({
         title: title,
         iconCls: "" + icon + "",
@@ -217,7 +262,7 @@ function showMyDialog1(jq, title, icon, href, name, modal, minimizable, maximiza
         shadow: false,
         cache: false,
         closed: true,
-        collapsible: false,
+        collapsible: true,
         draggable: true,
         resizable: false,
         modal: modal === undefined ? true : modal,
@@ -273,4 +318,24 @@ function getExportColumns(jq, fn) {
         exportColumns = "[" + $.trimend(exportColumns, ',') + "]";
         fn(exportColumns);
     }
+}
+function clearFrame($frame) {
+    if ($frame.length > 0) {
+        try {//跨域会拒绝访问，这里处理掉该异常   
+            $frame[0].contentWindow.document.write('');
+            $frame[0].contentWindow.close();
+        } catch (e) {
+            //Do nothing   
+        }
+        $frame.remove();
+        if ($.browser.msie) {
+            CollectGarbage();
+        }
+    }
+}
+function showMask(jq) {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: "100%" }).appendTo(jq);
+}
+function hideMask() {
+    $('.datagrid-mask').remove();
 }

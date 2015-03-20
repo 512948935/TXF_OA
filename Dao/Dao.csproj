@@ -50,6 +50,7 @@
     <Compile Include="ORM\IsValidType.cs" />
     <Compile Include="ORM\ModelCheck.cs" />
     <Compile Include="ORM\ReflectionHelper.cs" />
+    <Compile Include="tb_sys_ButtonDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BaseDAL.cs" />
     <Compile Include="tb_item_CompanyDAL.cs" />

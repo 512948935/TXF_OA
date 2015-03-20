@@ -30,7 +30,7 @@
                 </tr>
             </thead>
     </table>
-    <div id="div_dialog_search" style="padding:2px;"></div>
+    <div id="div_dialog_search" style="padding:2px;width:350px;top:30%;"></div>
     <div id="div_win_edit" style="width:80%;height:70%;padding:2px;overflow:hidden;"></div>
 </div>
 
@@ -63,7 +63,7 @@
         //创建过滤查询对话框
         getWhereColumns($("#tt_grid"), function (col) {
             var href = '/Item/CreateWhereHTML?col=' + col;
-            showMyDialog($("#div_dialog_search"), '筛选条件', 'tu1611', href, 350, true, function () {
+            showMyDialog($("#div_dialog_search"), '筛选条件', 'tu1611', href, true, function () {
                 var where = "";
                 $("#ttSearch input:text").each(function () {
                     where += '{Key:"' + $(this).attr('name') + '",Value:"' + $.strFilter($(this).val()) + '",Symbol:"like"},';
@@ -92,8 +92,8 @@
         text: '添加',
         iconCls: 'icon-add',
         handler: function () {
-            parent.showMask();
             document.location = '/Item/DepinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
+            showMask(parent.$("#div_layout_west"));
         }
     }, '-', {
         id: 'btnedit',
@@ -102,8 +102,8 @@
         handler: function () {
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
-                parent.showMask();
                 document.location = '/Item/DepinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
+                showMask(parent.$("#div_layout_west"));
             }
             else
                 jqAlert('请选择一条记录！', 'warning')

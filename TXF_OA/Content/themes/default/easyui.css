@@ -2577,3 +2577,12 @@
 .checkbox{
     vertical-align:middle; margin-top:0;
 }
+.txtDiv{
+    border: 1px solid #95B8E7;
+	height: 100px;
+	width: 184px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	overflow-x:auto;
+    }

@@ -1,0 +1,151 @@
+﻿@{
+    ViewBag.Title = "新增/编辑按钮信息";
+}
+ <form id="form_edit" method="post" action="" style="padding:2px">
+        <table width="100%" cellpadding="0" cellspacing="0" align="center" class="tablestyle" id="tt">
+            <tr>
+                <td class="td1" width="35%">按钮代码：</td>
+                <td class="td2">
+                    <input id="t_Code" name="Code" style="width:130px"
+                  /><input type="text" id="t_Suff_Code" name="Suff_Code" required="true" missingMessage='必填' style="width:50px" />
+                    <input type="hidden" id="t_ItemNo" name="ItemNo" />
+                    <input type="hidden" id="t_ItemID" name="ItemID" />
+                    <input type="hidden" id="t_ID" name="ID" value="0" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">按钮名称：</td>
+                <td class="td2">
+                    <input type="text" id="t_ItemName" name="ItemName" required="true" missingMessage='必填' />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">按钮说明：</td>
+                <td class="td2">
+                    <input type="text" id="t_ButtonText" name="ButtonText" required="true" missingMessage='必填' />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">按钮图标：</td>
+                <td class="td2">
+                    <input id="t_ButtonIcon" name="ButtonIcon" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">备注：</td>
+                <td class="td2">
+                     <textarea class="txtaa" id="t_Remark" name="Remark" rows="5" cols="30"></textarea>
+                </td>
+            </tr>
+        </table>
+</form>
+<div style="text-align:center;padding:2px;">
+    <a class="easyui-linkbutton" iconCls="icon-ok" id="btnSave" href="javascript:void(0)">保存</a>
+    <a class="easyui-linkbutton" iconCls="icon-back" id="btnBack" href="javascript:void(0)">返回</a>
+</div>
+<div id="div_dialog_icon" style="padding:2px;width:477px;height:350px"></div>
+  <script type="text/javascript">
+      var backUrl = encodeURI(getUrlParam('backUrl'));
+      var id = getUrlParam("ID");
+      $(function () {
+          //添加textbox样式
+          $("#form_edit input:text").each(function () {
+              $(this).addClass('easyui-validatebox textbox txt');
+              if ($(this).attr('required') || $(this).attr('validtype'))
+                  $(this).validatebox();
+          });
+          $("#t_Code").combotree({
+              url: '/Item/LoadComboTree?pageUrl=/Item/ButtoninfoManage',
+              valueField: 'ID',
+              textField: 'NodeCode',
+              panelHeight: 'auto',
+              required: true,
+              missingMessage: '必填',
+              onSelect: function (node) {
+                  $("#t_ItemID").val(node.id);
+              }
+          });
+          $("#t_ButtonIcon").textbox({
+              prompt: '双击我选择图标哦.',
+              buttonIcon: 'icon-clear',
+              onClickButton: function () {
+                  $(this).textbox('clear')
+              }
+          });
+          //保存
+          $("#btnSave").click(function () {
+              if ($("#form_edit").form('validate')) {
+                  var suff_code = $("#t_Suff_Code").val().replace(/\./g, "");
+                  $("#t_ItemNo").val($("#t_Code").textbox("getText") + suff_code);
+                  $.ajaxPost({
+                      url: "/Item/SaveButtoninfo",
+                      data: $("#form_edit").serializeArray(),
+                      success: function (data) {
+                          if (data.status == 1) {//保存成功
+                              if (id > 0)
+                                  jqAlert('保存成功.', 'info', backUrl + "&fromCache=false");
+                              else
+                                  jqAlert('保存成功.', 'info', '/Item/ButtoninfoManage?fromCache=false');
+                          }
+                          else {
+                              jqAlert('保存失败:' + data, 'error')
+                          }
+                      }
+                  });
+              }
+          });
+          //返回
+          $("#btnBack").click(function () {
+              document.location = backUrl + "&fromCache=true";
+          });
+          //加载数据
+          if (id > 0) {
+              $.ajaxGet({
+                  url: "/Item/GetButtoninfo",
+                  data: { "ID": id, "code": getUrlParam("code") },
+                  success: function (data) {
+                      if (data.status == 1) {
+                          var model = eval(data.model)[0];
+                          $("#form_edit input").each(function () {
+                              var val = model[this.name];
+                              if (this.type == "text" || this.type == "hidden") {
+                                  $(this).val(val);
+                              }
+                              else if (this.type == "checkbox") {
+                                  $(this).attr("checked", val == "True")
+                              }
+                          });
+                          $("#t_ButtonIcon").textbox("setText", model.ButtonIcon);
+                          $("#t_Remark").val(model.Remark);
+                          var itemNo = model.ItemNo;
+                          var len = itemNo.lastIndexOf(".") + 1;
+                          $("#t_Code").combotree("setValue", itemNo.substr(0, len));
+                          $("#t_Suff_Code").val(itemNo.substr(len));
+                      }
+                      else
+                          jqAlert('数据加载失败:' + data, 'error')
+                  }
+              });
+          }
+          var selectedIcon;
+          showMyDialog($("#div_dialog_icon"), '页面图标', 'tu0511', "/Admin/CreateButtonIcon", false, function () {
+              $("#t_ButtonIcon").textbox("setValue", selectedIcon.title);
+              $("#div_dialog_icon").window("close")
+          }).dialog({
+              onLoad: function () {
+                  $("#tt td a img").click(function () {
+                      if (selectedIcon != null)
+                          $(selectedIcon).css("border-color", "#fffffb");
+                      $(this).css("border-color", "#ffd400");
+                      selectedIcon = this;
+                  });
+              }
+          });
+          var txt = $("#t_ButtonIcon").textbox("textbox");
+          $(txt).dblclick(function () {
+              $("#div_dialog_icon").dialog('open');
+          });
+      });
+   </script>
+
+

@@ -33,7 +33,7 @@
                 </tr>
             </thead>
     </table>
-    <div id="div_dialog_search" style="padding:2px;"></div>
+    <div id="div_dialog_search" style="padding:2px;width:350px;top:30%"></div>
     <div id="div_dialog_upload" style="padding:2px;width:90%;height:90%;overflow:hidden"></div>
 </div>
 
@@ -51,12 +51,26 @@
     }
     var url = param.getUrl();
     $(function () {
+        if (getUrlParam("choose") == "True") {
+            $("#btnadd").hide();
+            $("#btnadd").parent().next().hide();
+            $("#btnedit").hide();
+            $("#btnedit").parent().next().hide();
+            $("#btnperson").hide();
+            $("#btnperson").parent().next().hide();
+            $("#btnheader").hide();
+            $("#btnheader").parent().next().hide();
+            $("#btnremove").hide();
+            $("#btnremove").parent().next().hide();
+            $("#btnexport").hide();
+            $("#btnexport").parent().next().hide();
+        }
         //调整datagrid大小
         datagridResize(parent.$("#div_layout"));
         //创建过滤查询对话框
         getWhereColumns($("#tt_grid"), function (col) {
             var href = '/Item/CreateWhereHTML?col=' + col;
-            showMyDialog($("#div_dialog_search"), '筛选条件', 'tu1611', href, 350, true, function () {
+            showMyDialog($("#div_dialog_search"), '筛选条件', 'tu1611', href, true, function () {
                 var where = "";
                 $("#ttSearch input:text").each(function () {
                     where += '{Key:"' + $(this).attr('name') + '",Value:"' + $.strFilter($(this).val()) + '",Symbol:"like"},';
@@ -72,10 +86,12 @@
             });
         });
         //创建图片上传对话框
-        showMyDialog1($("#div_dialog_upload"), '头像上传', 'icon-header', "", "frame1").dialog({
-            onOpen: function () {
+        showMyDialog2($("#div_dialog_upload"), '头像上传', 'icon-header', "", "frame1").dialog({
+            onBeforeOpen: function () {
                 var selections = $('#tt_grid').datagrid('getSelections');
-                $("#frame1").attr("src", "/Item/UserHeader?ID=" + selections[0].ID);
+                var src = "/Item/UserHeader?ID=" + selections[0].ID;
+                if ($("#frame1").attr("src") != src)
+                    $("#frame1").attr("src", src);
             },
             onClose: function () {
                 var msg = window.frames["frame1"].$("#croped_message").html()
@@ -107,8 +123,8 @@
         text: '添加',
         iconCls: 'icon-add',
         handler: function () {
-            parent.showMask();
             document.location = '/Item/UserinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
+            showMask(parent.$("#div_layout_west"));
         }
     }, '-', {
         id: 'btnedit',
@@ -117,33 +133,35 @@
         handler: function () {
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
-                parent.showMask();
                 document.location = '/Item/UserinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
+                showMask(parent.$("#div_layout_west"));
             }
             else
                 jqAlert('请选择一条记录！', 'warning')
         }
     }, '-', {
-        id: 'btnedit',
+        id: 'btnperson',
         text: '设置人事信息',
         iconCls: 'icon-edit',
         handler: function () {
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
-                parent.showMask();
                 document.location = '/Item/UserPersonalInfo?backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
+                showMask(parent.$("#div_layout_west"));
             }
             else
                 jqAlert('请选择一条记录！', 'warning')
         }
     }, '-', {
-        id: "toolbar_header",
+        id: "btnheader",
         text: '设置头像',
         iconCls: 'icon-header',
         handler: function () {
             var selections = $('#tt_grid').datagrid('getSelections');
-            if (selections.length == 1)
+            if (selections.length == 1) {
                 $("#div_dialog_upload").dialog("open");
+                showMask(parent.$("#div_layout_west"));
+            }
             else
                 jqAlert('请选择一条记录！', 'warning')
         }

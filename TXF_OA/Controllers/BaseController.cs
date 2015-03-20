@@ -8,6 +8,8 @@ using System.Data;
 using Newtonsoft.Json;
 using System.IO;
 using Model;
+using Ninject;
+using IBLL;
 
 namespace TXF_OA
 {
@@ -15,7 +17,8 @@ namespace TXF_OA
     {
         //定义一个基类的UserInfo对象
         public tb_item_User CurrentUser { get; set; }
-
+        [Inject]
+        public Itb_item_UserBLL userBLL { get; set; }
         /// <summary>
         /// 重写基类在Action之前执行的方法
         /// </summary>
@@ -24,12 +27,35 @@ namespace TXF_OA
         {
             base.OnActionExecuting(filterContext);
             CurrentUser = Session["User"] as tb_item_User;
-
-            //检验用户是否已经登录，如果登录则不执行，否则则执行下面的跳转代码
             if (CurrentUser == null)
             {
-                Response.Redirect("/Account/Login");
+                if (Request.Cookies["Account"] != null && userBLL != null)
+                {
+                    string name = Request.Cookies["Account"]["UserName"];
+                    string pwd = Request.Cookies["Account"]["UserPwd"];
+                    List<WhereField> wheres = new List<WhereField>(){
+                                          new WhereField ("ItemName",name)
+                                         ,new WhereField("UserPwd",pwd )
+                    };
+                    Session["User"] = CurrentUser = userBLL.SelectT(wheres);
+                }
+                else
+                    Response.Redirect("/Account/Login");
             }
+            else
+            {
+                if (Request.Cookies["Account"] == null)
+                {
+                    HttpCookie cookie = new HttpCookie("Account");//初使化并设置Cookie的名称
+                    DateTime dt = DateTime.Now;
+                    TimeSpan ts = new TimeSpan(1, 0, 0, 0, 0);//过期时间为1分钟
+                    cookie.Expires = dt.Add(ts);//设置过期时间
+                    cookie.Values.Add("UserName", CurrentUser.ItemName);
+                    cookie.Values.Add("UserPwd", CurrentUser.UserPwd);
+                    Response.AppendCookie(cookie);
+                }
+            }
+            //检验用户是否已经登录，如果登录则不执行，否则则执行下面的跳转代码
         }
         #region JsonHelper
         /// <summary>

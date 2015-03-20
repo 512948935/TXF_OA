@@ -53,6 +53,7 @@
     <Compile Include="tb_sys_ItemBLL.cs" />
     <Compile Include="tb_sys_ModuleBLL.cs" />
     <Compile Include="tb_sys_UserBLL.cs" />
+    <Compile Include="tb_sys_ButtonBLL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Entity\Entity.csproj">

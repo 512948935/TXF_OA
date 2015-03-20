@@ -32,6 +32,7 @@ namespace Dao.DataProvider
         #endregion
         private static object locker1 = new object();
         private static object locker2 = new object();
+        private static object locker3 = new object();
         #region ExecuteNonQuery
         public static int ExecuteNonQuery(CommandType cmdType, string cmdText, List<SqlParameter> parameterValues = null)
         {
@@ -60,24 +61,27 @@ namespace Dao.DataProvider
         #region ExecuteScalar
         public static object ExecuteScalar(CommandType cmdType, string cmdText, List<SqlParameter> parameterValues = null)
         {
-            object result = 0;
-            bool mustCloseConn = true;
-            DbCommand cmd = PrepareCmd(cmdType, cmdText, parameterValues, out mustCloseConn);
-            try
+            lock (locker1)
             {
-                OpenConn(cmd.Connection);
-                result = cmd.ExecuteScalar();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                if (mustCloseConn) CloseConn(cmd.Connection);
-                ClearCmdParameters(cmd);
-                cmd.Dispose();
+                object result = 0;
+                bool mustCloseConn = true;
+                DbCommand cmd = PrepareCmd(cmdType, cmdText, parameterValues, out mustCloseConn);
+                try
+                {
+                    OpenConn(cmd.Connection);
+                    result = cmd.ExecuteScalar();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    if (mustCloseConn) CloseConn(cmd.Connection);
+                    ClearCmdParameters(cmd);
+                    cmd.Dispose();
+                }
             }
         }
         #endregion ExecuteScalar
@@ -85,27 +89,30 @@ namespace Dao.DataProvider
         #region ExecuteReader
         public static DbDataReader ExecuteReader(CommandType cmdType, string cmdText, List<SqlParameter> parameterValues = null)
         {
-            DbDataReader result = null;
-            bool mustCloseConn = true;
-            DbCommand cmd = PrepareCmd(cmdType, cmdText, parameterValues, out mustCloseConn);
-            try
+            lock (locker2)
             {
-                OpenConn(cmd.Connection);
-                if (mustCloseConn)
-                    result = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                else
-                    result = cmd.ExecuteReader();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                if (mustCloseConn) CloseConn(cmd.Connection);
-                throw ex;
-            }
-            finally
-            {
-                ClearCmdParameters(cmd);
-                cmd.Dispose();
+                DbDataReader result = null;
+                bool mustCloseConn = true;
+                DbCommand cmd = PrepareCmd(cmdType, cmdText, parameterValues, out mustCloseConn);
+                try
+                {
+                    OpenConn(cmd.Connection);
+                    if (mustCloseConn)
+                        result = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    else
+                        result = cmd.ExecuteReader();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    if (mustCloseConn) CloseConn(cmd.Connection);
+                    throw ex;
+                }
+                finally
+                {
+                    ClearCmdParameters(cmd);
+                    cmd.Dispose();
+                } 
             }
         }
         #endregion ExecuteReader
@@ -113,7 +120,7 @@ namespace Dao.DataProvider
         #region ExecuteDataset
         public static DataSet ExecuteDataSet(CommandType cmdType, string cmdText, List<SqlParameter> parameterValues = null)
         {
-            lock (locker1)
+            lock (locker3)
             {
                 DataSet result = null;
                 bool mustCloseConn = true;

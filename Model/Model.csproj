@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="BaseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tb_sys_Button.cs" />
     <Compile Include="tb_item_Company.cs" />
     <Compile Include="tb_item_Department.cs" />
     <Compile Include="tb_item_Role.cs" />

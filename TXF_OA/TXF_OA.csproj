@@ -1078,6 +1078,9 @@
     <Content Include="Views\Item\UserPersonalInfo.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Item\UserHeader.cshtml" />
+    <Content Include="Views\Item\ButtonInfoManage.cshtml" />
+    <Content Include="Views\Item\ButtoninfoEdit.cshtml" />
+    <Content Include="Views\Item\RoleSetting.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj">

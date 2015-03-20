@@ -89,11 +89,9 @@
               if ($("#form_edit").form('validate')) {
                   var suff_code = $("#t_Suff_Code").val().replace(/\./g, "");
                   $("#t_ItemNo").val($("#t_Code").textbox("getText") + suff_code);
-                  $.ajax({
-                      type: "post",
+                  $.ajaxPost({
                       url: "/Item/SaveCompanyinfo",
                       data: $("#form_edit").serializeArray(),
-                      async: false,
                       success: function (data) {
                           if (data.status == 1) {//保存成功
                               if (id > 0)
@@ -114,27 +112,29 @@
           });
           //加载数据
           if (id > 0) {
-              $.ajaxGet("/Item/GetCompanyinfo", { "id": id, "code": getUrlParam("code") }, function (data) {
-                  if (data.status == 1) {
-                      var model = eval(data.model)[0];
-                      $("#form_edit input").each(function () {
-                          var val = model[this.name];
-                          if (this.type == "text" || this.type == "hidden") {
-                              $(this).val(val);
-                          }
-                          else if (this.type == "checkbox") {
-                              $(this).attr("checked", val == "True")
-                          }
-                      });
-                      $("#t_SetUpTime").datebox('setValue', dateFormatter(model.SetUpTime));
-                      $("#t_Remark").val(model.Remark);
-                      var itemNo = model.ItemNo;
-                      var len = itemNo.lastIndexOf(".") + 1;
-                      $("#t_Code").combotree("setValue", itemNo.substr(0, len));
-                      $("#t_Suff_Code").val(itemNo.substr(len));
+              $.ajaxGet({
+                  url: "/Item/GetCompanyinfo",
+                  data: { "id": id, "code": getUrlParam("code") },
+                  success: function (data) {
+                      if (data.status == 1) {
+                          var model = eval(data.model)[0];
+                          $("#form_edit input").each(function () {
+                              var val = model[this.name];
+                              if (this.type == "text" || this.type == "hidden") {
+                                  $(this).val(val);
+                              }
+                              else if (this.type == "checkbox") {
+                                  $(this).attr("checked", val == "True")
+                              }
+                          });
+                          $("#t_SetUpTime").datebox('setValue', dateFormatter(model.SetUpTime));
+                          $("#t_Remark").val(model.Remark);
+                          var itemNo = model.ItemNo;
+                          var len = itemNo.lastIndexOf(".") + 1;
+                          $("#t_Code").combotree("setValue", itemNo.substr(0, len));
+                          $("#t_Suff_Code").val(itemNo.substr(len));
+                      }
                   }
-                  else
-                      jqAlert('数据加载失败:' + data, 'error')
               });
           }
       });

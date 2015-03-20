@@ -15,7 +15,8 @@ namespace TXF_OA
     {
         [Inject]
         public Itb_sys_ModuleBLL moduleBLL { get; set; }
-
+        [Inject]
+        public Itb_sys_ButtonBLL buttonBLL { get; set; }
         #region 模块信息管理
         
         #region List
@@ -107,7 +108,17 @@ namespace TXF_OA
             try
             {
                 tb_sys_Module model = moduleBLL.SelectT("ID=" + id);
-                return Json(new { status = 1, model = model }, JsonRequestBehavior.AllowGet);
+                Dictionary<int, tb_sys_Button> buttons = new Dictionary<int, tb_sys_Button>();
+                if (!string.IsNullOrEmpty(model.ButtonID))
+                {
+                    List<tb_sys_Button> buttonList = buttonBLL.SelectList("ID IN (" + model.ButtonID + ")");
+                    string[] strs = model.ButtonID.Split(',');
+                    for (int i = 0; i < strs.Length; i++)
+                    {
+                        buttons.Add(i, buttonList.Where(c => c.ID == Convert.ToInt32(strs[i])).FirstOrDefault());
+                    }
+                }
+                return Json(new { status = 1, model = model, buttons = buttons.Values }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -130,6 +141,35 @@ namespace TXF_OA
         }
         #endregion
         #endregion
-       
+
+        #region 创建动态图标
+        public ActionResult CreateButtonIcon()
+        {
+            string strHTML = "<table id='tt' border='0' cellpadding='0' cellspacing='0' align='center' class='tablestyle'>";
+            string x, y;
+            for (var row = 1; row < 26; row++)
+            {
+                strHTML += "<tr>";
+                x = row < 10 ? "0" + row.ToString() : row.ToString();
+                for (var col = 1; col < 21; col++)
+                {
+                    y = col < 10 ? "0" + col.ToString() : col.ToString();
+                    strHTML += "<td><a href='#'><img style='display:block;width:18px;height:18px;border:2px solid #fffffb' title='tu" + y + x + "'"
+                            + "class='tu" + y + x + "' /></a></td>";
+                }
+                strHTML += "</tr>";
+            }
+            strHTML += "<tr>";
+            for (var col = 1; col < 15; col++)
+            {
+                y = col < 10 ? "0" + col.ToString() : col.ToString();
+                strHTML += "<td><a href='#'>";
+                strHTML += "<img style='display:block;width:18px;height:18px;border:2px solid #fffffb' title='tu" + y + "26' class='tu" + y + "26' />";
+                strHTML += "</a></td>";
+            }
+            strHTML += "</tr></table>";
+            return Content(strHTML);
+        }
+        #endregion
     }
 }

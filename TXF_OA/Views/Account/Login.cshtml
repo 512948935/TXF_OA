@@ -28,12 +28,17 @@
                                    , "pwd": $pwd.val()
                                    , "code": $code.val()
                  };
-                 $.ajaxPost("/Account/LogIn", queryParams, function (msg) {
-                     if (msg == "success")
-                         document.location = "/Home/Index?UserName=" + $('#txtUserName').val();
-                     else {
-                         $imgCode.attr('src', '/Account/CreateCode?abc=' + Math.random());
-                         alert(msg);
+                 $.ajaxPost({
+                     url: "/Account/LogIn",
+                     data: queryParams,
+                     dataType: "text",
+                     success: function (msg) {
+                         if (msg == "success")
+                             document.location = "/Home/Index?UserName=" + $('#txtUserName').val();
+                         else {
+                             $imgCode.attr('src', '/Account/CreateCode?abc=' + Math.random());
+                             alert(msg);
+                         }
                      }
                  });
              }

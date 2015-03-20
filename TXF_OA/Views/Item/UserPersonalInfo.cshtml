@@ -170,39 +170,41 @@
          $("#t_JoinTime").datebox({ editable: false });
          //加载数据
          if (id > 0) {
-             $.ajaxGet("/Item/GetPersonalinfo", { "id": id }, function (data) {
-                 if (data.status == 1) {
-                     var model = data.model;
-                     $("#form_edit input").each(function () {
-                         var val = model[this.name];
-                         if (this.type == "text" || this.type == "hidden") {
-                             $(this).val(val);
-                         }
-                         else if (this.type == "checkbox") {
-                             $(this).attr("checked", val == true)
-                         }
-                         else if ((this.type == "radio")) {
-                             $("input[name=" + this.name + "][value=" + val + "]").attr("checked", true);
-                         }
-                     });
-                     $("#t_Ethnic").combobox("setValue", model.Ethnic);
-                     $("#t_Faction").combobox("setValue", model.Faction);
-                     $("#t_Education").combobox("setValue", model.Education);
-                     $("#t_BirthDay").datebox('setValue', dateFormatter(model.BirthDay));
-                     $("#t_JoinTime").datebox('setValue', dateFormatter(model.JoinTime));
+             $.ajaxGet({
+                 url: "/Item/GetPersonalinfo",
+                 data: { "ID": id },
+                 success: function (data) {
+                     if (data.status == 1) {
+                         var model = data.model;
+                         $("#form_edit input").each(function () {
+                             var val = model[this.name];
+                             if (this.type == "text" || this.type == "hidden") {
+                                 $(this).val(val);
+                             }
+                             else if (this.type == "checkbox") {
+                                 $(this).attr("checked", val == true)
+                             }
+                             else if ((this.type == "radio")) {
+                                 $("input[name=" + this.name + "][value=" + val + "]").attr("checked", true);
+                             }
+                         });
+                         $("#t_Ethnic").combobox("setValue", model.Ethnic);
+                         $("#t_Faction").combobox("setValue", model.Faction);
+                         $("#t_Education").combobox("setValue", model.Education);
+                         $("#t_BirthDay").datebox('setValue', dateFormatter(model.BirthDay));
+                         $("#t_JoinTime").datebox('setValue', dateFormatter(model.JoinTime));
+                     }
+                     else
+                         jqAlert('数据加载失败:' + data, 'error')
                  }
-                 else
-                     jqAlert('数据加载失败:' + data, 'error')
              });
          }
          //保存
          $("#btnSave").click(function () {
              if ($("#form_edit").form('validate')) {
-                 $.ajax({
-                     type: "post",
+                 $.ajaxPost({
                      url: "/Item/SavePersonalInfo",
                      data: $("#form_edit").serializeArray(),
-                     async: false,
                      success: function (data) {
                          if (data.status == 1) {//保存成功
                              if (id > 0)

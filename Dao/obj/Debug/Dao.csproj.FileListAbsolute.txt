@@ -47,6 +47,6 @@ E:\GitHub\TXF_OA\Dao\bin\Debug\MyCache.IO.pdb
 E:\GitHub\TXF_OA\Dao\bin\Debug\MyCache.Interface.pdb
 E:\GitHub\TXF_OA\Dao\bin\Debug\MyCache.Factory.pdb
 E:\GitHub\TXF_OA\Dao\bin\Debug\MyCache.InProc.pdb
+E:\GitHub\TXF_OA\Dao\obj\Debug\Dao.csprojResolveAssemblyReference.cache
 E:\GitHub\TXF_OA\Dao\obj\Debug\Dao.dll
 E:\GitHub\TXF_OA\Dao\obj\Debug\Dao.pdb
-E:\GitHub\TXF_OA\Dao\obj\Debug\Dao.csprojResolveAssemblyReference.cache

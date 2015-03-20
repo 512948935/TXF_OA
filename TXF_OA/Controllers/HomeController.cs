@@ -18,7 +18,10 @@ namespace TXF_OA
         public ActionResult Index()
         {
             if (CurrentUser != null)
+            {
                 ViewBag.UserName = CurrentUser.ItemName;
+                ViewBag.FaceSrc = CurrentUser.FaceSrc ?? "/Content/images/face_1.gif";
+            }
             return View();
         }
         #region 加载菜单
@@ -71,6 +74,10 @@ namespace TXF_OA
         #region 注销
         public ActionResult LogOut()
         {
+            HttpCookie cookie = new HttpCookie("Account");
+            cookie.Expires = DateTime.Now.Add(new TimeSpan(-1, 0, 0, 0));
+            Response.AppendCookie(cookie);
+            Session["User"] = null;
             return Redirect("/Account/Login");
         }
         #endregion

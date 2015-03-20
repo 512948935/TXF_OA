@@ -89,6 +89,16 @@ namespace Model
             get { return m_Icon; }
             set { m_Icon = value; }
         }
+        private string m_ButtonID;
+        /// <summary>
+        ///按钮ID
+        /// </summary>
+        [Model(Name = "按钮ID", Empty = true, DataType = DbType.String, MaxLength = 20)]
+        public string ButtonID
+        {
+            get { return m_ButtonID; }
+            set { m_ButtonID = value; }
+        }
         private bool m_IsDisabled;
         /// <summary>
         ///是否禁用
@@ -113,7 +123,7 @@ namespace Model
         /// <summary>
         ///  是否为数据管理项
         /// </summary>
-        [Model(Name = "是否为数据管理项", Empty = true, DataType = DbType.Boolean)]
+        [Model(Name = "是否为数据管理项", Empty = true, DataType = DbType.Boolean, NotAdd = true, NotUpdate = true)]
         public bool IsItem
         {
             get { return m_IsItem; }

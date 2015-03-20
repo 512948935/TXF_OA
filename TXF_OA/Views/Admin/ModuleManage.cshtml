@@ -6,7 +6,7 @@
     <div data-options="region:'west',split:true,tools:'#toolbar',collapsible:false" iconCls='tu1419' title="系统菜单" id="left" style="width:250px;padding:5px">
         <ul id="ul_tree"></ul>
         <!----------------------------------模块编辑对话框------------------------------------------->
-        <div id="div_dialog_eidt" style="padding:2px;">
+        <div id="div_dialog_edit" style="padding:2px;">
            <form id="form_edit" method="post" action="">
                <table id="tt" class="tablestyle" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">            
                 <tr>
@@ -25,7 +25,7 @@
                 </tr>
                 <tr>
                     <td class="td1">模块图标：</td>
-                    <td class="td2"><input type="text" id="t_Icon" name="Icon"/></td>
+                    <td class="td2"><input id="t_Icon" name="Icon"/></td>
                 </tr>
                 <tr>
                     <td class="td1">是否禁用：</td>
@@ -76,22 +76,22 @@
                     </tr>
                 </thead>
         </table>
-        <div id="div_dialog_search" style="padding:2px;"></div>
-        <div id="div_win_edit" style="padding:2px;overflow:hidden;width:650px;height:225px"></div>
+        <div id="div_dialog_search" style="padding:2px;width:350px;"></div>
+        <div id="div_win_edit" style="padding:2px;overflow:hidden;width:78%;height:99%;left:250px"></div>
      </div>
 </div>
 <script type="text/javascript">
     //#region easyui-datagrid 功能按钮+配置参数
     var url = "/Admin/GetPageList";
+    var selectedID;
     var toolbar = [{
         id: 'btnadd',
         text: '添加',
         iconCls: 'icon-add',
         handler: function () {
             //子窗体的form
-            $("#form_edit", window.frames['frame1'].document)[0].reset();
+            selectedID = 0;
             $('#div_win_edit').window('open');
-            $("#t_ModuleCode", window.frames['frame1'].document).val($("#t_PreCode").val() + ".");
         }
     }, '-', {
         id: 'btnedit',
@@ -100,22 +100,7 @@
         handler: function () {
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
-                $.get("/Admin/GetModel", { "ID": selections[0].ID }, function (data) {
-                    if (data.status == 1) {
-                        var model = data.model;
-                        //子窗体的form
-                        $("#form_edit", window.frames['frame1'].document).find("input").each(function () {
-                            var val = model[this.name];
-                            if (this.type == "text" || this.type == "hidden")
-                                $(this).val(val);
-                            else if (this.type == "checkbox")
-                                $(this).attr("checked", val == "True");
-                        });
-                    }
-                    else {
-                        jqAlert('数据加载失败:' + data, 'error')
-                    }
-                });
+                selectedID = selections[0].ID;
                 $('#div_win_edit').window('open');
             }
             else
@@ -216,6 +201,11 @@
                     return "<span style='color:red'>" + node.text + "</span>";
                 return node.text;
             },
+            onLoadSuccess: function () {
+                var node = $('#ul_tree').tree('find', $("#t_ID").val());
+                if (node != null)
+                    $('#ul_tree').tree('select', node.target);
+            },
             onSelect: function (node) {
                 var code = node.attributes["ModuleCode"];
                 if (code != $("#t_PreCode").val()) {
@@ -229,7 +219,7 @@
         $("#btnAdd").click(function () {
             $("#t_ID").val(0);
             $("#form_edit")[0].reset(); //重置表单
-            $('#div_dialog_eidt').dialog('open');
+            $('#div_dialog_edit').dialog('open');
         });
         //修改节点
         $("#btnModify").click(function () {
@@ -246,7 +236,7 @@
                         $(this).attr("checked", val == "True");
                 });
                 $("#t_PreCode").val(node.attributes["ModuleCode"]);
-                $('#div_dialog_eidt').dialog('open');
+                $('#div_dialog_edit').dialog('open');
             }
         });
         //删除节点
@@ -268,31 +258,36 @@
             }
         });
         //初始化模块编辑对话框
-        showMyDialog($("#div_dialog_eidt"), '编辑模块信息', 'icon-edit', '', 400, true, function () {
+        showMyDialog($("#div_dialog_edit"), '编辑模块信息', 'icon-edit', '', true, function () {
             if ($("#form_edit").form('validate')) {
-                $.ajax({
-                    type: "POST",
+                $.ajaxPost({
                     url: "/Admin/SaveAction",
                     data: $("#form_edit").serializeArray(),
-                    async: false,
                     success: function (data) {
                         if (data.status == 1) {//保存成功
-                            $("#div_dialog_eidt").dialog('close');
+                            $("#div_dialog_edit").dialog('close');
                             $("#ul_tree").tree("reload");
                         }
-                        else {
+                        else
                             jqAlert('保存失败:' + data, 'error')
-                        }
                     }
                 });
             }
         });
         //初始化页面编辑对话框
-        showMyWindow($("#div_win_edit"), '编辑页面信息', 'icon-edit', "/Admin/ModuleEdit", 'frame1', true, false, true);
+        showMyWindow($("#div_win_edit"), '编辑页面信息', 'icon-edit', "", 'frame1', true, false, true).window({
+            onOpen: function () {
+                var src = "/Admin/ModuleEdit?ID=" + selectedID;
+                if ($("#t_PreCode").val() != "")
+                    src += "&Code=" + $("#t_PreCode").val() + ".";
+                if ($("#frame1").attr("src") != src)
+                    $("#frame1").attr("src", src);
+            }
+        })
         //初始化过滤查询对话框
         getWhereColumns($("#tt_grid"), function (col) {
             var href = '/Admin/CreateWhereHTML?col=' + col;
-            showMyDialog($("#div_dialog_search"), '筛选条件', 'tu1611', href, 350, true, function () {
+            showMyDialog($("#div_dialog_search"), '筛选条件', 'tu1611', href, true, function () {
                 var where = "";
                 $("#ttSearch input:text").each(function () {
                     where += '{Key:"' + $(this).attr('name') + '",Value:"' + $.strFilter($(this).val()) + '",Symbol:"like"},';

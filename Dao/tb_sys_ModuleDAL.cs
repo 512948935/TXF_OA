@@ -97,7 +97,7 @@ namespace Dao
             string sql = string.Format(@"UPDATE	dbo.tb_sys_Module
                                          SET ModuleCode=(REPLACE(LEFT(ModuleCode,'{0}'),LEFT(ModuleCode,{1}),'{2}')+SUBSTRING(ModuleCode,{3},LEN(ModuleCode)))
                                          FROM dbo.tb_sys_Module
-                                         WHERE LEFT(ModuleCode,{4})='{5}'", len, len, code, len + 1, len, PreCode);
+                                         WHERE LEFT(ModuleCode,{4})='{5}' AND ModuleCode<>'{2}'", len, len, code, len + 1, len, PreCode);
             DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql.ToString());
         }
         /// <summary>

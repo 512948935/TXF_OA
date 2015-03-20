@@ -3,7 +3,7 @@
 }
 <div id="div_layout" class="easyui-layout" style="width:100%;height:100%">
    <!--左边-->
-   <div id="div_layout_left" data-options="region:'west',split:true,tools:'#toolbar',iconCls:'tu1419',title:'数据类别'" style="width:240px;padding:5px">
+   <div id="div_layout_west" data-options="region:'west',split:true,tools:'#toolbar',iconCls:'tu1419',title:'数据类别'" style="width:240px;padding:5px">
         <ul id="ul_tree"></ul>
    </div>
    <!--中间-->
@@ -136,7 +136,7 @@
                      }
                      else
                          window.frames["mainFrame"].reloadGird(node.attributes.NodeCode);
-                     showMask();
+                     showMask($("#div_layout_west"));
                  }
              });
              //新增节点
@@ -165,8 +165,7 @@
                              if (data.status == 1) {//删除成功
                                  $("#ul_tree").tree("reload");
                                  $("#t_NodeCode").val('');
-                                 window.frames["mainFrame"].document.write('');
-                                 window.frames["mainFrame"].document.clear();
+                                 //clearFrame($("#mainFrame"));
                              }
                              else
                                  jqAlert('删除失败:' + data, 'error')
@@ -187,23 +186,19 @@
                      text: '确定',
                      iconCls: 'icon-ok',
                      handler: function () {
-                         if ($("#form_edit").form('validate')) {
-                             $.ajax({
-                                 type: "post",
-                                 url: "/Item/SaveItem",
-                                 data: $("#form_edit").serializeArray(),
-                                 async: false,
-                                 success: function (data) {
-                                     if (data.status == 1) {//保存成功
-                                         $("#ul_tree").tree("reload");
-                                         $('#div_dialog_edit').dialog('close');
-                                     }
-                                     else {
-                                         jqAlert('保存失败:' + data, 'error')
-                                     }
+                         $.ajaxPost({
+                             url: "/Item/SaveItem",
+                             data: $("#form_edit").serializeArray(),
+                             success: function (data) {
+                                 if (data.status == 1) {//保存成功
+                                     $("#ul_tree").tree("reload");
+                                     $('#div_dialog_edit').dialog('close');
                                  }
-                             });
-                         }
+                                 else {
+                                     jqAlert('保存失败:' + data, 'error')
+                                 }
+                             }
+                         });
                      }
                  }, {
                      text: '取消',
@@ -215,11 +210,4 @@
              });
              //#endregion
          })
-         function showMask() {
-             $left = $("#div_layout_left");
-             $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: "100%" }).appendTo($left);
-         }
-         function hideMask() {
-             $('.datagrid-mask').remove();
-         }
  </script>

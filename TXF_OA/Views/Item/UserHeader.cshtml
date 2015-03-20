@@ -53,15 +53,19 @@
       $(function () {
           //加载数据
           if (id > 0) {
-              $.ajaxGet("/Item/GetUserinfo", { "id": id }, function (data) {
-                  if (data.status == 1) {
-                      var model = eval(data.model)[0];
-                      if (model.FaceSrc != "")
-                          $("#preview_small").attr("src", model.FaceSrc);
-                      if (model.AvatarSrc != "")
-                          $("#preview_large").attr("src", model.AvatarSrc);
+              $.ajaxGet({
+                  url: "/Item/GetPersonalinfo",
+                  data: { "ID": id },
+                  success: function (data) {
+                      if (data.status == 1) {
+                          var model = data.model;
+                          if (model.FaceSrc != "")
+                              $("#preview_small").attr("src", model.FaceSrc);
+                          if (model.AvatarSrc != "")
+                              $("#preview_large").attr("src", model.AvatarSrc);
+                      }
                   }
-              });
+              })
           }
       });
 </script>
