@@ -17,8 +17,8 @@ namespace TXF_OA
         public Itb_sys_ModuleBLL moduleBLL { get; set; }
         [Inject]
         public Itb_sys_ButtonBLL buttonBLL { get; set; }
+
         #region 模块信息管理
-        
         #region List
         public ActionResult ModuleManage()
         {
@@ -97,7 +97,6 @@ namespace TXF_OA
             moduleBLL.UpdateNodeState(state, id);
         }
         #endregion
-        
         #region Form
         public ActionResult ModuleEdit()
         {
@@ -107,18 +106,19 @@ namespace TXF_OA
         {
             try
             {
-                tb_sys_Module model = moduleBLL.SelectT("ID=" + id);
-                Dictionary<int, tb_sys_Button> buttons = new Dictionary<int, tb_sys_Button>();
-                if (!string.IsNullOrEmpty(model.ButtonID))
+                tb_sys_Module module = moduleBLL.SelectT("ID=" + id);
+                Dictionary<int, tb_sys_Button> buttons = null;
+                if (!string.IsNullOrEmpty(module.ButtonID))
                 {
-                    List<tb_sys_Button> buttonList = buttonBLL.SelectList("ID IN (" + model.ButtonID + ")");
-                    string[] strs = model.ButtonID.Split(',');
+                    buttons = new Dictionary<int, tb_sys_Button>();
+                    List<tb_sys_Button> buttonList = buttonBLL.SelectList("ID IN (" + module.ButtonID + ") AND Marks=1");
+                    string[] strs = module.ButtonID.Split(',');
                     for (int i = 0; i < strs.Length; i++)
                     {
                         buttons.Add(i, buttonList.Where(c => c.ID == Convert.ToInt32(strs[i])).FirstOrDefault());
                     }
                 }
-                return Json(new { status = 1, model = model, buttons = buttons.Values }, JsonRequestBehavior.AllowGet);
+                return Json(new { status = 1, model = module, buttons = buttons.Values }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

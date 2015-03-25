@@ -357,7 +357,7 @@ namespace Dao.ORM
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public List<T> SelectList(string where = "1=1", string sort = "")
+        public List<T> SelectList(string where="1=1", string sort = "")
         {
             try
             {
@@ -400,7 +400,7 @@ namespace Dao.ORM
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public List<T> SelectList(List<WhereField> listWhere = null, string sort = "")
+        public List<T> SelectList(List<WhereField> listWhere, string sort = "")
         {
             string where = " 1=1 ";
             List<SqlParameter> Parameters = null;
@@ -457,7 +457,7 @@ namespace Dao.ORM
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public DataTable SelectDataTable(string field = "*", string where = "1=1", string sort = "")
+        public DataTable SelectDataTable(string where = "1=1", string field = "*", string sort = "")
         {
             try
             {
@@ -485,7 +485,7 @@ namespace Dao.ORM
         /// <param name="field">查询的字段</param>
         /// <param name="listWhere">where条件集合</param>
         /// <returns>DataTable</returns>
-        public DataTable SelectDataTable(string field = "*", List<WhereField> listWhere = null, string sort = "")
+        public DataTable SelectDataTable(List<WhereField> listWhere, string field = "*", string sort = "")
         {
             try
             {

@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "新增/编辑人员信息";
 }
-
+<div style="height:100%;overflow:auto">
 <form id="form_edit" method="post" action="" style="padding:2px">
     <table width="100%" cellpadding="0" cellspacing="0" align="center" class="tablestyle" id="tt">      
             <tr>
@@ -69,11 +69,13 @@
 
 </div>
 <div id="div_dialog_choose_role" style="overflow:hidden;padding:2px;width:85%;height:80%"></div>
+</div>
 
  <script type="text/javascript">
       var backUrl = encodeURI(getUrlParam('backUrl'));
       var id = getUrlParam("ID");
       $(function () {
+          showMask(parent.$("#ul_tree"));
           //添加textbox样式
           $("#form_edit input:text").each(function () {
               $(this).addClass('easyui-validatebox textbox txt');

@@ -30,13 +30,15 @@ namespace TXF_OA
         public Itb_item_RoleBLL roleBLL { get; set; }
         [Inject]
         public Itb_sys_ButtonBLL buttonBLL { get; set; }
+        [Inject]
+        public Itb_sys_Role_PermissionBLL role_PermissionBLL { get; set; }
 
         #region 公司信息
         #region List
-        public ActionResult CompanyinfoManage(bool isRedirect = false,bool choose = false)
+        public ActionResult CompanyinfoManage(bool isRedirect = false, int moduleID = 0, bool choose = false)
         {
             if (isRedirect)
-                return Redirect("/Item/ItemEdit?pageUrl=/Item/CompanyinfoManage?choose=" + choose);
+                return Redirect("/Item/ItemEdit?pageUrl=/Item/CompanyinfoManage&choose=" + choose);
             return View();
         }
         //TODO:显示公司信息
@@ -55,10 +57,6 @@ namespace TXF_OA
             jsonStr += "\"rows\":" + DataTableToJson(dt) + "";
             jsonStr += "\n}";
             return jsonStr;
-        }
-        public string GetButtons()
-        {
-            return "[{ \"id\": \"btnadd\",\"text\": \"添加\",\"iconCls\": \"icon-cancel\",\"handler\":\"toolbar_add\"}]";
         }
         public ActionResult DelCompanyinfo(string id)
         {
@@ -110,9 +108,9 @@ namespace TXF_OA
         {
             try
             {
+                model.User = onlineUser.User;
                 if (companyBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
                     throw new Exception("当前代码重复,请重新输入.");
-                model.User = CurrentUser;
                 if (model.ID == 0)
                     companyBLL.Add(model);
                 else
@@ -202,9 +200,9 @@ namespace TXF_OA
         {
             try
             {
+                model.User = onlineUser.User;
                 if (depBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
                     throw new Exception("当前代码重复,请重新输入.");
-                model.User = CurrentUser;
                 if (model.ID == 0)
                     depBLL.Add(model);
                 else
@@ -296,7 +294,6 @@ namespace TXF_OA
             {
                 if (userBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
                     throw new Exception("当前代码重复,请重新输入.");
-                model.User = CurrentUser;
                 if (model.ID == 0)
                     userBLL.Add(model);
                 else
@@ -312,8 +309,8 @@ namespace TXF_OA
                         ,new UpdateField("RoleID",model.RoleID)
                         ,new UpdateField("IsDisabled",model.IsDisabled)
                         ,new UpdateField("Remark",model.Remark)
-                        ,new UpdateField("ModifiedUserID",CurrentUser.ID)
-                        ,new UpdateField("ModifiedBy",CurrentUser.ItemName)
+                        ,new UpdateField("ModifiedUserID",onlineUser.User.ID)
+                        ,new UpdateField("ModifiedBy",onlineUser.User.ItemName)
                         ,new UpdateField("ModifiedOn",DateTime.Now)
                     };
                     userBLL.Update(fields, "ID=" + model.ID);
@@ -521,9 +518,9 @@ namespace TXF_OA
         {
             try
             {
+                model.User = onlineUser.User;
                 if (roleBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
                     throw new Exception("当前代码重复,请重新输入.");
-                model.User = CurrentUser;
                 if (model.ID == 0)
                     roleBLL.Add(model);
                 else
@@ -541,6 +538,167 @@ namespace TXF_OA
         public ActionResult RoleSetting()
         {
             return View();
+        }
+        public ActionResult GettPermissionButtons(string pageUrl = "", string choose = "")
+        {
+            try
+            {
+                DataTable dtPermission = role_PermissionBLL.GetPermissions(true, onlineUser.User.RoleID.Value);
+                DataRow row = dtPermission.Select("PageUrl='" + pageUrl + "'").FirstOrDefault();
+                Dictionary<int, tb_sys_Button> buttons = null;
+                if (row != null && Convert.ToString(row["ButtonID"]) != "")
+                {
+                    buttons = new Dictionary<int, tb_sys_Button>();
+                    List<tb_sys_Button> buttonList = buttonBLL.SelectList("ID IN (" + row["ButtonID"] + ") AND Marks=1");
+                    string[] strs = row["ButtonID"].ToString().Split(',');
+                    for (int i = 0; i < strs.Length; i++)
+                    {
+                        tb_sys_Button btn = buttonList.Where(c => c.ID == Convert.ToInt32(strs[i])).FirstOrDefault();
+                        if (choose == "True" && btn.ItemName != "search")
+                            continue;
+                        buttons.Add(i, buttonList.Where(c => c.ID == Convert.ToInt32(strs[i])).FirstOrDefault());
+                    }
+                }
+                string buttonJson = "[]";
+                if (buttons != null)
+                {
+                    buttonJson = "[";
+                    foreach (int i in buttons.Keys)
+                    {
+                        buttonJson += "{\"text\":\"" + buttons[i].ButtonText + "\",\"iconCls\":\"" + buttons[i].ButtonIcon + "\",\"handler\":\"toolbar_" + buttons[i].ItemName + "\"}";
+                        if (i < buttons.Keys.Count() - 1)
+                            buttonJson += ",\"-\",";
+                    }
+                    buttonJson += "]";
+                }
+                return Json(new { status = 1, buttons = buttonJson }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
+        }
+        public ActionResult GetPermissions(int roleID)
+        {
+            List<tb_sys_Module> modules = moduleBLL.SelectList();
+            DataTable permissions = role_PermissionBLL.GetPermissions(false, roleID);
+            DataTable newTable = CreateTable();
+            foreach (tb_sys_Module module in modules)
+            {
+                DataRow rowNew = newTable.NewRow();
+                rowNew["ID"] = module.ID;
+                rowNew["ParentID"] = module.ParentID;
+                rowNew["NodeName"] = module.ModuleCode + "." + module.ModuleName;
+                rowNew["ModuleCode"] = module.ModuleCode;
+                rowNew["ModuleName"] = module.ModuleName;
+                rowNew["PermissionID"] = 0;
+                rowNew["IsChecked"] = false;
+                DataRow row = permissions.Select("ModuleID=" + module.ID).FirstOrDefault();
+                string[] isCheckedButtons = { };
+                if (row != null)
+                {
+                    rowNew["PermissionID"] = row["ID"];
+                    rowNew["IsChecked"] = row["IsChecked"];
+                    isCheckedButtons = row["ButtonID"].ToString().Split(',');
+                }
+                if (!string.IsNullOrEmpty(module.ButtonID))
+                {
+                    Dictionary<int, tb_sys_Button> buttons = new Dictionary<int, tb_sys_Button>();
+                    List<tb_sys_Button> buttonList = buttonBLL.SelectList("ID IN (" + module.ButtonID + ") AND Marks=1");
+                    string[] strs = module.ButtonID.Split(',');
+                    for (int i = 0; i < strs.Length; i++)
+                    {
+                        tb_sys_Button btn = buttonList.Where(c => c.ID == Convert.ToInt32(strs[i])).FirstOrDefault();
+                        if (btn == null) continue;
+                        if (isCheckedButtons.Contains(strs[i]))
+                            btn.IsChecked = true;
+                        buttons.Add(i, btn);
+                    }
+                    rowNew["buttons"] = CreateButtons(module.ID, buttons);
+                }
+                newTable.Rows.Add(rowNew);
+            }
+            string jsonStr = "[]";
+            if (newTable.Rows.Count > 0)
+                jsonStr = DataTableToTreeJson(newTable);
+            return Content(jsonStr);
+        }
+        //TODO:权限保存
+        public ActionResult SavePermissions()
+        {
+            string data = Request["data"];
+            try
+            {
+                List<tb_sys_Role_Permission> permissions = JSONStringToList<tb_sys_Role_Permission>(data);
+                permissions.ForEach(c => c.User = onlineUser.User);
+                role_PermissionBLL.SavePermissions(permissions);
+                return Json(new { status = 1 }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
+        }
+        public string CreateButtons(int id, Dictionary<int, tb_sys_Button> buttons)
+        {
+            string buttonHTML = "<ul>";
+            foreach (tb_sys_Button btn in buttons.Values)
+            {
+                if (btn.IsChecked)
+                    buttonHTML += "<li style='float:left'>&nbsp;<input type='checkbox' id='button_" + btn.ID + "'"
+                               + " name='module_" + id + "' value=" + btn.ID + " checked=" + btn.IsChecked + " />" + btn.ButtonText + "</li>";
+                else
+                    buttonHTML += "<li style='float:left'>&nbsp;<input type='checkbox' id='button_" + btn.ID + "'"
+                               + " name='module_" + id + "' value=" + btn.ID + " />" + btn.ButtonText + "</li>";
+
+            }
+            buttonHTML += "</ul>";
+            return buttonHTML;
+        }
+        private DataTable CreateTable()
+        {
+            DataTable dt = new DataTable("newTable");
+            DataColumn columnField = new DataColumn();
+            columnField.DataType = System.Type.GetType("System.Int32");
+            columnField.ColumnName = "ID";
+            dt.Columns.Add(columnField);
+
+            columnField = new DataColumn();
+            columnField.DataType = System.Type.GetType("System.Int32");
+            columnField.ColumnName = "ParentID";
+            dt.Columns.Add(columnField);
+
+            columnField = new DataColumn();
+            columnField.DataType = System.Type.GetType("System.String");
+            columnField.ColumnName = "NodeName";
+            dt.Columns.Add(columnField);
+
+            columnField = new DataColumn();
+            columnField.DataType = System.Type.GetType("System.String");
+            columnField.ColumnName = "ModuleCode";
+            dt.Columns.Add(columnField);
+            columnField = new DataColumn();
+
+            columnField = new DataColumn();
+            columnField.DataType = System.Type.GetType("System.String");
+            columnField.ColumnName = "ModuleName";
+            dt.Columns.Add(columnField);
+
+            columnField = new DataColumn();
+            columnField.DataType = System.Type.GetType("System.Int32");
+            columnField.ColumnName = "PermissionID";
+            dt.Columns.Add(columnField);
+
+            columnField = new DataColumn();
+            columnField.DataType = System.Type.GetType("System.Boolean");
+            columnField.ColumnName = "IsChecked";
+            dt.Columns.Add(columnField);
+
+            columnField = new DataColumn();
+            columnField.DataType = System.Type.GetType("System.String");
+            columnField.ColumnName = "Buttons";
+            dt.Columns.Add(columnField);
+            return dt;
         }
         #endregion
         #endregion
@@ -619,9 +777,9 @@ namespace TXF_OA
         {
             try
             {
+                model.User = onlineUser.User;
                 if (roleBLL.CheckItemNo(model.ID, model.ItemNo) > 0)
                     throw new Exception("当前代码重复,请重新输入.");
-                model.User = CurrentUser;
                 if (model.ID == 0)
                     buttonBLL.Add(model);
                 else

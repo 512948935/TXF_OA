@@ -63,14 +63,14 @@ namespace IDao
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        List<T> SelectList(string where = "", string sort = "");
+        List<T> SelectList(string where = "1=1", string sort = "");
         /// <summary>
         /// 查找实体类集合
         /// </summary>
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        List<T> SelectList(List<WhereField> where = null, string sort = "");
+        List<T> SelectList(List<WhereField> where, string sort = "");
         /// <summary>
         /// 查找数据
         /// </summary>
@@ -78,7 +78,7 @@ namespace IDao
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        DataTable SelectDataTable(string field = "", string where = "", string sort = "");
+        DataTable SelectDataTable(string where = "1=1", string field = "", string sort = "");
         /// <summary>
         /// 查找数据
         /// </summary>
@@ -88,7 +88,7 @@ namespace IDao
         /// <param name="field"></param>
         /// <param name="listWhere"></param>
         /// <returns></returns>
-        DataTable SelectDataTable(string field = "", List<WhereField> listWhere = null, string sort = "");
+        DataTable SelectDataTable(List<WhereField> listWhere, string field = "", string sort = "");
         /// <summary>
         /// 获取数据总条数
         /// </summary>

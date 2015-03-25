@@ -1,5 +1,135 @@
 ﻿@{
-    ViewBag.Title = "RoleSetting";
+    ViewBag.Title = "权限设置";
 }
-
-<h2>RoleSetting</h2>
+<style type="text/css">
+.datagrid-header{ 
+    margin: 0; 
+    overflow: hidden; 
+    vertical-align:middle;
+    text-align: center; 
+    white-space: nowrap;  
+} 
+</style>
+<div style="height:100%" id="div_treegrid">
+    <table class="easyui-treegrid" id="tt_treegrid" name="treegrid" width="100%" border="0"
+           data-options="title:'当前角色是：' + getUrlParam('name'),
+                         url: url,
+                         fit:true,
+                         iconCls: 'icon-direction',
+                         rownumbers: true,
+                         idField: 'ID',
+                         treeField: 'NodeName',
+                         toolbar:toolbar,
+                         onLoadSuccess:loadSuccess
+                         ">
+            <thead data-options="frozen:true">
+                <tr>
+                    <th data-options="field:'ID',hidden:true,title:'ID'"></th>
+                    <th data-options="field:'NodeName',title:'系统菜单',formatter:nodeFormatter"></th>
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <th data-options="field:'Buttons',title:'功能按钮'"></th>
+                </tr>
+            </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $(function () {
+        showMask(parent.$("#ul_tree"));
+    });
+   var backUrl = encodeURI(getUrlParam('backUrl'));
+   var id = getUrlParam("ID");
+   var url = "/Item/GetPermissions?roleID=" + id;
+   var loadSuccess = function () {
+       $('#div_treegrid input:checkbox[name=treecheckbox]').each(function () {
+           $(this).click(function () {
+               var moduleID = "module_" + this.id;
+               var children = $('#tt_treegrid').treegrid("getChildren", this.id);
+               if (this.checked) {
+                   //当前节点复选框
+                   $("#div_treegrid input:checkbox[name='" + moduleID + "']").attr("checked", true);
+                   //子项节点复选框
+                   for (var o in children) {
+                       $("#" + children[o].ID).attr("checked", true);
+                       $("#div_treegrid input:checkbox[name='module_" + children[o].ID + "']").attr("checked", true);
+                   }
+               }
+               else {
+                   $("#div_treegrid input:checkbox[name='" + moduleID + "']").attr("checked", false);
+                   for (var o in children) {
+                       $("#" + children[o].ID).attr("checked", false);
+                       $("#div_treegrid input:checkbox[name='module_" + children[o].ID + "']").attr("checked", false);
+                   }
+               }
+           });
+       });
+   };
+   var toolbar = [{
+       text: '保存',
+       iconCls: 'icon-save',
+       handler: function () {
+           var w = $("#div_treegrid").width();
+           var h = $("#div_treegrid").height();
+           showMask($("#div_treegrid"));
+           $("<div class=\"datagrid-mask-msg\"></div>").html("数据提交中，请稍候……").appendTo($("#div_treegrid")).css({
+               display: "block",
+               left: (w - 190) / 2,
+               top: (h - 45) / 2
+           });
+           var data = "";
+           $('#div_treegrid input:checkbox[name=treecheckbox]').each(function () {
+               //按钮权限
+               var buttonID = "";
+               $("#div_treegrid input:checkbox[name='module_" + this.id + "']").each(function () {
+                   if (this.checked)
+                       buttonID += this.value + ",";
+               });
+               data += "{ID:'" + this.value + "',RoleID:'" + id + "',ModuleID:'" + this.id + "',IsChecked:'" + this.checked + "',ButtonID:'" + $.trimend(buttonID, ',') + "'},";
+           });
+           data = "[" + $.trimend(data, ',') + "]";
+           $.ajaxPost({
+               url: "/Item/SavePermissions",
+               data: { "data": data },
+               success: function (data) {
+                   if (data.status == 1) {//保存成功
+                       hideMask($("#div_treegrid"));
+                       $('.datagrid-mask-msg').remove();
+                       jqAlert('设置成功.', 'info');
+                       $("#tt_treegrid").treegrid('reload');
+                   }
+                   else {
+                       jqAlert('保存失败:' + data, 'error')
+                   }
+               }
+           });
+       }
+   }, '-', {
+       text: '全选',
+       iconCls: 'icon-ok',
+       handler: function () {
+           $('#div_treegrid input:checkbox').attr("checked", true);
+       }
+   }, '-', {
+       text: '全不选',
+       iconCls: 'icon-remove',
+       handler: function () {
+           $('#div_treegrid input:checkbox').attr("checked", false);
+       }
+   }, '-', {
+       text: '返回',
+       iconCls: 'icon-back',
+       handler: function () {
+           document.location = backUrl + "&fromCache=true";
+       }
+   }];
+   var nodeFormatter = function (value, row) {
+       if (value) {
+           if (row.IsChecked == "False")
+               return '<input id="' + row.ID + '" type="checkbox" name="treecheckbox" value="' + row.PermissionID + '" />&nbsp;' + (value);
+           else
+               return '<input id="' + row.ID + '" type="checkbox" name="treecheckbox" value="' + row.PermissionID + '" checked="checked"/>&nbsp;' + (value);
+       }
+   }
+</script>

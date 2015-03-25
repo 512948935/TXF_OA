@@ -40,6 +40,7 @@ E:\GitHub\TXF_OA\BLL\bin\Debug\IBLL.dll
 E:\GitHub\TXF_OA\BLL\bin\Debug\IDao.dll
 E:\GitHub\TXF_OA\BLL\bin\Debug\Model.dll
 E:\GitHub\TXF_OA\BLL\bin\Debug\MyCache.IO.dll
+E:\GitHub\TXF_OA\BLL\bin\Debug\Utility.dll
 E:\GitHub\TXF_OA\BLL\bin\Debug\TXF.Attributes.dll
 E:\GitHub\TXF_OA\BLL\bin\Debug\MyCache.Interface.dll
 E:\GitHub\TXF_OA\BLL\bin\Debug\MyCache.Factory.dll
@@ -49,6 +50,7 @@ E:\GitHub\TXF_OA\BLL\bin\Debug\IBLL.pdb
 E:\GitHub\TXF_OA\BLL\bin\Debug\IDao.pdb
 E:\GitHub\TXF_OA\BLL\bin\Debug\Model.pdb
 E:\GitHub\TXF_OA\BLL\bin\Debug\MyCache.IO.pdb
+E:\GitHub\TXF_OA\BLL\bin\Debug\Utility.pdb
 E:\GitHub\TXF_OA\BLL\bin\Debug\TXF.Attributes.pdb
 E:\GitHub\TXF_OA\BLL\bin\Debug\MyCache.Interface.pdb
 E:\GitHub\TXF_OA\BLL\bin\Debug\MyCache.Factory.pdb

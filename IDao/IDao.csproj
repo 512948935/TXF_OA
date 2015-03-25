@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IBaseDAL.cs" />
+    <Compile Include="Itb_sys_Role_PermissionDAL.cs" />
     <Compile Include="Itb_item_CompanyDAL.cs" />
     <Compile Include="Itb_item_DepartmentDAL.cs" />
     <Compile Include="Itb_item_RoleDAL.cs" />

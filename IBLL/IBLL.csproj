@@ -48,6 +48,7 @@
     <Compile Include="Itb_item_UserBLL.cs" />
     <Compile Include="Itb_sys_ItemBLL.cs" />
     <Compile Include="Itb_sys_ModuleBLL.cs" />
+    <Compile Include="Itb_sys_Role_PermissionBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Itb_sys_ButtonBLL.cs" />
   </ItemGroup>

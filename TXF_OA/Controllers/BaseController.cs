@@ -15,47 +15,26 @@ namespace TXF_OA
 {
     public class BaseController : Controller
     {
-        //定义一个基类的UserInfo对象
-        public tb_item_User CurrentUser { get; set; }
+        public OnlineUsers onlineUser;
+
         [Inject]
         public Itb_item_UserBLL userBLL { get; set; }
+
         /// <summary>
         /// 重写基类在Action之前执行的方法
         /// </summary>
         /// <param name="filterContext"></param>
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            //检验用户是否已经登录，如果登录则不执行，否则则执行下面的跳转代码
             base.OnActionExecuting(filterContext);
-            CurrentUser = Session["User"] as tb_item_User;
-            if (CurrentUser == null)
+            HttpCookie cookie = Request.Cookies["ID"];
+            if (onlineUser == null && cookie != null)
             {
-                if (Request.Cookies["Account"] != null && userBLL != null)
-                {
-                    string name = Request.Cookies["Account"]["UserName"];
-                    string pwd = Request.Cookies["Account"]["UserPwd"];
-                    List<WhereField> wheres = new List<WhereField>(){
-                                          new WhereField ("ItemName",name)
-                                         ,new WhereField("UserPwd",pwd )
-                    };
-                    Session["User"] = CurrentUser = userBLL.SelectT(wheres);
-                }
-                else
+                onlineUser = userBLL.Get(new Guid(cookie["uniqueID"] ?? ""));
+                if (onlineUser == null)
                     Response.Redirect("/Account/Login");
             }
-            else
-            {
-                if (Request.Cookies["Account"] == null)
-                {
-                    HttpCookie cookie = new HttpCookie("Account");//初使化并设置Cookie的名称
-                    DateTime dt = DateTime.Now;
-                    TimeSpan ts = new TimeSpan(1, 0, 0, 0, 0);//过期时间为1分钟
-                    cookie.Expires = dt.Add(ts);//设置过期时间
-                    cookie.Values.Add("UserName", CurrentUser.ItemName);
-                    cookie.Values.Add("UserPwd", CurrentUser.UserPwd);
-                    Response.AppendCookie(cookie);
-                }
-            }
-            //检验用户是否已经登录，如果登录则不执行，否则则执行下面的跳转代码
         }
         #region JsonHelper
         /// <summary>

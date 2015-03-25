@@ -83,7 +83,8 @@ namespace Dao
         {
             try
             {
-                string sql = "UPDATE dbo.tb_item_Role SET Marks=0 WHERE ID IN " + id + "";
+                string sql = "DELETE dbo.tb_sys_Role_Permission WHERE RoleID IN " + id + "";
+                sql += ";UPDATE dbo.tb_item_Role SET Marks=0 WHERE ID IN " + id + "";
                 DataProvider.DBHelper.ExecuteNonQuery(CommandType.Text, sql);
             }
             catch (Exception ex)

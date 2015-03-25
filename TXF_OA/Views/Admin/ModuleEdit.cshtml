@@ -53,7 +53,7 @@
         <tr>
             <td class="td1">是否禁用：</td>
             <td class="td2">
-                <input type="checkbox" class="checkbox" id="t_IsDelete" name="IsDelete" value="true" />
+                <input type="checkbox" class="checkbox" id="t_IsDisabled" name="IsDisabled" value="true" />
             </td>
         </tr>
     </table>    
@@ -115,7 +115,7 @@
                             if (this.type == "text" || this.type == "hidden")
                                 $(this).val(val);
                             else if (this.type == "checkbox")
-                                $(this).attr("checked", val == "True");
+                                $(this).attr("checked", val == true);
                         });
                         $("#t_Icon").textbox("setText", model.Icon);
                         createButtons($("#t_Button"), $("#t_ButtonID"), data.buttons || []);
@@ -156,7 +156,7 @@
                 if (selections.length > 0) {
                     $("#t_Button").children().remove();
                     $("#t_ButtonID").val("");
-                    createButtons($("#t_Button"),$("#t_ButtonID"), selections);
+                    createButtons($("#t_Button"), $("#t_ButtonID"), selections);
                     $("#div_dialog_choose_button").dialog('close');
                 }
                 else

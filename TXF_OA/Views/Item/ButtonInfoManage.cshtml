@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "公司信息";
 }
-<div style="height:100%">
+<div style="height:100%;">
     <table class="easyui-datagrid" id="tt_grid" name="datagrid" width="100%" border="0"
            data-options="title:'按钮信息',
                          url:encodeURI(url),
@@ -47,7 +47,7 @@
     var url = param.getUrl();
     $(function () {
         //调整datagrid大小
-        datagridResize(parent.$("#div_layout"));
+        datagridResize();
         //创建过滤查询对话框
         getWhereColumns($("#tt_grid"), function (col) {
             var href = '/Item/CreateWhereHTML?col=' + col;
@@ -73,7 +73,7 @@
         var page = p.data("pagination").options.pageNumber;
         var size = p.data("pagination").options.pageSize;
         backUrl = '/Item/ButtoninfoManage?where=' + param.where + '&page=' + page + '&pagesize=' + size;
-        parent.hideMask();
+        hideMask(parent.$("#ul_tree"));
     }
     var toolbar = [{
         id: 'btnadd',
@@ -81,7 +81,6 @@
         iconCls: 'icon-add',
         handler: function () {
             document.location = '/Item/ButtoninfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
-            showMask(parent.$("#div_layout_west"));
         }
     }, '-', {
         id: 'btnedit',
@@ -91,7 +90,6 @@
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
                 document.location = '/Item/ButtoninfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
-                showMask(parent.$("#div_layout_west"));
             }
             else
                 jqAlert('请选择一条记录！', 'warning')

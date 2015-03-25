@@ -52,6 +52,7 @@
     <Compile Include="tb_item_RoleBLL.cs" />
     <Compile Include="tb_sys_ItemBLL.cs" />
     <Compile Include="tb_sys_ModuleBLL.cs" />
+    <Compile Include="tb_sys_Role_PermissionBLL.cs" />
     <Compile Include="tb_sys_UserBLL.cs" />
     <Compile Include="tb_sys_ButtonBLL.cs" />
   </ItemGroup>
@@ -75,6 +76,10 @@
     <ProjectReference Include="..\MyCache.IO\MyCache.IO.csproj">
       <Project>{E8EDF160-08F9-480C-991F-60D147D678C6}</Project>
       <Name>MyCache.IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{94EE5739-1EE6-4CEF-A7EB-37A416004DE1}</Project>
+      <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

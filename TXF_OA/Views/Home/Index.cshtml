@@ -1,81 +1,77 @@
 ﻿@{
     ViewBag.Title = "首页";
 }
+
 <!-------------------------------头部----------------------------------------->
- <div data-options="region:'north',border:false" id="header">
-     <div class="h_left">
-                 <img src="../../Content/images/product.png" alt="Logo" />
-            </div>
-            <div class="h_right">
-                 <span id="date"></span>&nbsp;<img src="../../Content/images/time.gif" alt="时钟"/>
-                 <span id="time"></span>&nbsp;&nbsp;&nbsp;
-             </div>
-             <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                 <tr style="background:url(../../Content/images/BackWhite.gif)">
-                    <td width="185" height="27" style="background:url(@Url.Content("/images/BackWhite.gif")">
-                        &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src=@ViewBag.FaceSrc alt="头像" />
-                        &nbsp;<strong><span id="userName" style="color: #ffffff">@ViewBag.UserName</span></strong>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src="/Content/images/U01.gif" alt="联机" />
-                        &nbsp;<strong><span style="color: #ffffff">联机</span></strong>
-                    </td>
-                    <td >&nbsp;&nbsp;&nbsp;&nbsp;<a class="white" target="rform" href="/Content/NetMail/NetMailShou.aspx">
-                                    <img height="16" src="../../Content/images/TreeImages/webmail.gif" width="16" alt="" />&nbsp;Internet 邮件&nbsp;</a>
-                        &nbsp;&nbsp;<a class="white" target="rform" href="../Meeting/MyMeeting.aspx">
-                                    <img height="16" src="../../Content/images/TreeImages/vmeet.gif" width="16" alt=""/>&nbsp;我的会议&nbsp;</a>                                
-                        &nbsp;&nbsp;<a class="white" target="rform" href="../DocCenter/DocCenter.aspx?Type=个人文件&DirID=0">
-                                    <img height="16" src="../../Content/images/TreeImages/file_folder.gif" width="16" alt=""/>&nbsp;个人文件柜&nbsp;</a>                                
-                        &nbsp;&nbsp;<a class="white" target="rform" href="../LanEmail/LanEmailShou.aspx">
-                                    <img height="16" src="../../Content/images/TreeImages/email.gif" width="16" alt=""/>&nbsp;内部邮件&nbsp;</a> 
-                        &nbsp;&nbsp;<a class="white" target="rform" href="../HR/ShangXiaBanDengJi.aspx">
-                                    <img height="16" src="../../Content/images/TreeImages/attendance.gif" width="16" alt=""/>&nbsp;上下班登记&nbsp;</a>                               
-                        &nbsp;&nbsp;<a class="white" target="rform" href="../WorkFlow/MyWorkFlow.aspx">
-                                    <img height="16" src="../../Content/images/TreeImages/workflow.gif" width="16" alt=""/>&nbsp;我的工作&nbsp;</a>  
-                    </td>
-                     <td align="right" style="background:url(@Url.Content("/images/BackWhite.gif")">
-                        <a class="white" href="MyDesk.aspx" target="rform">
-                            <img alt="我的办公桌" width="16" height="16" src="../../Content/images/TreeImages/mytable.gif" />&nbsp;桌面</a>&nbsp;
-                        <a class="white"  href="../../Content/Personal/SystemTiXing.aspx" target="rform">
-                            <img alt="提醒" height="16" width="16" src="../../Content/images/TreeImages/theme.gif" />&nbsp;提醒</a>&nbsp;
-                        <a class="white"  href="/Home/LogOut">
-                            <img alt="注销用户" src="../../Content/images/login.gif"/>&nbsp;注销</a>&nbsp;&nbsp;&nbsp;
-                      </td>
-                </tr>
-         </table>
-</div>
-<!-------------------------------左边----------------------------------------->
-<div id="div_west" data-options="region:'west',split:true" title="菜单导航" iconCls='tu1419' style="width:250px;">
-    <div id="div_accordion" class="easyui-accordion" data-options="fit:true,border:false"></div>
-</div>
-<!-------------------------------中间----------------------------------------->
-<div data-options="region:'center'" style="overflow:hidden">
-    <div id="div_tabs" data-options="fit:true,border:false" style="overflow:hidden"></div>
-    <div id="mm" style="width: 120px;">
-        <div id="mm_reload" name="0" iconCls="icon-reload">刷新当前标签页</div>
-        <div id="mm_close" name="1">关闭当前标签页</div>
-        <div id="mm_closeother" name="3">关闭其他标签页</div>
-        <div id="mm_closeall" name="2">关闭所有标签页</div>
+<div class="easyui-layout" id="div_layout" style="width:100%;height:100%">
+    <div data-options="region:'north',border:false" id="header">
+         <div class="h_left">
+                     <img src="../../Content/images/product.png" alt="Logo" />
+                </div>
+                <div class="h_right">
+                     <span id="date"></span>&nbsp;<img src="../../Content/images/time.gif" alt="时钟"/>
+                     <span id="time"></span>&nbsp;&nbsp;&nbsp;
+                 </div>
+                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                     <tr style="background:url(../../Content/images/BackWhite.gif)">
+                        <td width="185" height="27" style="background:url(@Url.Content("/images/BackWhite.gif")">
+                            &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src=@ViewBag.FaceSrc alt="头像" />
+                            &nbsp;<strong><span id="userName" style="color: #ffffff">@ViewBag.UserName</span></strong>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src="/Content/images/U01.gif" alt="联机" />
+                            &nbsp;<strong><span style="color: #ffffff">联机</span></strong>
+                        </td>
+                        <td >&nbsp;&nbsp;&nbsp;&nbsp;<a class="white" target="rform" href="/Content/NetMail/NetMailShou.aspx">
+                                        <img height="16" src="../../Content/images/TreeImages/webmail.gif" width="16" alt="" />&nbsp;Internet 邮件&nbsp;</a>
+                            &nbsp;&nbsp;<a class="white" target="rform" href="../Meeting/MyMeeting.aspx">
+                                        <img height="16" src="../../Content/images/TreeImages/vmeet.gif" width="16" alt=""/>&nbsp;我的会议&nbsp;</a>                                
+                            &nbsp;&nbsp;<a class="white" target="rform" href="../DocCenter/DocCenter.aspx?Type=个人文件&DirID=0">
+                                        <img height="16" src="../../Content/images/TreeImages/file_folder.gif" width="16" alt=""/>&nbsp;个人文件柜&nbsp;</a>                                
+                            &nbsp;&nbsp;<a class="white" target="rform" href="../LanEmail/LanEmailShou.aspx">
+                                        <img height="16" src="../../Content/images/TreeImages/email.gif" width="16" alt=""/>&nbsp;内部邮件&nbsp;</a> 
+                            &nbsp;&nbsp;<a class="white" target="rform" href="../HR/ShangXiaBanDengJi.aspx">
+                                        <img height="16" src="../../Content/images/TreeImages/attendance.gif" width="16" alt=""/>&nbsp;上下班登记&nbsp;</a>                               
+                            &nbsp;&nbsp;<a class="white" target="rform" href="../WorkFlow/MyWorkFlow.aspx">
+                                        <img height="16" src="../../Content/images/TreeImages/workflow.gif" width="16" alt=""/>&nbsp;我的工作&nbsp;</a>  
+                        </td>
+                         <td align="right" style="background:url(@Url.Content("/images/BackWhite.gif")">
+                            <a class="white" href="MyDesk.aspx" target="rform">
+                                <img alt="我的办公桌" width="16" height="16" src="../../Content/images/TreeImages/mytable.gif" />&nbsp;桌面</a>&nbsp;
+                            <a class="white"  href="../../Content/Personal/SystemTiXing.aspx" target="rform">
+                                <img alt="提醒" height="16" width="16" src="../../Content/images/TreeImages/theme.gif" />&nbsp;提醒</a>&nbsp;
+                            <a class="white" href="/Account/LogOut">
+                                <img alt="注销用户" src="../../Content/images/login.gif"/>&nbsp;注销</a>&nbsp;&nbsp;&nbsp;
+                          </td>
+                    </tr>
+             </table>
     </div>
+    <!-------------------------------左边----------------------------------------->
+    <div id="div_west" data-options="region:'west',split:true" title="菜单导航" iconCls='tu1419' style="width:250px;">
+        <div id="div_accordion" class="easyui-accordion" data-options="fit:true,border:false"></div>
+    </div>
+    <!-------------------------------中间----------------------------------------->
+    <div data-options="region:'center'" style="overflow:hidden">
+        <div id="div_tabs" data-options="fit:true,border:false" style="overflow:hidden"></div>
+        <div id="mm" style="width: 120px;">
+            <div id="mm_reload" name="0" iconCls="icon-reload">刷新当前标签页</div>
+            <div id="mm_close" name="1">关闭当前标签页</div>
+            <div id="mm_closeother" name="3">关闭其他标签页</div>
+            <div id="mm_closeall" name="2">关闭所有标签页</div>
+        </div>
+    </div>
+    <!-------------------------------底部----------------------------------------->
+    <div data-options="region:'south',border:false" id="footer"></div>
 </div>
-<!-------------------------------底部----------------------------------------->
-<div data-options="region:'south',border:false" id="footer"></div>
+
  <script type="text/javascript">
      $(function () {
-         $("#a_01").bind("click", function () {
-             $("#mainFrame").attr("src", "/Admin/ModuleManage");
-             $('#body_layout').layout('collapse', 'west');
-         });
          //设置时间
          $('#date').html(currentDate);
          $('#time').html(currentTime);
-         var displayTime = window.setInterval(function () {
-             $('#time').html(currentTime)
-         }, 1000);
+         var displayTime = window.setInterval(function () { $('#time').html(currentTime) }, 1000);
          //加载Accordion菜单
-         $.ajax({
+         $.ajaxGet({
              url: '/Home/GetAccordionData',
-             type: 'get',
              async: false,
-             dataType: 'json',
              success: function (data) {
                  $.each(data, function (i, item) {
                      $("#div_accordion").accordion("add", item);
@@ -83,6 +79,7 @@
                      $("#ul_tree_" + item.id).tree({
                          url: "/Home/GetTreeData?id=" + item.id,
                          async: false,
+                         cache: false,
                          onClick: function (node) {
                              addTabs(node.text, node.attributes["PageUrl"], node.attributes["Icon"], node.id, true);
                          }
@@ -120,8 +117,8 @@
          addTabs("我的桌面", "", "tu1112", "00", false);
          $("#ul_tree_00 li a").click(function () {
              var tabTitle = $(this).text();
+             var id = this.id;
              var url = $(this).attr("ref");
-             var id = $(this).attr("id");
              var icon = "icon-gears";
              addTabs(tabTitle, url, icon, id, true);
          });
@@ -129,29 +126,22 @@
      //添加tabs
      function addTabs(subTitle, url, icon, id, closable) {
          if (!$("#div_tabs").tabs("exists", subTitle)) {
-             //                          $("#div_tabs").tabs("add", {
-             //                              id: "tab_" + id,
-             //                              title: subTitle,
-             //                              content: '<div style="height:100%;overflow:hidden">' + createFrame(url, "tab_" + id) + '</div>',
-             //                              closable: closable,
-             //                              icon: icon
-             //                          });
-             showMask($("#div_west"));
+             showMask($("#div_accordion"));
              $('#div_tabs').tabs('addFrameTab', {
                  tab: { id: "tab_" + id, title: subTitle, closable: closable, icon: icon },
-                 iframe: { id: "frame_" + id, src: url, onComplete: function () {hideMask();
-                  } }
+                 iframe: { id: "frame_" + id, src: url, onComplete: function () { hideMask($("#div_accordion")); }
+                 }
              });
              tabClose();
          }
          else
              $("#div_tabs").tabs("select", subTitle);
      }
-     function createFrame(url, id) {
-         var s = '<iframe id="frame_' + id + '" scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
-         var iframe = document.getElementById("frame_" + id + "");
-         return s;
-     }
+//     function createFrame(url, id) {
+//         var s = '<iframe id="frame_' + id + '" scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+//         var iframe = document.getElementById("frame_" + id + "");
+//         return s;
+//     }
      function tabClose() {
          /*双击关闭TAB选项卡*/
          $("div .tabs-inner").dblclick(function () {
@@ -218,5 +208,5 @@
      }
      function cancel() {
          window.clearInterval(timer);
-     }           
+     }
  </script>

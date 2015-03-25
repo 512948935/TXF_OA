@@ -34,7 +34,7 @@
             </thead>
     </table>
     <div id="div_dialog_search" style="padding:2px;width:350px;top:30%"></div>
-    <div id="div_dialog_upload" style="padding:2px;width:90%;height:90%;overflow:hidden"></div>
+    <div id="div_dialog_header" style="padding:2px;width:90%;height:90%;overflow:hidden"></div>
 </div>
 
 <script type="text/javascript">
@@ -66,7 +66,7 @@
             $("#btnexport").parent().next().hide();
         }
         //调整datagrid大小
-        datagridResize(parent.$("#div_layout"));
+        datagridResize();
         //创建过滤查询对话框
         getWhereColumns($("#tt_grid"), function (col) {
             var href = '/Item/CreateWhereHTML?col=' + col;
@@ -86,7 +86,7 @@
             });
         });
         //创建图片上传对话框
-        showMyDialog2($("#div_dialog_upload"), '头像上传', 'icon-header', "", "frame1").dialog({
+        showMyDialog2($("#div_dialog_header"), '头像上传', 'icon-header', "", "frame1").dialog({
             onBeforeOpen: function () {
                 var selections = $('#tt_grid').datagrid('getSelections');
                 var src = "/Item/UserHeader?ID=" + selections[0].ID;
@@ -100,12 +100,13 @@
                     $('#tt_grid').datagrid('options').url = param.getUrl();
                     $("#tt_grid").datagrid('load');
                 }
+                parent.hideMask(parent.$("#ul_tree"));
             },
             buttons: [{
                 text: '关闭',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $("#div_dialog_upload").dialog("close");
+                    $("#div_dialog_header").dialog("close");
                 }
             }]
         });
@@ -116,7 +117,7 @@
         var page = p.data("pagination").options.pageNumber;
         var size = p.data("pagination").options.pageSize;
         backUrl = '/Item/UserinfoManage?where=' + param.where + '&page=' + page + '&pagesize=' + size;
-        parent.hideMask();
+        parent.hideMask(parent.$("#ul_tree"));
     }
     var toolbar = [{
         id: 'btnadd',
@@ -124,7 +125,6 @@
         iconCls: 'icon-add',
         handler: function () {
             document.location = '/Item/UserinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
-            showMask(parent.$("#div_layout_west"));
         }
     }, '-', {
         id: 'btnedit',
@@ -134,7 +134,6 @@
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
                 document.location = '/Item/UserinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
-                showMask(parent.$("#div_layout_west"));
             }
             else
                 jqAlert('请选择一条记录！', 'warning')
@@ -147,7 +146,6 @@
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
                 document.location = '/Item/UserPersonalInfo?backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
-                showMask(parent.$("#div_layout_west"));
             }
             else
                 jqAlert('请选择一条记录！', 'warning')
@@ -159,8 +157,8 @@
         handler: function () {
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
-                $("#div_dialog_upload").dialog("open");
-                showMask(parent.$("#div_layout_west"));
+                $("#div_dialog_header").dialog("open");
+                showMask(parent.$("#ul_tree"));
             }
             else
                 jqAlert('请选择一条记录！', 'warning')

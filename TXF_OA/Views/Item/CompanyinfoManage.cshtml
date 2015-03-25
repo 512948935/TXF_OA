@@ -49,7 +49,7 @@
         //获取工具条
         getTools();
         //调整datagrid大小
-        datagridResize(parent.$("#div_layout"));
+        datagridResize();
         //创建过滤查询对话框
         getWhereColumns($("#tt_grid"), function (col) {
             var href = '/Item/CreateWhereHTML?col=' + col;
@@ -75,13 +75,17 @@
         var page = p.data("pagination").options.pageNumber;
         var size = p.data("pagination").options.pageSize;
         backUrl = '/Item/CompanyinfoManage?where=' + param.where + '&page=' + page + '&pagesize=' + size;
-        parent.hideMask();
+        hideMask(parent.$("#ul_tree"));
     }
     function getTools() {
         $.ajaxGet({
-            url: "/Item/GetButtons",
+            url: "/Item/GettPermissionButtons",
+            data: { pageUrl: "/Item/CompanyinfoManage" },
             success: function (data) {
-                $("#tt_grid").datagrid("addToolbarItem", data);
+                if (data.status == 1)
+                    $("#tt_grid").datagrid("addToolbarItem", eval(data.buttons));
+                else
+                    jqAlert('按钮加载失败' + data, 'warning')
             }
         });
     }

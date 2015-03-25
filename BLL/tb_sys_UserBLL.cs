@@ -62,10 +62,6 @@ namespace BLL
             DataTable dt = MyCache.IO.Opation.Get(cacheKey ?? "") as DataTable ?? myDao.GetModel(id);
             return dt.Select("ID=" + id)[0];
         }
-        public DataTable GetPageList(int page, int pagesize, out int total, string code, string disabled, List<WhereField> listWhere)
-        {
-            return myDao.GetPageList(page, pagesize, out total, code, disabled, listWhere);
-        }
         public int CheckItemNo(int id, string itemNo)
         {
             return myDao.CheckItemNo(id, itemNo);
@@ -74,5 +70,94 @@ namespace BLL
         {
             myDao.DeleteDepinfo(id);
         }
+
+        #region 在线用户管理
+        //静态缓存key
+        private static string key = "OnlineUsers";
+        /// <summary>
+        /// 得到所有在线用户表
+        /// </summary>
+        /// <returns></returns>
+        public List<OnlineUsers> GetAll()
+        {
+            object obj = MyCache.IO.Opation.Get(key);
+            return obj as List<OnlineUsers> ?? new List<OnlineUsers>();
+        }
+        private void set(List<OnlineUsers> list)
+        {
+            if (list == null) return;
+            MyCache.IO.Opation.Set(key, list);
+        }
+        /// <summary>
+        /// 添加一个用户到在线用户表
+        /// </summary>
+        public void AddToCache(tb_item_User user, Guid uniqueID)
+        {
+            try
+            {
+                if (user == null) return;
+                var onList = GetAll();
+                bool isadd = false;
+                var onUser = onList.Find(p => p.User.ID == user.ID);
+                if (onUser == null)
+                {
+                    onUser = new OnlineUsers();
+                    isadd = true;
+                }
+                onUser.User = user;
+                onUser.ID = user.ID;
+                onUser.ClientInfo = string.Concat("操作系统：", Utility.Tools.GetOSName(), "浏览器：", Utility.Tools.GetBrowse());
+                onUser.IP = Utility.Tools.GetIPAddress();
+                onUser.LastPage = "";
+                onUser.LoginTime = DateTime.Now;
+                onUser.UniqueID = uniqueID;
+                if (isadd)
+                    onList.Add(onUser);
+                set(onList);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        /// <summary>
+        /// 删除一个在线用户
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public bool Remove(Guid id)
+        {
+            var list = GetAll();
+            var user = list.Find(p => p.UniqueID == id);
+            if (user != null)
+            {
+                list.Remove(user);
+            }
+            set(list);
+            return true;
+        }
+
+        /// <summary>
+        /// 清除所有在线用户
+        /// </summary>
+        /// <returns></returns>
+        public bool RemoveAll()
+        {
+            var list = new List<OnlineUsers>();
+            MyCache.IO.Opation.Set(key, list);
+            return true;
+        }
+
+        /// <summary>
+        /// 查询一个在线用户实体
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public OnlineUsers Get(Guid id)
+        {
+            var list = GetAll();
+            return list.Find(p => p.UniqueID == id);
+        }
+        #endregion
     }
 }

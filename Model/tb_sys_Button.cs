@@ -7,7 +7,7 @@ using TXF.Attributes;
 
 namespace Model
 {
-    public class tb_sys_Button:BaseRepository
+    public class tb_sys_Button : BaseRepository
     {
         private int m_ID;
         /// <summary>
@@ -79,5 +79,10 @@ namespace Model
             get { return m_Remark; }
             set { m_Remark = value; }
         }
+
+        /// <summary>
+        /// 判断按钮是否被选中(不能属性头)
+        /// </summary>
+        public bool IsChecked { get; set; }
     }
 }

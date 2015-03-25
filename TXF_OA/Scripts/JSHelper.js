@@ -26,6 +26,7 @@ $.extend({
             url: params.url || "",
             data: params.data || {},
             cache: params.cache || false,
+            async: params.async || false,
             error: function () { params.error || alert('执行失败.', 'warning'); },
             success: function (obj) { params.success(obj) }
         });
@@ -172,13 +173,10 @@ function getUrlParam1(name) {
     return ""; //返回参数值
 }
 //调整datagrid大小
-function datagridResize(jq) {
-    jq.layout('panel', 'center').panel({
+function datagridResize() {
+    $("#body_layout").layout('panel', 'center').panel({
         onResize: function (w, h) {
             $("[name='datagrid']").datagrid("resize", { width: w });
-//            setTimeout(function () {
-//                $("[name='datagrid']").datagrid("resize", { width: w });
-//            }, 0);
         }
     });
 }
@@ -233,11 +231,11 @@ function showMyDialog1(jq, title, icon, href, name, modal, fn, minimizable, maxi
             var iframe = document.getElementById(name);
             if (iframe.attachEvent) {
                 iframe.attachEvent("onload", function () {
-                    hideMask();
+                    hideMask(jq);
                 });
             } else {
                 iframe.onload = function () {
-                    hideMask();
+                    hideMask(jq);
                 };
             }
         },
@@ -334,8 +332,9 @@ function clearFrame($frame) {
     }
 }
 function showMask(jq) {
+    jq.find('.datagrid-mask').remove();
     $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: "100%" }).appendTo(jq);
 }
-function hideMask() {
-    $('.datagrid-mask').remove();
+function hideMask(jq) {
+    jq.find('.datagrid-mask').remove();
 }

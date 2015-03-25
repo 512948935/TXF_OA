@@ -59,6 +59,7 @@
     <Compile Include="tb_item_UserDAL.cs" />
     <Compile Include="tb_sys_ItemDAL.cs" />
     <Compile Include="tb_sys_ModuleDAL.cs" />
+    <Compile Include="tb_sys_Role_PermissionDAL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Attributes\TXF.Attributes.csproj">

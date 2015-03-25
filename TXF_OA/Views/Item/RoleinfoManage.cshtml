@@ -56,7 +56,7 @@
             $("#btnexport").parent().next().hide();
         }
         //调整datagrid大小
-        datagridResize(parent.$("#div_layout"));
+        datagridResize();
         //创建过滤查询对话框
         getWhereColumns($("#tt_grid"), function (col) {
             var href = '/Item/CreateWhereHTML?col=' + col;
@@ -82,7 +82,7 @@
         var page = p.data("pagination").options.pageNumber;
         var size = p.data("pagination").options.pageSize;
         backUrl = '/Item/RoleinfoManage?where=' + param.where + '&page=' + page + '&pagesize=' + size;
-        parent.hideMask(); 
+        parent.hideMask(parent.$("#ul_tree")); 
     }
     var toolbar = [{
         id: 'btnadd',
@@ -90,7 +90,6 @@
         iconCls: 'icon-add',
         handler: function () {
             document.location = '/Item/RoleinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
-            showMask(parent.$("#div_layout_west"));
         }
     }, '-', {
         id: 'btnedit',
@@ -100,7 +99,18 @@
             var selections = $('#tt_grid').datagrid('getSelections');
             if (selections.length == 1) {
                 document.location = '/Item/RoleinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
-                showMask(parent.$("#div_layout_west"));
+            }
+            else
+                jqAlert('请选择一条记录！', 'warning')
+        }
+    }, '-', {
+        id: 'toolbar_role',
+        text: '权限设置',
+        iconCls: 'icon-right',
+        handler: function () {
+            var selections = $('#tt_grid').datagrid('getSelections');
+            if (selections.length == 1) {
+                document.location = '/Item/RoleSetting?name=' + escape(selections[0].ItemName) + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
             }
             else
                 jqAlert('请选择一条记录！', 'warning')

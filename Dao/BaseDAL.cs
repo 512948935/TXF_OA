@@ -90,7 +90,7 @@ namespace Dao
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public virtual List<T> SelectList(string where = "", string sort = "")
+        public virtual List<T> SelectList(string where = "1=1",string sort = "")
         {
             return ORM.ModelOperate<T>.Instance().SelectList(where, sort);
         }
@@ -100,7 +100,7 @@ namespace Dao
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public virtual List<T> SelectList(List<WhereField> where = null, string sort = "")
+        public virtual List<T> SelectList(List<WhereField> where, string sort = "")
         {
             return ORM.ModelOperate<T>.Instance().SelectList(where, sort);
         }
@@ -111,9 +111,9 @@ namespace Dao
         /// <param name="where"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public virtual DataTable SelectDataTable(string field = "", string where = "", string sort = "")
+        public virtual DataTable SelectDataTable(string where = "1=1", string field = "", string sort = "")
         {
-            return ORM.ModelOperate<T>.Instance().SelectDataTable(field, where, sort);
+            return ORM.ModelOperate<T>.Instance().SelectDataTable(where, field, sort);
         }
         /// <summary>
         /// 查找数据
@@ -124,9 +124,9 @@ namespace Dao
         /// <param name="field"></param>
         /// <param name="listWhere"></param>
         /// <returns></returns>
-        public virtual DataTable SelectDataTable(string field = "", List<WhereField> listWhere = null, string sort = "")
+        public virtual DataTable SelectDataTable(List<WhereField> listWhere, string field, string sort = "")
         {
-            return ORM.ModelOperate<T>.Instance().SelectDataTable(field, listWhere, sort);
+            return ORM.ModelOperate<T>.Instance().SelectDataTable(listWhere, field, sort);
         }
         /// <summary>
         /// 获取数据总条数

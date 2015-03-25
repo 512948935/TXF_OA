@@ -10,24 +10,33 @@ using Model;
 
 namespace TXF_OA
 {
-    public class HomeController : BaseController
+    public class HomeController:Controller
     {
         [Inject]
         public Itb_sys_ModuleBLL moduleBLL { get; set; }
+        [Inject]
+        public Itb_item_UserBLL userBLL { get; set; }
 
         public ActionResult Index()
         {
-            if (CurrentUser != null)
+            HttpCookie cookie = Request.Cookies["ID"];
+            if (cookie != null)
             {
-                ViewBag.UserName = CurrentUser.ItemName;
-                ViewBag.FaceSrc = CurrentUser.FaceSrc ?? "/Content/images/face_1.gif";
+                OnlineUsers onlineUser = userBLL.Get(new Guid(cookie["uniqueID"] ?? ""));
+                if (onlineUser != null)
+                {
+                    ViewBag.UserName = onlineUser.User.ItemName;
+                    ViewBag.FaceSrc = onlineUser.User.FaceSrc ?? "/Content/images/face_1.gif";
+                }
+                else
+                    Response.Redirect("/Account/Login");
             }
             return View();
         }
         #region 加载菜单
         public string GetAccordionData()
         {
-            DataTable dt = moduleBLL.SelectDataTable(where: "ParentID=0", sort: "ModuleCode");
+            DataTable dt = moduleBLL.SelectDataTable(where: "ParentID=0 AND IsDisabled=0", sort: "ModuleCode");
             string jsonStr = "[]";
             if (dt.Rows.Count > 0)
             {
@@ -44,7 +53,7 @@ namespace TXF_OA
         public string GetTreeData(int id = 0)
         {
             if (dt == null)
-                dt = moduleBLL.SelectDataTable(where: "1=1", sort: "ModuleCode");
+                dt = moduleBLL.SelectDataTable(where: "IsDisabled=0", sort: "ModuleCode");
             DataRow[] rows = dt.Select("ParentID=" + id + "");
             string jsonStr = "[]";
             if (rows.Length > 0)
@@ -52,7 +61,7 @@ namespace TXF_OA
                 jsonStr = "[";
                 foreach (DataRow row in rows)
                 {
-                    string pageUrl = row["PageUrl"].ToString();
+                    string pageUrl = Convert.ToString(row["PageUrl"]);
                     if (Convert.ToInt32(row["IsItem"]) > 0)
                         pageUrl += "?isRedirect=true";
                     jsonStr += ("{\"id\":" + row["ID"] + ",\"text\":\"" + row["ModuleName"] + "\",\"state\":\"" + row["NodeState"] + "\",\"iconCls\":\"" + row["Icon"] + "\""
@@ -68,17 +77,6 @@ namespace TXF_OA
                 jsonStr = jsonStr.TrimEnd(',') + "]";
             }
             return jsonStr;
-        }
-        #endregion
-
-        #region 注销
-        public ActionResult LogOut()
-        {
-            HttpCookie cookie = new HttpCookie("Account");
-            cookie.Expires = DateTime.Now.Add(new TimeSpan(-1, 0, 0, 0));
-            Response.AppendCookie(cookie);
-            Session["User"] = null;
-            return Redirect("/Account/Login");
         }
         #endregion
     }

@@ -13,5 +13,11 @@ namespace IBLL
         DataRow GetModel(int id);
         int CheckItemNo(int id, string itemNo);
         void DeleteDepinfo(string id);
+
+        List<OnlineUsers> GetAll();
+        void AddToCache(tb_item_User user, Guid uniqueID);
+        bool Remove(Guid id);
+        bool RemoveAll();
+        OnlineUsers Get(Guid id);
     }
 }

@@ -16,6 +16,7 @@ E:\GitHub\TXF_OA\TXF_OA\bin\Ninject.Web.Mvc.dll
 E:\GitHub\TXF_OA\TXF_OA\bin\WebActivator.dll
 E:\GitHub\TXF_OA\TXF_OA\bin\WebActivatorEx.dll
 E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.IO.dll
+E:\GitHub\TXF_OA\TXF_OA\bin\Utility.dll
 E:\GitHub\TXF_OA\TXF_OA\bin\TXF.Attributes.dll
 E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.Interface.dll
 E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.Factory.dll
@@ -31,6 +32,7 @@ E:\GitHub\TXF_OA\TXF_OA\bin\Ninject.Extensions.Conventions.xml
 E:\GitHub\TXF_OA\TXF_OA\bin\Ninject.Web.Common.xml
 E:\GitHub\TXF_OA\TXF_OA\bin\Ninject.Web.Mvc.xml
 E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.IO.pdb
+E:\GitHub\TXF_OA\TXF_OA\bin\Utility.pdb
 E:\GitHub\TXF_OA\TXF_OA\bin\TXF.Attributes.pdb
 E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.Interface.pdb
 E:\GitHub\TXF_OA\TXF_OA\bin\MyCache.Factory.pdb
