@@ -198,7 +198,7 @@
                          $("#t_JoinTime").datebox('setValue', dateFormatter(model.JoinTime));
                      }
                      else
-                         jqAlert('数据加载失败:' + data, 'error')
+                         jqAlert('数据加载失败:' + data.error, 'error')
                  }
              });
          }
@@ -216,7 +216,7 @@
                                  jqAlert('保存成功.', 'info', '/Item/UserinfoManage?fromCache=false');
                          }
                          else {
-                             jqAlert('保存失败:' + data, 'error')
+                             jqAlert('保存失败:' + data.error, 'error')
                          }
                      }
                  });

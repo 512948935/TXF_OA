@@ -44,7 +44,7 @@ namespace Dao
                           ,a.IsChecked
 	                      ,b.PageUrl
                      FROM  dbo.tb_sys_Role_Permission a
-		                   JOIN dbo.tb_sys_Module b ON b.ID=a.ModuleID", roleID);
+		                   JOIN dbo.tb_sys_Module b ON b.ID=a.ModuleID WHERE a.RoleID={0}", roleID);
                 return DataProvider.DBHelper.ExecuteDataTable(CommandType.Text, sql);
             }
             catch (Exception ex)

@@ -20,23 +20,25 @@ namespace TXF_OA
         public ActionResult Index()
         {
             HttpCookie cookie = Request.Cookies["ID"];
+            OnlineUsers onlineUser = null;
             if (cookie != null)
             {
-                OnlineUsers onlineUser = userBLL.Get(new Guid(cookie["uniqueID"] ?? ""));
+                onlineUser = userBLL.Get(new Guid(cookie["uniqueID"] ?? ""));
                 if (onlineUser != null)
                 {
-                    ViewBag.UserName = onlineUser.User.ItemName;
-                    ViewBag.FaceSrc = onlineUser.User.FaceSrc ?? "/Content/images/face_1.gif";
+                    ViewData["UserName"] = onlineUser.User.ItemName;
+                    ViewData["FaceSrc"] = onlineUser.User.FaceSrc;
+                    ViewData["RoleID"] = onlineUser.User.RoleID ?? 0;
                 }
                 else
-                    Response.Redirect("/Account/Login");
+                    return Redirect("/Account/Login");
             }
             return View();
         }
         #region 加载菜单
-        public string GetAccordionData()
+        public string GetAccordionData(int RoleID = 0)
         {
-            DataTable dt = moduleBLL.SelectDataTable(where: "ParentID=0 AND IsDisabled=0", sort: "ModuleCode");
+            DataTable dt = moduleBLL.GetModuleByRoleID("ParentID=0 AND RoleID=" + RoleID);
             string jsonStr = "[]";
             if (dt.Rows.Count > 0)
             {
@@ -53,7 +55,7 @@ namespace TXF_OA
         public string GetTreeData(int id = 0)
         {
             if (dt == null)
-                dt = moduleBLL.SelectDataTable(where: "IsDisabled=0", sort: "ModuleCode");
+                dt = moduleBLL.GetModuleByRoleID("RoleID=12");
             DataRow[] rows = dt.Select("ParentID=" + id + "");
             string jsonStr = "[]";
             if (rows.Length > 0)
@@ -71,12 +73,18 @@ namespace TXF_OA
                               + ",\"ModuleName\":\"" + row["ModuleName"] + "\""
                               + ",\"PageUrl\":\"" + pageUrl + "\""
                               + ",\"Icon\":\"" + row["Icon"] + "\""
-                              + ",\"IsDisabled\":\"" + row["IsDisabled"] + "\""
                               + "}},");
                 }
                 jsonStr = jsonStr.TrimEnd(',') + "]";
             }
             return jsonStr;
+        }
+        #endregion
+
+        #region 我的桌面
+        public ActionResult MyDesk()
+        {
+            return View();
         }
         #endregion
     }

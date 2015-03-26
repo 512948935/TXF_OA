@@ -29,6 +29,10 @@ namespace BLL
         {
             myDao.SaveModule(module, code);
         }
+        public DataTable GetModuleByRoleID(string where)
+        {
+            return myDao.GetModuleByRoleID(where);
+        }
         public void UpdateNodeState(string state, int id)
         {
             myDao.UpdateNodeState(state, id);

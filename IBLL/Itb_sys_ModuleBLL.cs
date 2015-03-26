@@ -10,6 +10,7 @@ namespace IBLL
     public interface Itb_sys_ModuleBLL : IBaseBLL<tb_sys_Module>
     {
         void SaveModule(tb_sys_Module module, string code);
+        DataTable GetModuleByRoleID(string where);
         void UpdateNodeState(string state, int id);
         void DeleteModule(string code);
         /// <summary>

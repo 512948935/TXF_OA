@@ -94,7 +94,7 @@
                             parent.$("#div_win_edit").window("close");
                         }
                         else
-                            jqAlert('保存失败:' + data, 'error')
+                            jqAlert('保存失败:' + data.error, 'error')
                     }
                 });
             }
@@ -121,7 +121,7 @@
                         createButtons($("#t_Button"), $("#t_ButtonID"), data.buttons || []);
                     }
                     else {
-                        jqAlert('数据加载失败:' + data, 'error')
+                        jqAlert('数据加载失败:' + data.error, 'error')
                     }
                 }
             });

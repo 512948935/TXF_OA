@@ -51,20 +51,8 @@
     }
     var url = param.getUrl();
     $(function () {
-        if (getUrlParam("choose") == "True") {
-            $("#btnadd").hide();
-            $("#btnadd").parent().next().hide();
-            $("#btnedit").hide();
-            $("#btnedit").parent().next().hide();
-            $("#btnperson").hide();
-            $("#btnperson").parent().next().hide();
-            $("#btnheader").hide();
-            $("#btnheader").parent().next().hide();
-            $("#btnremove").hide();
-            $("#btnremove").parent().next().hide();
-            $("#btnexport").hide();
-            $("#btnexport").parent().next().hide();
-        }
+        //获取工具条
+        getTools();
         //调整datagrid大小
         datagridResize();
         //创建过滤查询对话框
@@ -119,99 +107,87 @@
         backUrl = '/Item/UserinfoManage?where=' + param.where + '&page=' + page + '&pagesize=' + size;
         parent.hideMask(parent.$("#ul_tree"));
     }
-    var toolbar = [{
-        id: 'btnadd',
-        text: '添加',
-        iconCls: 'icon-add',
-        handler: function () {
-            document.location = '/Item/UserinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
-        }
-    }, '-', {
-        id: 'btnedit',
-        text: '修改',
-        iconCls: 'icon-edit',
-        handler: function () {
-            var selections = $('#tt_grid').datagrid('getSelections');
-            if (selections.length == 1) {
-                document.location = '/Item/UserinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
-            }
-            else
-                jqAlert('请选择一条记录！', 'warning')
-        }
-    }, '-', {
-        id: 'btnperson',
-        text: '设置人事信息',
-        iconCls: 'icon-edit',
-        handler: function () {
-            var selections = $('#tt_grid').datagrid('getSelections');
-            if (selections.length == 1) {
-                document.location = '/Item/UserPersonalInfo?backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
-            }
-            else
-                jqAlert('请选择一条记录！', 'warning')
-        }
-    }, '-', {
-        id: "btnheader",
-        text: '设置头像',
-        iconCls: 'icon-header',
-        handler: function () {
-            var selections = $('#tt_grid').datagrid('getSelections');
-            if (selections.length == 1) {
-                $("#div_dialog_header").dialog("open");
-                showMask(parent.$("#ul_tree"));
-            }
-            else
-                jqAlert('请选择一条记录！', 'warning')
-        }
-    }, '-', {
-        id: 'btnremove',
-        text: '删除',
-        iconCls: 'icon-remove',
-        handler: function () {
-            var selections = $('#tt_grid').datagrid('getSelections');
-            if (selections.valueOf() == '')
-                jqAlert('请选择一条记录！', 'warning')
-            else {
-                var id = "(";
-                for (var i = 0; i < selections.length; i++) {
-                    id += selections[i].ID + ",";
+    function getTools() {
+        $.ajaxGet({
+            url: "/Item/GettPermissionButtons?choose=" + getUrlParam("choose"),
+            data: { pageUrl: "/Item/UserinfoManage" },
+            success: function (data) {
+                if (data.status == 1) {
+                    if (data.buttons != "")
+                        $("#tt_grid").datagrid("addToolbarItem", eval(data.buttons));
                 }
-                id += "-1)";
-                uiConfirm("您确认要删除当前信息吗.", function () {
-                    $.post("/Item/DelUserinfo", { "ID": id }, function (data) {
-                        if (data.status == 1) {
-                            param.fromCache = false;
-                            $('#tt_grid').datagrid('options').url = param.getUrl();
-                            $("#tt_grid").datagrid('reload');
-                        }
-                        else
-                            jqAlert('删除失败:' + data, 'error')
-                    });
+                else
+                    jqAlert('按钮加载失败' + data, 'warning')
+            }
+        });
+    }
+
+    // #region 按钮功能
+    function toolbar_add() {
+        document.location = '/Item/UserinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
+    }
+    function toolbar_edit() {
+        var selections = $('#tt_grid').datagrid('getSelections');
+        if (selections.length == 1) {
+            document.location = '/Item/UserinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=' + selections[0].ID;
+        }
+        else
+            jqAlert('请选择一条记录！', 'warning')
+    }
+    function toolbar_delete() {
+        var selections = $('#tt_grid').datagrid('getSelections');
+        if (selections.valueOf() == '')
+            jqAlert('请选择一条记录！', 'warning')
+        else {
+            var id = "(";
+            for (var i = 0; i < selections.length; i++) {
+                id += selections[i].ID + ",";
+            }
+            id += "-1)";
+            uiConfirm("您确认要删除当前信息吗.", function () {
+                $.post("/Item/DelUserinfo", { "ID": id }, function (data) {
+                    if (data.status == 1) {
+                        param.fromCache = false;
+                        $('#tt_grid').datagrid('options').url = param.getUrl();
+                        $("#tt_grid").datagrid('reload');
+                    }
+                    else
+                        jqAlert('删除失败:' + data, 'error')
                 });
-            }
+            });
         }
-    }, '-',
-            {
-                id: 'btnsearch',
-                text: '查询',
-                iconCls: 'icon-search',
-                handler: function () {
-                    $('#div_dialog_search').dialog('open');
-                }
-            }, '-', {
-                id: "btnexport",
-                text: '导出',
-                iconCls: 'icon-excelcss',
-                handler: function () {
-                    getExportColumns($("#tt_grid"), function (data) {
-                        if (data != "") {
-                            $("#tt").datagrid('reload');
-                            var url = "/Item/ExportUserinfo?title=" + escape("公司信息") + "&columns=" + data;
-                            window.open(url);
-                        }
-                    });
-                }
-            }];
+    }
+    function toolbar_search() {
+        $('#div_dialog_search').dialog('open');
+    }
+    function toolbar_export() {
+        getExportColumns($("#tt_grid"), function (data) {
+            if (data != "") {
+                $("#tt").datagrid('reload');
+                var url = "/Item/ExportUserinfo?title=" + escape("公司信息") + "&columns=" + data;
+                window.open(url);
+            }
+        });
+    }
+    function toolbar_person() {
+        var selections = $('#tt_grid').datagrid('getSelections');
+        if (selections.length == 1) {
+            $("#div_dialog_header").dialog("open");
+            showMask(parent.$("#ul_tree"));
+        }
+        else
+            jqAlert('请选择一条记录！', 'warning')
+    }
+    function toolbar_header() {
+        var selections = $('#tt_grid').datagrid('getSelections');
+        if (selections.length == 1) {
+            $("#div_dialog_header").dialog("open");
+            showMask(parent.$("#ul_tree"));
+        }
+        else
+            jqAlert('请选择一条记录！', 'warning')
+    }
+    //#endregion
     var boolFormatter = function (value) {
         if (value == "True") return "是"
         return "否";

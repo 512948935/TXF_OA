@@ -82,8 +82,10 @@
             url: "/Item/GettPermissionButtons",
             data: { pageUrl: "/Item/CompanyinfoManage" },
             success: function (data) {
-                if (data.status == 1)
-                    $("#tt_grid").datagrid("addToolbarItem", eval(data.buttons));
+                if (data.status == 1) {
+                    if (data.buttons != "")
+                        $("#tt_grid").datagrid("addToolbarItem", eval(data.buttons));
+                }
                 else
                     jqAlert('按钮加载失败' + data, 'warning')
             }

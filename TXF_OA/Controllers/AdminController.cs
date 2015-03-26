@@ -48,7 +48,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+                return Json(new { status = -1, error = ex.Message });
             }
         }
         //删除模块下面的页面信息
@@ -107,10 +107,9 @@ namespace TXF_OA
             try
             {
                 tb_sys_Module module = moduleBLL.SelectT("ID=" + id);
-                Dictionary<int, tb_sys_Button> buttons = null;
+                Dictionary<int, tb_sys_Button> buttons = new Dictionary<int, tb_sys_Button>(); ;
                 if (!string.IsNullOrEmpty(module.ButtonID))
                 {
-                    buttons = new Dictionary<int, tb_sys_Button>();
                     List<tb_sys_Button> buttonList = buttonBLL.SelectList("ID IN (" + module.ButtonID + ") AND Marks=1");
                     string[] strs = module.ButtonID.Split(',');
                     for (int i = 0; i < strs.Length; i++)
@@ -122,7 +121,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+                return Json(new { status = -1, error = ex.Message });
             }
         }
         [HttpPost]
@@ -136,7 +135,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+                return Json(new { status = -1, error = ex.Message });
             }
         }
         #endregion

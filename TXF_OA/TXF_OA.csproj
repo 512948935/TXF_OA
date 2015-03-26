@@ -132,6 +132,7 @@
     <Content Include="Content\GooFlow\jquery.min.js" />
     <Content Include="Content\GooFlow\json2.js" />
     <Content Include="Content\images\1.jpg" />
+    <Content Include="Content\images\123.png" />
     <Content Include="Content\images\2.jpg" />
     <Content Include="Content\images\3.jpg" />
     <Content Include="Content\images\AddAll.gif" />
@@ -1082,6 +1083,7 @@
     <Content Include="Views\Item\ButtonInfoManage.cshtml" />
     <Content Include="Views\Item\ButtoninfoEdit.cshtml" />
     <Content Include="Views\Item\RoleSetting.cshtml" />
+    <Content Include="Views\Home\MyDesk.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj">

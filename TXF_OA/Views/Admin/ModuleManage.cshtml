@@ -91,7 +91,7 @@
         iconCls: 'icon-add',
         handler: function () {
             //子窗体的form
-            selectedID = 0;
+            selectedID = -1;
             $('#div_win_edit').window('open');
         }
     }, '-', {
@@ -301,11 +301,16 @@
         //初始化页面编辑对话框
         showMyWindow($("#div_win_edit"), '编辑页面信息', 'icon-edit', "", 'frame1', true, false, true).window({
             onOpen: function () {
-                var src = "/Admin/ModuleEdit?ID=" + selectedID;
-                if ($("#t_PreCode").val() != "")
-                    src += "&Code=" + $("#t_PreCode").val() + ".";
-                if ($("#frame1").attr("src") != src)
+                var src = "/Admin/ModuleEdit";
+                if (selectedID == -1) {
+                    src += "?Code=" + $("#t_PreCode").val() + ".";
                     $("#frame1").attr("src", src);
+                }
+                else {
+                    var src = src + "?ID=" + selectedID;
+                    if ($("#frame1").attr("src") != src)
+                        $("#frame1").attr("src", src);
+                }
             }
         })
         //初始化过滤查询对话框

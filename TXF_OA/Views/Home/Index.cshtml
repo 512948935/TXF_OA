@@ -15,8 +15,10 @@
                  <table cellpadding="0" cellspacing="0" border="0" width="100%">
                      <tr style="background:url(../../Content/images/BackWhite.gif)">
                         <td width="185" height="27" style="background:url(@Url.Content("/images/BackWhite.gif")">
-                            &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src=@ViewBag.FaceSrc alt="头像" />
-                            &nbsp;<strong><span id="userName" style="color: #ffffff">@ViewBag.UserName</span></strong>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src=@ViewData["FaceSrc"] alt="头像" />
+                            &nbsp;<strong><span id="userName" style="color: #ffffff">@ViewData["UserName"]</span>
+                                          <input type="hidden" id="t_RoleID" value= @ViewData["RoleID"] />
+                                  </strong>
                             &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src="/Content/images/U01.gif" alt="联机" />
                             &nbsp;<strong><span style="color: #ffffff">联机</span></strong>
                         </td>
@@ -42,11 +44,11 @@
                                 <img alt="注销用户" src="../../Content/images/login.gif"/>&nbsp;注销</a>&nbsp;&nbsp;&nbsp;
                           </td>
                     </tr>
-             </table>
-    </div>
+                   </table>
+           </div>
     <!-------------------------------左边----------------------------------------->
-    <div id="div_west" data-options="region:'west',split:true" title="菜单导航" iconCls='tu1419' style="width:250px;">
-        <div id="div_accordion" class="easyui-accordion" data-options="fit:true,border:false"></div>
+    <div data-options="region:'west',split:true" title="菜单导航" iconCls='tu1419' style="width:220px;">
+        <div id="div_accordion" class="easyui-accordion" data-options="fit:true,border:true"></div>
     </div>
     <!-------------------------------中间----------------------------------------->
     <div data-options="region:'center'" style="overflow:hidden">
@@ -58,26 +60,30 @@
             <div id="mm_closeall" name="2">关闭所有标签页</div>
         </div>
     </div>
+    <!-------------------------------右边----------------------------------------->
+    <div data-options="region:'east',split:true" title="消息列表(1)" iconCls='tu0606' style="width:250px;">
+    </div>
     <!-------------------------------底部----------------------------------------->
     <div data-options="region:'south',border:false" id="footer"></div>
 </div>
 
  <script type="text/javascript">
      $(function () {
+         $('#div_layout').layout('collapse', 'east'); 
          //设置时间
          $('#date').html(currentDate);
          $('#time').html(currentTime);
          var displayTime = window.setInterval(function () { $('#time').html(currentTime) }, 1000);
          //加载Accordion菜单
          $.ajaxGet({
-             url: '/Home/GetAccordionData',
+             url: "/Home/GetAccordionData?RoleID=" + $("#t_RoleID").val(),
              async: false,
              success: function (data) {
                  $.each(data, function (i, item) {
                      $("#div_accordion").accordion("add", item);
                      $("#" + item.id).html('<ul id="ul_tree_' + item.id + '" style="margin:5px;"></ul>');
                      $("#ul_tree_" + item.id).tree({
-                         url: "/Home/GetTreeData?id=" + item.id,
+                         url: "/Home/GetTreeData?id=" + item.id + "&RoleID=" + $("#t_RoleID").val(),
                          async: false,
                          cache: false,
                          onClick: function (node) {
@@ -114,7 +120,7 @@
                  operateTabs(item.name);
              }
          });
-         addTabs("我的桌面", "", "tu1112", "00", false);
+         addTabs("我的桌面", "/Home/MyDesk", "tu1112", "00", false);
          $("#ul_tree_00 li a").click(function () {
              var tabTitle = $(this).text();
              var id = this.id;

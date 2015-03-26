@@ -31,7 +31,7 @@
                  $.ajaxPost({
                      url: "/Account/LogIn",
                      data: queryParams,
-                     dataType: "text",
+                     dataType:'text',
                      success: function (msg) {
                          if (msg == "success")
                              document.location = "/Home/Index?UserName=" + $('#txtUserName').val();

@@ -15,6 +15,11 @@ namespace IDao
         /// </summary>
         void UpdateNodeState(string state, int id);
         /// <summary>
+        /// 根据权限获取菜单
+        /// </summary>
+        /// <param name="roleID"></param>
+        DataTable GetModuleByRoleID(string where);
+        /// <summary>
         /// 删除一条数据
         /// </summary>
         void DeleteModule(string code);

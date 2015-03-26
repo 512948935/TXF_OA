@@ -25,6 +25,30 @@ namespace Dao
                 throw ex;
             }
         }
+        public DataTable GetModuleByRoleID(string where)
+        {
+            try
+            {
+                string sql = string.Format(@"SELECT	* FROM	(SELECT	a.ID
+			                                                ,a.ParentID
+			                                                ,a.NodeState
+			                                                ,a.ModuleCode
+			                                                ,a.ModuleName
+			                                                ,a.Icon
+			                                                ,a.PageUrl
+			                                                ,a.IsItem
+			                                                ,b.RoleID
+		                                                     FROM dbo.tb_sys_Module a
+				                                             JOIN dbo.tb_sys_Role_Permission b ON b.ModuleID=a.ID
+		                                                     WHERE	IsDisabled=0 AND b.IsChecked=1) tt WHERE {0}
+                                            ORDER BY ModuleCode", where);
+                return DataProvider.DBHelper.ExecuteDataTable(CommandType.Text, sql);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         /// <summary>
         /// 删除一条数据
         /// </summary>

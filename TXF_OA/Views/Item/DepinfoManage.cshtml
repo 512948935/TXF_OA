@@ -85,13 +85,16 @@
             url: "/Item/GettPermissionButtons?choose=" + getUrlParam("choose"),
             data: { pageUrl: "/Item/CompanyinfoManage" },
             success: function (data) {
-                if (data.status == 1)
-                    $("#tt_grid").datagrid("addToolbarItem", eval(data.buttons));
+                if (data.status == 1) {
+                    if (data.buttons != "")
+                        $("#tt_grid").datagrid("addToolbarItem", eval(data.buttons));
+                }
                 else
                     jqAlert('按钮加载失败' + data, 'warning')
             }
         });
     }
+
     // #region 按钮功能
     function toolbar_add() {
         document.location = '/Item/DepinfoEdit?code=' + param.code + '&backUrl=' + escape(backUrl) + '&ID=0';
@@ -140,6 +143,7 @@
         });
     }
     //#endregion
+
     var boolFormatter = function (value) {
         if (value == "True") return "是"
         return "否";

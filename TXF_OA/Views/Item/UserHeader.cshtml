@@ -64,6 +64,8 @@
                           if (model.AvatarSrc != "")
                               $("#preview_large").attr("src", model.AvatarSrc);
                       }
+                      else
+                          jqAlert('加载失败:' + data.error, 'error')
                   }
               })
           }

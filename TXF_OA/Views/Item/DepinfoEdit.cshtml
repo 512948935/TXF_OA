@@ -108,7 +108,7 @@
                                   jqAlert('保存成功.', 'info', '/Item/DepinfoManage?fromCache=false');
                           }
                           else {
-                              jqAlert('保存失败:' + data, 'error')
+                              jqAlert('保存失败:' + data.error, 'error')
                           }
                       }
                   });
@@ -143,7 +143,7 @@
                           $("#t_Suff_Code").val(itemNo.substr(len));
                       }
                       else
-                          jqAlert('数据加载失败:' + data, 'error')
+                          jqAlert('数据加载失败:' + data.error, 'error')
                   }
               });
           }

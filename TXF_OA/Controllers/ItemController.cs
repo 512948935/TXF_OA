@@ -68,7 +68,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         //导出
@@ -100,7 +100,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         [HttpPost, ValidateInput(false)]
@@ -119,7 +119,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         #endregion
@@ -160,7 +160,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         //导出
@@ -192,7 +192,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         [HttpPost, ValidateInput(false)]
@@ -211,7 +211,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         #endregion
@@ -252,7 +252,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         //导出
@@ -284,7 +284,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         [HttpPost, ValidateInput(false)]
@@ -319,7 +319,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         //TODO:人事信息设置
@@ -343,7 +343,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         public ActionResult SavePersonalInfo(tb_item_User user)
@@ -378,7 +378,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         #endregion
@@ -478,7 +478,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         //导出
@@ -510,7 +510,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         [HttpPost, ValidateInput(false)]
@@ -529,7 +529,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         #endregion
@@ -559,7 +559,7 @@ namespace TXF_OA
                         buttons.Add(i, buttonList.Where(c => c.ID == Convert.ToInt32(strs[i])).FirstOrDefault());
                     }
                 }
-                string buttonJson = "[]";
+                string buttonJson = "";
                 if (buttons != null)
                 {
                     buttonJson = "[";
@@ -575,12 +575,12 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         public ActionResult GetPermissions(int roleID)
         {
-            List<tb_sys_Module> modules = moduleBLL.SelectList();
+            List<tb_sys_Module> modules = moduleBLL.SelectList(sort: "ModuleCode");
             DataTable permissions = role_PermissionBLL.GetPermissions(false, roleID);
             DataTable newTable = CreateTable();
             foreach (tb_sys_Module module in modules)
@@ -636,7 +636,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         public string CreateButtons(int id, Dictionary<int, tb_sys_Button> buttons)
@@ -737,7 +737,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         //导出
@@ -769,7 +769,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         [HttpPost, ValidateInput(false)]
@@ -788,7 +788,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         #endregion
@@ -819,7 +819,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         public ActionResult DeleteItem(string NodeCode)
@@ -831,7 +831,7 @@ namespace TXF_OA
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+               return Json(new { status = -1, error = ex.Message });
             }
         }
         /// <summary>

@@ -169,7 +169,7 @@ $.extend($.fn.layout.paneldefaults, {
             if (popts.title) {
                 var vTitle = popts.title;
                 if (dir == "east" || dir == "west") {
-                    var vTitle = popts.title.split('').join('<br/>');
+                    var vTitle = popts.title.replace("(", "︵").replace(")", "︶").split('').join('<br/>');
                     pDiv.find('.panel-body').html(vTitle);
                 } else {
                     $('.layout-button-' + btnDir).closest('.layout-expand').find('.panel-title')
