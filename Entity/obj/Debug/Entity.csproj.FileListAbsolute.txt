@@ -13,3 +13,4 @@ E:\GitHub\TXF_OA\Entity\bin\Debug\Entity.dll
 E:\GitHub\TXF_OA\Entity\bin\Debug\Entity.pdb
 E:\GitHub\TXF_OA\Entity\obj\Debug\Entity.dll
 E:\GitHub\TXF_OA\Entity\obj\Debug\Entity.pdb
+E:\GitHub\TXF_OA\Entity\obj\Debug\Entity.csprojResolveAssemblyReference.cache

@@ -193,9 +193,6 @@
 .window .window-body-noheader {
   border-top-width: 1px;
 }
-.window .panel-body-nobottom {
-  border-bottom-width: 0;
-}
 .window .window-header .panel-icon,
 .window .window-header .panel-tool {
   top: 50%;
@@ -228,6 +225,7 @@
   filter: alpha(opacity=40);
   opacity: 0.40;
   font-size: 1px;
+  *zoom: 1;
   overflow: hidden;
 }
 .window,
@@ -246,10 +244,10 @@
 }
 .window,
 .window .window-body {
-  border-color: #ccc;
+  border-color: #ddd;
 }
 .window {
-  background-color: #ffffff;
+  background-color: #daeef5;
 }
 .window-proxy {
   border: 1px dashed #ddd;
@@ -258,11 +256,7 @@
 .window-mask {
   background: #eee;
 }
-.window .panel-footer {
-  border: 1px solid #ddd;
-  position: relative;
-  top: -1px;
-}
+
 .dialog-content {
   overflow: auto;
 }
@@ -2690,33 +2684,30 @@
 .s-btn-active {
   color: #404040;
 }
-.window {
-  background-color: #6caef5;
-}
 
 /*自定义样式*/
 .tablestyle {
-	border-top: 1px solid #ccc;
-	border-right: 1px solid #ccc;
+	border-top: 1px solid #c3d9e0;
+	border-right: 1px solid #c3d9e0;
 	border-collapse: collapse
 }
 
 .tablestyle .td1 {
 	text-align: right;
-	border-bottom: 1px solid #ccc;
-	border-left: 1px solid #ccc;
+	border-bottom: 1px solid #c3d9e0;
+	border-left: 1px solid #c3d9e0;
 }
 
 .tablestyle .td2 {
     height:22px;
 	text-align: left;
-	border-bottom: 1px solid #ccc;
-	border-left: 1px solid #ccc;
+	border-bottom: 1px solid #c3d9e0;
+	border-left: 1px solid #c3d9e0;
 	padding: 1px 1px;
 }
 
 .txt {
-	border: 1px solid #ccc;
+	border: 1px solid #c3d9e0;
 	height: 20px;
 	width: 180px;
 	line-height: 20px;
@@ -2724,7 +2715,7 @@
 }
 
 .txt1 {
-	border: 1px solid #ccc;
+	border: 1px solid #c3d9e0;
 	height: 20px;
 	width: 200px;
 	line-height: 20px;
@@ -2732,7 +2723,7 @@
 }
 
 .txtaa {
-	border: 1px solid #ccc;
+	border: 1px solid #c3d9e0;
 	height: 100px;
 	width: 300px;
 	-moz-border-radius: 5px 5px 5px 5px;
@@ -2742,7 +2733,7 @@
 }
 
 .txtaa1 {
-	border: 1px solid #ccc;
+	border: 1px solid #c3d9e0;
 	height: 100px;
 	width: 300px;
 }
@@ -2750,7 +2741,7 @@
     vertical-align:middle; margin-top:0;
 }
 .txtDiv{
-    border: 1px solid #ccc;
+    border: 1px solid #c3d9e0;
 	height: 100px;
 	width: 184px;
 	-moz-border-radius: 5px 5px 5px 5px;

@@ -221,8 +221,9 @@
         });
         //新增节点
         $("#btnAdd").click(function () {
-            $("#t_ID").val(0);
             $("#form_edit")[0].reset(); //重置表单
+            $("#t_ID").val(0);
+            $("#t_Icon").textbox("setValue","");
             $('#div_dialog_edit').dialog('open');
         });
         //修改节点

@@ -1,7 +1,23 @@
 ﻿@{
     ViewBag.Title = "首页";
 }
-
+<style type="text/css">
+.tree-node{
+   height:20px;
+   padding:2px;
+   }
+.tree-title{
+    color: #333;
+    font-size:12px;
+    font-family:"雅黑";
+   }
+   #div_accordion{
+       background-color:#E0EEEE;
+   }
+   .accordion-body{
+       background-color:transparent;
+   }
+</style>
 <!-------------------------------头部----------------------------------------->
 <div class="easyui-layout" id="div_layout" style="width:100%;height:100%">
     <div data-options="region:'north',border:false" id="header">
@@ -9,11 +25,11 @@
                      <img src="../../Content/images/product.png" alt="Logo" />
                 </div>
                 <div class="h_right">
-                     <span id="date"></span>&nbsp;<img src="../../Content/images/time.gif" alt="时钟"/>
+                     <span id="date"></span>&nbsp;<img src="/Content/images/time.gif" alt="时钟"/>
                      <span id="time"></span>&nbsp;&nbsp;&nbsp;
                  </div>
                  <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                     <tr style="background:url(../../Content/images/BackWhite.gif)">
+                     <tr style="background:url(/Content/images/BackWhite.gif)">
                         <td width="185" height="27" style="background:url(@Url.Content("/images/BackWhite.gif")">
                             &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src=@ViewData["FaceSrc"] alt="头像" />
                             &nbsp;<strong><span id="userName" style="color: #ffffff">@ViewData["UserName"]</span>
@@ -22,24 +38,24 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;<img height="18" width="18" src="/Content/images/U01.gif" alt="联机" />
                             &nbsp;<strong><span style="color: #ffffff">联机</span></strong>
                         </td>
-                        <td >&nbsp;&nbsp;&nbsp;&nbsp;<a class="white" target="rform" href="/Content/NetMail/NetMailShou.aspx">
-                                        <img height="16" src="../../Content/images/TreeImages/webmail.gif" width="16" alt="" />&nbsp;Internet 邮件&nbsp;</a>
-                            &nbsp;&nbsp;<a class="white" target="rform" href="../Meeting/MyMeeting.aspx">
-                                        <img height="16" src="../../Content/images/TreeImages/vmeet.gif" width="16" alt=""/>&nbsp;我的会议&nbsp;</a>                                
-                            &nbsp;&nbsp;<a class="white" target="rform" href="../DocCenter/DocCenter.aspx?Type=个人文件&DirID=0">
-                                        <img height="16" src="../../Content/images/TreeImages/file_folder.gif" width="16" alt=""/>&nbsp;个人文件柜&nbsp;</a>                                
-                            &nbsp;&nbsp;<a class="white" target="rform" href="../LanEmail/LanEmailShou.aspx">
-                                        <img height="16" src="../../Content/images/TreeImages/email.gif" width="16" alt=""/>&nbsp;内部邮件&nbsp;</a> 
-                            &nbsp;&nbsp;<a class="white" target="rform" href="../HR/ShangXiaBanDengJi.aspx">
-                                        <img height="16" src="../../Content/images/TreeImages/attendance.gif" width="16" alt=""/>&nbsp;上下班登记&nbsp;</a>                               
-                            &nbsp;&nbsp;<a class="white" target="rform" href="../WorkFlow/MyWorkFlow.aspx">
-                                        <img height="16" src="../../Content/images/TreeImages/workflow.gif" width="16" alt=""/>&nbsp;我的工作&nbsp;</a>  
+                        <td >&nbsp;&nbsp;&nbsp;&nbsp;<a class="white" target="rform" href="#">
+                                        <img height="16" src="/Content/images/TreeImages/webmail.gif" width="16" alt="" />&nbsp;Internet 邮件&nbsp;</a>
+                            &nbsp;&nbsp;<a class="white" target="rform" href="#">
+                                        <img height="16" src="/Content/images/TreeImages/vmeet.gif" width="16" alt=""/>&nbsp;我的会议&nbsp;</a>                                
+                            &nbsp;&nbsp;<a class="white" target="rform" href="#">
+                                        <img height="16" src="/Content/images/TreeImages/file_folder.gif" width="16" alt=""/>&nbsp;个人文件柜&nbsp;</a>                                
+                            &nbsp;&nbsp;<a class="white" target="rform" href="#">
+                                        <img height="16" src="/Content/images/TreeImages/email.gif" width="16" alt=""/>&nbsp;内部邮件&nbsp;</a> 
+                            &nbsp;&nbsp;<a class="white" target="rform" href="#">
+                                        <img height="16" src="/Content/images/TreeImages/attendance.gif" width="16" alt=""/>&nbsp;上下班登记&nbsp;</a>                               
+                            &nbsp;&nbsp;<a class="white" target="rform" href="#">
+                                        <img height="16" src="/Content/images/TreeImages/workflow.gif" width="16" alt=""/>&nbsp;我的工作&nbsp;</a>  
                         </td>
-                         <td align="right" style="background:url(@Url.Content("/images/BackWhite.gif")">
-                            <a class="white" href="MyDesk.aspx" target="rform">
+                         <td align="right" style="background:url('/Content/images/BackWhite.gif')">
+                            <a class="white" href="/Home/MyDesk" target="rform">
                                 <img alt="我的办公桌" width="16" height="16" src="../../Content/images/TreeImages/mytable.gif" />&nbsp;桌面</a>&nbsp;
-                            <a class="white"  href="../../Content/Personal/SystemTiXing.aspx" target="rform">
-                                <img alt="提醒" height="16" width="16" src="../../Content/images/TreeImages/theme.gif" />&nbsp;提醒</a>&nbsp;
+                            <a class="white"  href="#" target="rform">
+                                <img alt="提醒" height="16" width="16" src="/Content/images/TreeImages/theme.gif" />&nbsp;提醒</a>&nbsp;
                             <a class="white" href="/Account/LogOut">
                                 <img alt="注销用户" src="../../Content/images/login.gif"/>&nbsp;注销</a>&nbsp;&nbsp;&nbsp;
                           </td>
@@ -47,8 +63,8 @@
                    </table>
            </div>
     <!-------------------------------左边----------------------------------------->
-    <div data-options="region:'west',split:true" title="菜单导航" iconCls='tu1419' style="width:220px;">
-        <div id="div_accordion" class="easyui-accordion" data-options="fit:true,border:true"></div>
+    <div data-options="region:'west',split:false" title="菜单导航" iconCls='tu1419' style="width:250px;">
+        <div id="div_accordion" class="easyui-accordion" data-options="fit:true,border:false,height:30"></div>
     </div>
     <!-------------------------------中间----------------------------------------->
     <div data-options="region:'center'" style="overflow:hidden">
@@ -86,6 +102,7 @@
                          url: "/Home/GetTreeData?id=" + item.id + "&RoleID=" + $("#t_RoleID").val(),
                          async: false,
                          cache: false,
+                         lines:true,
                          onClick: function (node) {
                              addTabs(node.text, node.attributes["PageUrl"], node.attributes["Icon"], node.id, true);
                          }
@@ -96,8 +113,7 @@
          $("#div_accordion").accordion("add", {
              "title": "管理员操作",
              "content": '<ul id="ul_tree_00" class="easyui-tree" style="margin:5px;">'
-                      + '<li iconCls="icon-gears"><a id="a_01" href="javascript:void(0)" ref="/Item/ItemEdit">数据管理</a></li>'
-                      + '<li iconCls="icon-gears"><a id="a_02" href="javascript:void(0)" ref="/Admin/ModuleManage">模块管理</a></li>'
+                      + '<li iconCls="icon-gears"><a id="a_02" href="javascript:void(0)" ref="/Admin/ModuleManage">系统模块管理</a></li>'
                       + '</ul>',
              "iconCls": "tu0112",
              "selected": "false"
